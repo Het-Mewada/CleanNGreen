@@ -1,0 +1,27 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: 'NeuropolX' , 'Orbitron';
+  src: url('./assets/fonts/neuropol_x.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  font-family: 'NeuropolX', sans-serif;
+}
+html, body, #root {
+  height: 100%;
+  overflow: auto; /* or overflow-y: auto */
+}
+
+
+body,
+* {
+  scrollbar-width: none;        /* Firefox */
+  -ms-overflow-style: none;     /* IE/Edge */
+}
+
+*::-webkit-scrollbar {
+  display: none;                /* Chrome, Safari */
+}
