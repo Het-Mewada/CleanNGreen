@@ -11,5 +11,4 @@ router.get("/profile", protect ,  getUserProfile );
 router.put("/profile-pic", protect, updateProfilePic);
 router.post("/edit-profile", protect , updateUser ); 
 
-
 export default router;

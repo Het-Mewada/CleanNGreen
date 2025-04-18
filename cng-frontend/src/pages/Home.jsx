@@ -1,283 +1,330 @@
-import React, { useEffect, useState } from "react";
-import {
-  FaUserShield,
-  FaShoppingCart,
-  FaUsers,
-  FaChartLine,
-  FaComments,
-  FaExchangeAlt,
-  FaPlus,
-} from "react-icons/fa";
-import { MdDashboard, MdEmail } from "react-icons/md";
-import { BsKanbanFill } from "react-icons/bs";
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import axios from "axios";
-import AuthContext from "../context/AuthContext"; // Adjust path as needed
-import { useContext } from "react";
-import { useNavigate } from "react-router-dom";
-
-  const token = JSON.parse(localStorage.getItem("user"))?.token;
-
+import "./Home.css";
+import NewsSection from "../components/NewsSection";
+import CarbonFootprintCalculator from "../components/homePageCompo/CarbonCalculator";
+import ProductsComponent from "../components/homePageCompo/EcoProducts";
+import HeroComponent from "../components/homePageCompo/HeroSection";
+import StatsComponent from "../components/homePageCompo/Stats";
 const Home = () => {
-  const [projects, setProjects] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const { user, logout } = useContext(AuthContext);
-  const navigate = useNavigate();
+  // const [news, setNews] = useState([]);
+  const [activeTab, setActiveTab] = useState("initiatives");
+  const [email, setEmail] = useState("");
+  const [subscriptionSuccess, setSubscriptionSuccess] = useState(false);
 
-  useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        const response = await axios.get(
-          "http://192.168.141.31:5000/api/home/projects"
-        );
-        setProjects(response.data);
-      } catch (error) {
-        setError(error.response?.data?.message || "Failed to fetch projects");
-        console.error("Error fetching projects:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProjects();
-  }, []);
-
-  const handleDeleteProject = async (projectId) => {
-    if (window.confirm("Are you sure you want to delete this project?")) {
-      try {
-        await axios.delete(
-          `http://192.168.141.31:5000/api/home/projects/${projectId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        setProjects(projects.filter((p) => p._id !== projectId));
-      } catch (error) {
-        setError(error.response?.data?.message || "Failed to delete project");
-      }
-    }
+  const handleSubscribe = (e) => {
+    e.preventDefault();
+    axios
+      .post("/api/subscribe", { email })
+      .then(() => {
+        setSubscriptionSuccess(true);
+        setEmail("");
+        setTimeout(() => setSubscriptionSuccess(false), 3000);
+      })
+      .catch((err) => console.error(err));
   };
 
   return (
-    <div className="homepage bg-dark">
-      {/* Updated Hero Section with Login/Logout */}
-      <header className="hero-section relative text-center text-white py-20 overflow-hidden">
-        {/* Video Background */}
-        <div className="absolute inset-0 z-0">
-          <video
-            autoPlay
-            loop
-            muted
-            playsInline
-            className="w-full h-full object-cover"
+    <div className="bg-gradient-to-r from-emerald-600 to-teal-500">
+      {/* Hero Section */}
+      <HeroComponent />
+
+      {/* Stats */}
+      <StatsComponent />
+
+      {/* Features Tabs */}
+      <section className="features-section px-4 py-12 bg-white dark:bg-gray-900">
+        <h2 className="text-3xl font-bold text-center text-green-700 mb-8">
+          Our Green Initiatives
+        </h2>
+
+        {/* Tabs */}
+        <div className="flex flex-col sm:flex-row justify-center gap-4 mb-10">
+          {" "}
+          <button
+            className={`px-5 py-2 rounded-full text-sm font-medium transition-colors duration-300 ${
+              activeTab === "initiatives"
+                ? "bg-green-600 text-white"
+                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+            }`}
+            onClick={() => setActiveTab("initiatives")}
           >
-            <source
-              src="https://videos.pexels.com/video-files/3129671/3129671-uhd_2560_1440_30fps.mp4"
-              type="video/mp4"
-            />
-            {/* Fallback image if video doesn't load */}
-            <img
-              src="https://media.istockphoto.com/id/1140409137/vector/trendy-low-poly-triangles-with-navy-bg.jpg?s=612x612&w=0&k=20&c=vunManM5m2lfkcgYpOd_dIF-gCGUEUL4SjLYe-o9Nng="
-              alt="Background"
-              className="w-full h-full object-cover"
-            />
-          </video>
-          {/* Overlay for better text readability */}
-          <div className="absolute inset-0 bg-black/50"
-            style={{
-              backdropFilter: "blur(1px)",
-            }}></div>
+            Initiatives
+          </button>
+          <button
+            className={`px-5 py-2 rounded-full text-sm font-medium transition-colors duration-300 ${
+              activeTab === "technologies"
+                ? "bg-green-600 text-white"
+                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+            }`}
+            onClick={() => setActiveTab("technologies")}
+          >
+            Technologies
+          </button>
+          <button
+            className={`px-5 py-2 rounded-full text-sm font-medium transition-colors duration-300 ${
+              activeTab === "education"
+                ? "bg-green-600 text-white"
+                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+            }`}
+            onClick={() => setActiveTab("education")}
+          >
+            Education
+          </button>
         </div>
 
-        {/* Content */}
-        <div className="container relative z-10 mt-12 px-4 text-center">
-          <h1 className=" fw-bold mb-5">
-            My Digital{" "}
-            <span style={{
-                fontSize:'9vw',             
-            }}>
-
-            <span
-              style={{
-                WebkitBackgroundClip: "text",
-                backgroundClip: "text",
-              }}
-              className="bg-gradient-to-r from-blue-400 to-purple-600 bg-clip-text text-transparent"
-              >
-              Universe
-            </span>{" "}
-            ✨              </span>
-
-          </h1>
-
-          <div className="max-w-3xl mx-auto">
-            <h1 className="text-5xl md:text-6xl font-bold mb-4">
-              Welcome to FusionX Ecosystem
-            </h1>
-            <p className="text-xl md:text-2xl mb-8">
-              Discover our integrated services in one unified platform
-            </p>
-          </div>
-        </div>
-      </header>
-
-      {/* Projects Section */}
-      <section className="py-5">
-        <div className="container">
-          <div className="d-flex justify-content-between align-items-center mb-4">
-            <h2 className="mb-0 text-white">My Projects</h2>
-            {user?.role === "admin" && (
-              <button
-                className="d-flex btn btn-primary"
-                onClick={() => navigate("/projects/new")}
-              >
-                <FaPlus className="me-2" />
-                Add Project
-              </button>
-            )}
-          </div>
-
-          {error && <div className="alert alert-danger">{error}</div>}
-
-          {loading ? (
-            <div className="text-center py-5">
-              <div className="spinner-border text-primary" role="status">
-                <span className="visually-hidden">Loading...</span>
+        {/* Tab Content */}
+        <div className="tab-content max-w-6xl mx-auto">
+          {activeTab === "initiatives" && (
+            <div className="grid md:grid-cols-3 gap-8">
+              <div className="bg-green-100 p-6 rounded-xl shadow hover:shadow-lg transition">
+                <div className="text-4xl mb-4">☀️</div>
+                <h3 className="text-xl font-semibold text-green-800 mb-2">
+                Power Tomorrow with the Sun
+                </h3>
+                <p className="text-gray-700 mb-4">
+                Explore how solar technology helps reduce carbon footprints, save energy, and support a sustainable lifestyle.
+                </p>
+                <Link
+                  to="/solar-projects"
+                  className="text-green-700 font-medium hover:underline"
+                >
+                  Learn More →
+                </Link>
+              </div>
+              <div className="bg-green-100 p-6 rounded-xl shadow hover:shadow-lg transition">
+                <div className="text-4xl mb-4">♻️</div>
+                <h3 className="text-xl font-semibold text-green-800 mb-2">
+                Reducing Land Waste: Why It Matters                </h3>
+                <p className="text-gray-700 mb-4">
+                Get to know what land waste is, where it goes, and how simple changes in your daily routine can make a huge difference.
+                </p>
+                <Link
+                  to="/manage-waste"
+                  className="text-green-700 font-medium hover:underline"
+                >
+                  Learn More →
+                </Link>
+              </div>
+              <div className="bg-green-100 p-6 rounded-xl shadow hover:shadow-lg transition">
+                <div className="text-4xl mb-4">🌳</div>
+                <h3 className="text-xl font-semibold text-green-800 mb-2">
+                Grow Green, Breathe Clean                </h3>
+                <p className="text-gray-700 mb-4">
+                Forests are more than just trees—they're home to thousands of species and the lungs of our planet.Discover how you can be part of the global reforestation movement.
+                </p>
+                <Link
+                  to="/reforestation"
+                  className="text-green-700 font-medium hover:underline"
+                >
+                  Learn More →
+                </Link>
               </div>
             </div>
-          ) : projects.length === 0 ? (
-            <div className="text-center py-5">
-              <h4>No projects found</h4>
-              {user?.role === "admin" && (
-                <button
-                  className="btn btn-primary mt-3"
-                  onClick={() => navigate("/projects/new")}
-                >
-                  Create Your First Project
-                </button>
-              )}
+          )}
+
+          {activeTab === "technologies" && (
+            <div className="grid md:grid-cols-2 gap-8">
+              <div className="bg-blue-100 p-6 rounded-xl shadow hover:shadow-lg transition">
+                <h3 className="text-xl font-semibold text-blue-800 mb-2">
+                  Smart Grid Solutions
+                </h3>
+                <p className="text-gray-700">
+                  AI-powered energy distribution for maximum efficiency.
+                </p>
+              </div>
+              <div className="bg-blue-100 p-6 rounded-xl shadow hover:shadow-lg transition">
+                <h3 className="text-xl font-semibold text-blue-800 mb-2">
+                  Water Purification
+                </h3>
+                <p className="text-gray-700">
+                  Low-energy water cleaning systems for developing areas.
+                </p>
+              </div>
             </div>
-          ) : (
-            <div className="row g-4 ">
-              {projects.map((project) => (
-                <div key={project._id} className="col-md-6 col-lg-4 ">
-                  <div className="card project-card h-100 ">
-                    {project.thumbnail && (
-                      <img
-                        src={project.thumbnail}
-                        className="card-img-top"
-                        alt={project.title}
-                        style={{ height: "200px" }}
-                      />
-                    )}
-                    <div className="card-body d-flex flex-column ">
-                      <div className=" d-flex justify-content-between align-items-center mb-2">
-                        <h5 className="card-title mb-0">
-                          {project.title.charAt(0).toUpperCase() +
-                            project.title.slice(1)}
-                        </h5>
-                        <span
-                          className={`badge ${
-                            project.status === "completed"
-                              ? "bg-success"
-                              : project.status === "in-progress"
-                              ? "bg-warning text-dark"
-                              : "bg-secondary"
-                          }`}
-                        >
-                          {project.status.charAt(0).toUpperCase() +
-                            project.status.slice(1)}
-                        </span>
-                      </div>
-                      <p className="card-text flex-grow-1">
-                        {project.shortDescription ||
-                          project.description.substring(0, 100)}
-                        ...
-                      </p>
-                      <div className="d-flex flex-wrap gap-2 mb-3">
-                        {project.technologies?.slice(0, 3).map((tech) => (
-                          <span
-                            key={tech.name}
-                            className="badge bg-gray-200 text-dark"
-                          >
-                            {tech.name}
-                          </span>
-                        ))}
-                      </div>
-                      <div className="d-flex justify-content-between align-items-center mt-auto">
-                        <a
-                          href={project.liveUrl || "#"}
-                          className="btn btn-sm btn-outline-primary"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          View Project
-                        </a>
-                        <div>
-                          <div className="card-footer bg-transparent border-top-0">
-                            {user?.role === "admin" && (
-                              <div className="d-flex justify-content-end gap-2">
-                                <button
-                                  className="btn btn-sm btn-outline-primary"
-                                  onClick={() =>
-                                    navigate(`/projects/edit/${project._id}`)
-                                  }
-                                >
-                                  Edit
-                                </button>
-                                <button
-                                  className="btn btn-sm btn-outline-danger"
-                                  onClick={() =>
-                                    handleDeleteProject(project._id)
-                                  }
-                                >
-                                  Delete
-                                </button>
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
+          )}
+
+          {activeTab === "education" && (
+            <div className="grid md:grid-cols-2 gap-8">
+              <div className="bg-yellow-100 p-6 rounded-xl shadow hover:shadow-lg transition">
+                <h3 className="text-xl font-semibold text-yellow-800 mb-2">
+                  Workshops
+                </h3>
+                <p className="text-gray-700">
+                  Free community workshops on sustainable living.
+                </p>
+              </div>
+              <div className="bg-yellow-100 p-6 rounded-xl shadow hover:shadow-lg transition">
+                <h3 className="text-xl font-semibold text-yellow-800 mb-2">
+                  School Programs
+                </h3>
+                <p className="text-gray-700">
+                  Curriculum development for environmental education.
+                </p>
+              </div>
             </div>
           )}
         </div>
       </section>
 
-      {/* Styles */}
-      <style jsx>{`
-        .hero-section {
-          // background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          height: 100vh;
-          border-radius: 0 0 20px 20px;
-        }
-        .project-card {
-          transition: transform 0.3s, box-shadow 0.3s;
-          border: none;
-          border-radius: 10px;
-        }
-        .project-card:hover {
-          transform: translateY(-5px);
-          box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-        }
-        .project-card .card-img-top {
-          border-top-left-radius: 10px;
-          border-top-right-radius: 10px;
-        }
-        .btn-primary {
-          background-color: #667eea;
-          border-color: #667eea;
-        }
-        .btn-primary:hover {
-          background-color: #5a6fd1;
-          border-color: #5a6fd1;
-        }
-      `}</style>
+      {/* News Section */}
+      <NewsSection
+        apiKey="c0f02ed3fec0abc91611b7a89aa44d48"
+        newsSource="gnews" // or "gnews"
+        limit={10} // number of news items to display
+      />
+
+      {/* Eco Products Marketplace */}
+      <ProductsComponent />
+
+      {/* Events Calendar */}
+      {/* <EventDetails eventsToShow="3"/> */}
+
+      {/* Interactive Carbon Calculator */}
+      <CarbonFootprintCalculator />
+
+      {/* Community Forum Preview */}
+
+      {/* Newsletter Subscription */}
+      <section className="relative py-16 bg-gradient-to-br from-green-50 to-teal-50" style={{
+        overflow:'hidden'
+      }}>
+        <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-white rounded-xl shadow-lg overflow-hidden p-8 sm:p-10">
+            {/* Decorative elements */}
+            <div className="absolute -top-4 -right-4 w-24 h-24 bg-teal-200 rounded-full opacity-20"></div>
+            <div className="absolute -bottom-8 -left-8 w-32 h-32 bg-green-200 rounded-full opacity-20"></div>
+
+            <div className="relative z-10 text-center">
+              {/* Header with icon */}
+              <div className="flex justify-center mb-6">
+                <div className="w-14 h-14 bg-teal-100 rounded-full flex items-center justify-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6 text-teal-600"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                    />
+                  </svg>
+                </div>
+              </div>
+
+              <h2 className="text-3xl font-bold text-gray-900 mb-3">
+                Stay Updated
+              </h2>
+              <p className="text-lg text-gray-600 mb-8 max-w-md mx-auto">
+                Subscribe to our newsletter for the latest in green technology,
+                sustainability tips, and community events. Join{" "}
+                <span className="font-semibold text-teal-600">5,000+</span>{" "}
+                eco-conscious subscribers.
+              </p>
+
+              {/* Form */}
+              <form onSubmit={handleSubscribe} className="space-y-4">
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <input
+                    type="email"
+                    placeholder="Your email address"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    className="flex-grow px-5 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all duration-200"
+                  />
+                  <button
+                    type="submit"
+                    className="px-6 py-3 bg-teal-600 hover:bg-teal-700 text-white font-medium rounded-lg transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2"
+                  >
+                    Subscribe
+                  </button>
+                </div>
+
+                {subscriptionSuccess && (
+                  <div className="mt-4 p-3 bg-green-50 text-green-700 rounded-lg flex items-center justify-center space-x-2 animate-fade-in">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    <span>
+                      Thank you for subscribing! Check your email for
+                      confirmation.
+                    </span>
+                  </div>
+                )}
+
+                <p className="text-xs text-gray-500 mt-4">
+                  We respect your privacy. Unsubscribe at any time. No spam,
+                  ever.
+                </p>
+              </form>
+
+              {/* Trust indicators */}
+              <div className="mt-8 pt-6 border-t border-gray-100 flex flex-col sm:flex-row justify-center items-center gap-4 text-sm text-gray-500">
+                <div className="flex items-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4 mr-1 text-green-500"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                  Weekly digest
+                </div>
+                <div className="flex items-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4 mr-1 text-green-500"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                  Industry insights
+                </div>
+                <div className="flex items-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4 mr-1 text-green-500"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                  Exclusive content
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   );
 };

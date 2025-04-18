@@ -9,6 +9,7 @@ const otpStorage = {};
 // @route POST /api/auth/register
 const registerUser = asyncHandler(async (req, res) => {
   try {
+    console.log("request body : " + req.body)
     const { name, email, password, gender , role } = req.body;
 
     // Check if user already exists
@@ -53,13 +54,13 @@ const verifyOtp = asyncHandler(async (req, res) => {
     }
 
     // Create user
-    const { name, password, role } = storedData.userData;
-    const user = new User({ name, email, password,gender, role });
+    const { name, password,gender, role } = storedData.userData;
+    const user = new User({ name, email, password, role ,gender });
     await user.save();
 
     // Generate JWT token
     const token = jwt.sign(
-      { id: user._id, role: user.role },
+      { user },
       process.env.JWT_SECRET,
       { expiresIn: '1d' }
     );
@@ -71,6 +72,7 @@ const verifyOtp = asyncHandler(async (req, res) => {
       _id: user._id,
       name: user.name,
       email: user.email,
+      gender:user.gender,
       role: user.role,
       token
     });
@@ -98,11 +100,16 @@ const loginUser = asyncHandler(async (req, res) => {
     throw new Error("You are blocked from using this site")
   }
 
+  if(user.googleId){
+    throw new Error("This email is already linked to a Google account. Please log in using the 'Continue with Google' option.");
+  }
+
   if (user && (await user.matchPassword(password))) {
     res.json({
       _id: user._id,
       name: user.name,
       email: user.email,
+      gender: user.gender,
       role: user.role,
       isBlocked : user.isBlocked,
       token : generateToken(res , user._id)

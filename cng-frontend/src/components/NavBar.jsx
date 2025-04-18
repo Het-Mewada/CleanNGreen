@@ -6,10 +6,8 @@ import { Menu, X } from "lucide-react"; // Icons
 // Define your logo components
 
 export default function NAV() {
-  const { user, logout } = useContext(AuthContext);
-  const navigate = useNavigate();
+  const { user } = useContext(AuthContext);
   const [isOpen, setIsOpen] = useState(false);
-  console.log("user from nav bar : " + user?.gender);
   const toggleMenu = () => setIsOpen(!isOpen);
 
   return (
@@ -85,7 +83,7 @@ export default function NAV() {
                       }
                       style={{ textDecoration: "none", color: "#278783" }}
                     >
-                      Admin Dashboard
+                      Home
                     </NavLink>
                     <NavLink
                       to="/admin-dashboard"
@@ -111,10 +109,22 @@ export default function NAV() {
                     >
                       Blocked Users
                     </NavLink>
+                    <NavLink
+                      to="/insert-data"
+                      className={
+                        ({ isActive }) =>
+                          isActive
+                            ? "no-underline px-4 py-2 bg-[#e8b98f] text-dark rounded-full font-semibold shadow transition" // active style
+                            : "no-underline px-4 py-2 bg-[#FFEBD0] text-[#278783] rounded-full font-semibold shadow hover:bg-[#f7dbc4] transition" // inactive style
+                      }
+                      style={{ textDecoration: "none", color: "#278783" }}
+                    >
+                      Insert Data
+                    </NavLink>
                   </>
                 ) : (
                   <>
-                  <NavLink
+                    <NavLink
                       to="/home"
                       className={
                         ({ isActive }) =>
@@ -126,7 +136,6 @@ export default function NAV() {
                     >
                       Home
                     </NavLink>
-                
                   </>
                 )}
                 <NavLink

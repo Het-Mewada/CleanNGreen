@@ -7,7 +7,7 @@ const Register = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [gender,setGender] = useState("")
+  const [gender, setGender] = useState("male");
   const [role, setRole] = useState("user");
   const [error, setError] = useState(null);
   const [otp, setOtp] = useState("");
@@ -19,23 +19,18 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const now = Date.now();
-    const timeDiff = (now - OtpSentTime) / (1000 * 60);
-    if (timeDiff < 0.5) {
-      setError("Wait for 30 seconds before trying again");
-      return;
-    }
     setIsSubmitting(true);
     setError(null);
 
     try {
       if (!showOtpField) {
         // First step - submit initial registration (to trigger OTP)
-        await register(name, email, password, gender , role, navigate, false );
-        setRegistrationData({ name, email, password,gender , role });
+        await register(name, email, password, gender, role, navigate, false);
+        setRegistrationData({ name, email, password, gender, role });
         setShowOtpField(true);
         setOtpSentTime(Date.now());
       } else {
+        console.log(registrationData.gender);
         // Second step - submit with OTP
         await register(
           registrationData.name,
@@ -49,6 +44,7 @@ const Register = () => {
         );
       }
     } catch (error) {
+      console.log(error)
       setError(error.message);
     } finally {
       setIsSubmitting(false);
@@ -217,8 +213,9 @@ const Register = () => {
                             const now = Date.now();
                             const timeDiff = (now - OtpSentTime) / (1000 * 60);
                             if (timeDiff < 0.5) {
-
-                              setError("Wait for 30 seconds before trying again");
+                              setError(
+                                "Wait for 30 seconds before trying again"
+                              );
                               return;
                             }
                             await register(

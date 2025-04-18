@@ -13,7 +13,7 @@ const Login = () => {
   // const GoogleLoginButton = () => {
   const handleGoogleLogin = (e) => {
     e.preventDefault()
-    window.location.href = "http://localhost:5000/api/auth/google";
+    window.location.href = `http://localhost:5000/api/auth/google`;
     
   };
 
@@ -116,8 +116,7 @@ const Login = () => {
                   alt="Google"
                   className="w-5 h-5"
                 />
-                  Login with Google
-                </span>
+Continue with Google                </span>
               </button>
               <div className="text-center mt-4">
                 <p className="text-muted">

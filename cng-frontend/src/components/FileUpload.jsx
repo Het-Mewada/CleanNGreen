@@ -22,7 +22,7 @@ const FileUpload = ({ onUploadSuccess }) => {
     try {
       const token = JSON.parse(localStorage.getItem("user"))?.token;
       const { data } = await axios.post(
-        "http://192.168.141.31:5000/api/upload",
+        `${__API_URL__}/upload`,
         formData,
         { 
           withCredentials: true, 

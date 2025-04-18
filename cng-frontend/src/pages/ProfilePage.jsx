@@ -39,14 +39,18 @@ const ProfilePage = () => {
         return;
       }
       try {
-        const decodedToken = jwtDecode(token);
-
-        setUser(decodedToken);
-
-        console.log("after decode : " + { user });
-
+        const res = await axios.get(`${__API_URL__}/users/profile`, {
+          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+    
+        setUser(res.data);
+        console.log("User data after decode:", res.data);
+    
         setProfilePic(
-          decodedToken.profilePic ||
+          res.data.profilePic ||
             "https://cdni.iconscout.com/illustration/premium/thumb/male-user-image-illustration-download-in-svg-png-gif-file-formats--person-picture-profile-business-pack-illustrations-6515860.png?f=webp"
         );
       } catch (err) {
@@ -72,7 +76,7 @@ const ProfilePage = () => {
 
     try {
       const { data } = await axios.put(
-        "http://192.168.141.31:5000/api/users/profile-pic",
+        `${__API_URL__}/users/profile-pic`,
         { profilePic: filePath },
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -103,7 +107,7 @@ const ProfilePage = () => {
   
     try {
       const response = await axios.post(
-        "http://192.168.141.31:5000/api/users/edit-profile",
+        `${__API_URL__}/users/edit-profile`,
         {
          data: user, // Send the user object directly, not wrapped in a data property
         },
@@ -131,7 +135,7 @@ const ProfilePage = () => {
   }
 
   return (
-    <Container className="mt-4" style={{ paddingBottom: "60px" }}>
+    <Container className="mt-25" style={{ paddingBottom: "60px" }}>
       <Row className="justify-content-center">
         <Col md={8}>
           <Card
@@ -167,7 +171,7 @@ const ProfilePage = () => {
                       style={{ position: "relative", display: "inline-block" }}
                     >
                       <img
-                        src={profilePic}
+                        src={profilePic || "https://images.icon-icons.com/2643/PNG/512/female_woman_user_people_avatar_white_tone_icon_159354.png"}
                         alt="Profile"
                         className="rounded-circle border border-2"
                         style={{

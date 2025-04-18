@@ -15,7 +15,7 @@ export default function BlockedUsers() {
       const token = JSON.parse(localStorage.getItem("user"))?.token;
 
       const response = await axios.get(
-        `http://192.168.141.31:5000/api/admin/blocked-users`,
+        `${__API_URL__}/admin/blocked-users`,
         {
           headers: { Authorization: `Bearer ${token}` },
           withCredentials: true,
@@ -45,7 +45,7 @@ export default function BlockedUsers() {
 
     try {
       const response = await axios.post(
-        `http://192.168.141.31:5000/api/admin/block`,
+        `${__API_URL__}/admin/block`,
         {
           data: {userId , userRole},
         },

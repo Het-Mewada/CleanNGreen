@@ -14,6 +14,12 @@ import OAuthSuccess from "./Auth-pages/SuccessOAuth";
 import "bootstrap/dist/css/bootstrap.min.css";
 import ProfilePage from "./pages/ProfilePage";
 import Blocked from "./admin/Blocked";
+import Data from "./pages/InsertData";
+import EventForm from "./admin/EventEdit";
+import Footer from "./components/Footer";
+import SolarImpact from "./pages/Solar";
+import WasteReducing from "./pages/WasteReduce";
+import ReforestationCard from "./pages/Reforesting";
 import "./index.css";
 function App() {
   return (
@@ -22,50 +28,61 @@ function App() {
     </Router>
   );
 }
-
 function MainApp() {
   const location = useLocation();
   const hideNavRoutes = ["/login", "/register"];
-  const shouldShowNav = !hideNavRoutes.includes(location.pathname);
+  const showComponents = !hideNavRoutes.includes(location.pathname);
 
   return (
     <>
-      <div className="hide-scrollbar" style={{ overflow: "auto" }}>
-        {shouldShowNav && <Nav />}
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/home" element={<Home />} />
+      <div className="flex flex-col min-h-screen" style={{
+      }}> 
+        {showComponents && (
+          <div className="fixed top-0 left-0 w-full z-50" style={{overflowx:'hidden'}}>
+            <Nav />
+          </div>
+        )}
 
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+        {/* Spacer div to push content below fixed navbar */}
+        {/* {showComponents && <div className="h-[60px]" />} adjust height to match navbar */}
 
-          {/* <Route path="/typing-speed-test" element={<TypingTest />} /> */}
-          <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/social-auth-success" element={<OAuthSuccess />} />
-          <Route element={<ProtectedRoute usersOnly={true} />}>
-            {/* <Route path="/dashboard" element={<UserDashboard />} /> */}
-          </Route>
+        <div className="flex-grow">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/home" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/event-edit" element={<EventForm />} />
+            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/social-auth-success" element={<OAuthSuccess />} />
+            <Route path="/solar-projects" element={<SolarImpact/>} />
+            <Route path="/manage-waste" element={<WasteReducing/>} />
+            <Route path="/reforestation" element={<ReforestationCard/>} />
 
-          {/* <Route element={<ProtectedRoute adminOnly={true} />}> */}
-          <Route path="/admin-dashboard" element={<AdminDashboard />} />
-          {/* <Route path="/projects/edit/:id" element={<EditProject />} /> */}
-          <Route path="/blocked-users" element={<Blocked />} />
-          {/* <Route path="/projects/new" element={<ProjectForm />} /> */}
-          {/* </Route> */}
+            <Route element={<ProtectedRoute usersOnly={true} />}>
+              {/* Protected User Routes */}
+            </Route>
 
-          <Route
-            path="*"
-            element={
-              <h1 className="text-center">
-                {" "}
-                <span style={{ color: "red" }}>404</span> <br /> Page Not Found
-              </h1>
-            }
-          />
-        </Routes>
+            <Route path="/admin-dashboard" element={<AdminDashboard />} />
+            <Route path="/insert-data" element={<Data />} />
+            <Route path="/blocked-users" element={<Blocked />} />
+
+            <Route
+              path="*"
+              element={
+                <h1 className="text-center text-3xl p-10">
+                  <span className="text-red-500">404</span> <br /> Page Not Found
+                </h1>
+              }
+            />
+          </Routes>
+        </div>
+
+        {showComponents && <Footer />}
       </div>
     </>
   );
 }
+
 
 export default App;

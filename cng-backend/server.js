@@ -12,6 +12,13 @@ import adminRoutes from "./routes/adminRoutes.js";
 import uploadRoutes from "./routes/uploadRoutes.js";
 import projectRoutes from "./routes/projectRoutes.js";
 
+import statsRouter from './routes/statsRouter.js'
+import productRouter from './routes/productRouter.js'
+import eventRouter from './routes/eventRouter.js'
+import subscriberRouter from './routes/subscriberRouter.js'
+
+
+
 // Import passport config (important!)
 import "./config/passport.js";
 
@@ -24,7 +31,7 @@ connectDB();
 // ✅ Middleware
 app.use(
   cors({
-    origin: true, // 🔥 Better than "*", allows credentials to work
+    origin: true,
     credentials: true,
   })
 );
@@ -52,6 +59,13 @@ app.use("/api/home", projectRoutes);
 
 // ✅ Static folder for uploaded files
 app.use("/uploads", express.static("uploads"));
+
+
+// insert data
+app.use('/api/stats', statsRouter);
+app.use('/api/products', productRouter);
+app.use('/api/events', eventRouter);
+app.use('/api/subscribers', subscriberRouter);
 
 // ✅ Test route
 app.get("/api", (req, res) => {

@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState , useContext } from "react";
+import AuthContext from "../context/AuthContext";
 import axios from "axios";
 
 const AdminDashboard = () => {
@@ -13,6 +14,7 @@ const AdminDashboard = () => {
   const [isDeleteModeOpen, setIsDeleteModeOpen] = useState(false);
   const [isBlockModeOpen, setIsBlockModeOpen] = useState(false);
   const [editFormData, setEditFormData] = useState(null);
+  
   const [deleteStatus, setDeleteStatus] = useState({
     status: "idle", // 'idle' | 'loading' | 'success' | 'error'
     message: "",
@@ -25,6 +27,12 @@ const AdminDashboard = () => {
     status: "idle", // 'idle' | 'loading' | 'success' | '
     message: "",
   });
+
+
+  const {user} = useContext(AuthContext)
+
+
+
   const fetchUsers = async () => {
     setUsers([]);
     setError(null);
@@ -38,11 +46,9 @@ const AdminDashboard = () => {
         return;
       }
 
-      // Add isBlocked parameter when role is "blocked"
-      const isBlocked = role === "blocked" ? true : undefined;
 
       const { data } = await axios.get(
-        `http://192.168.141.31:5000/api/admin?page=${page}&search=${search}&role=${role}&limit=5`,
+        `${__API_URL__}/admin?page=${page}&search=${search}&role=${role}&limit=5`,
         {
           withCredentials: true,
           headers: { Authorization: `Bearer ${token}` },
@@ -59,13 +65,18 @@ const AdminDashboard = () => {
       setIsLoading(false);
       setError(null);
     } catch (error) {
+      if(error.status == "403"){
+        alert("You do not have access to this content")
+        window.location.href = "/login";
+        return;
+            }
       console.error(
         "Error fetching users:",
         error.response?.data || error.message
       );
       setError(error.response?.data || error.message);
-      if (error.response?.status === 403 || error.response?.status === 401) {
-        alert("You do not have access to this content , Redirecting to login.");
+      if (user.role !== "admin") {
+        alert(user.role);
         localStorage.removeItem("user");
         window.location.href = "/login";
       }
@@ -101,7 +112,7 @@ const AdminDashboard = () => {
 
     try {
       const response = await axios.delete(
-        `http://192.168.141.31:5000/api/admin/delete`,
+        `${__API_URL__}/admin/delete`,
         {
           data: { userId: user._id },
           withCredentials: true,
@@ -140,7 +151,7 @@ const AdminDashboard = () => {
 
     try {
       const response = await axios.post(
-        `http://192.168.141.31:5000/api/admin/block`,
+        `${__API_URL__}/admin/block`,
         {
           data: { userId, userRole },
         },
@@ -183,7 +194,7 @@ const AdminDashboard = () => {
 
     try {
       const response = await axios.post(
-        `http://192.168.141.31:5000/api/admin/update-user`,
+        `${__API_URL__}/admin/update-user`,
         {
           data: user,
         },
@@ -210,7 +221,7 @@ const AdminDashboard = () => {
   }
 
   return (
-    <div className="min-h-screen  px-9 py-4">
+    <div className="min-h-screen pt-27 px-9">
       <div className="bg-white shadow-xl rounded-2xl p-6">
         <h2 className="text-2xl font-bold text-[#278783] font-neuropol border-b-2 border-[#278783] pb-2 flex justify-between">
           Admin Dashboard
