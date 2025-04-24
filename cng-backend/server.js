@@ -1,10 +1,10 @@
-import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import session from "express-session";
 import passport from "passport";
 import cookieParser from "cookie-parser";
 
+import express from "express";
 import connectDB from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
