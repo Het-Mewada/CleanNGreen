@@ -140,12 +140,6 @@ export default function NAV() {
                 )}
                 <NavLink
                   to="/profile"
-                  // className={
-                  //   ({ isActive }) =>
-                  //     isActive
-                  //       ? "no-underline px-4 py-2 bg-[#e8b98f] text-dark rounded-full font-semibold shadow transition" // active style
-                  //       : "no-underline px-4 py-2 bg-[#FFEBD0] text-[#278783] rounded-full font-semibold shadow hover:bg-[#f7dbc4] transition" // inactive style
-                  // }
                   style={{ textDecoration: "none", color: "#278783" }}
                 >
                   <img
@@ -174,14 +168,16 @@ export default function NAV() {
                 <Link
                   to="/login"
                   onClick={toggleMenu}
-                  className="block px-4 py-2 bg-[#FFEBD0] text-[#278783] rounded font-semibold shadow hover:bg-[#f7dbc4]"
+                  className="no-underline text-inherit px-4 py-2 bg-[#FFEBD0] text-[#278783] rounded-full font-semibold shadow hover:bg-[#f7dbc4] transition"
+                  style={{ textDecoration: "none", color: "#278783" }}
                 >
                   Login
                 </Link>
                 <Link
                   to="/register"
                   onClick={toggleMenu}
-                  className="block px-4 py-2 bg-[#FFEBD0] text-[#278783] rounded font-semibold shadow hover:bg-[#f7dbc4]"
+                  className="no-underline text-inherit px-4 py-2 mb-2.5 bg-[#FFEBD0] text-[#278783] rounded-full font-semibold shadow hover:bg-[#f7dbc4] transition"
+                  style={{ textDecoration: "none", color: "#278783" }}
                 >
                   Register
                 </Link>
@@ -205,6 +201,14 @@ export default function NAV() {
                       style={{ textDecoration: "none", color: "#278783" }}
                     >
                       Blocked Users
+                    </Link>
+                    <Link
+                      to="/profile"
+                      onClick={toggleMenu}
+                      className="no-underline text-inherit px-4 py-2 bg-[#FFEBD0] text-[#278783] rounded-full font-semibold shadow hover:bg-[#f7dbc4] transition"
+                      style={{ textDecoration: "none", color: "#278783" }}
+                    >
+                      Profile
                     </Link>
                   </>
                 ) : (
@@ -241,11 +245,3 @@ export default function NAV() {
     </nav>
   );
 }
-
-<button
-  onClick={() => logout(navigate)}
-  className="no-underline text-inherit px-4 py-2 bg-[#C0392B] text-light rounded-full font-semibold shadow hover:bg-red-800 transition"
-  style={{ textDecoration: "none", borderRadius: "10px" }}
->
-  Logout
-</button>;

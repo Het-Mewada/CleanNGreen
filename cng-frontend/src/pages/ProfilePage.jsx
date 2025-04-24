@@ -1,7 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import FileUpload from "../components/FileUpload";
-import { jwtDecode } from "jwt-decode";
 
 import {
   Container,
@@ -16,7 +15,7 @@ import AuthContext from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 const ProfilePage = () => {
-  const [profilePic, setProfilePic] = useState("");
+  const [profilePic, setProfilePic] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [isEditModeOpen, setIsEditModeOpen] = useState(false);
@@ -45,14 +44,12 @@ const ProfilePage = () => {
             Authorization: `Bearer ${token}`,
           },
         });
-    
+
         setUser(res.data);
+        console.log("profile data chexk ", res.data.profilePic);
         console.log("User data after decode:", res.data);
-    
-        setProfilePic(
-          res.data.profilePic ||
-            "https://cdni.iconscout.com/illustration/premium/thumb/male-user-image-illustration-download-in-svg-png-gif-file-formats--person-picture-profile-business-pack-illustrations-6515860.png?f=webp"
-        );
+
+        setProfilePic(res.data.profilePic);
       } catch (err) {
         console.error("Error fetching profile:", err);
         setError("Failed to fetch profile. Please try again.");
@@ -97,19 +94,19 @@ const ProfilePage = () => {
 
   async function updateUser(user) {
     const token = JSON.parse(localStorage.getItem("user"))?.token;
-  
+
     if (!token) {
       window.location.href = "/login";
       return;
     }
-  
+
     setEditStatus({ status: "loading", message: "Editing User..." });
-  
+
     try {
       const response = await axios.post(
         `${__API_URL__}/users/edit-profile`,
         {
-         data: user, // Send the user object directly, not wrapped in a data property
+          data: user, // Send the user object directly, not wrapped in a data property
         },
         {
           withCredentials: true,
@@ -118,7 +115,7 @@ const ProfilePage = () => {
           },
         }
       );
-      console.log(response)
+      console.log(response);
       if (response.status === 200) {
         setEditStatus({ status: "success", message: response.data.message });
         setUser(response.data.user); // Update the user context with the returned user data
@@ -132,6 +129,9 @@ const ProfilePage = () => {
       });
       return false;
     }
+  }
+  function removeProfilepic() {
+    alert("hello");
   }
 
   return (
@@ -170,8 +170,15 @@ const ProfilePage = () => {
                     <div
                       style={{ position: "relative", display: "inline-block" }}
                     >
+                      {console.log("hello user : ", user)}
                       <img
-                        src={profilePic || "https://images.icon-icons.com/2643/PNG/512/female_woman_user_people_avatar_white_tone_icon_159354.png"}
+                        src={
+                          profilePic
+                            ? profilePic
+                            : user.gender === "male"
+                            ? "https://w7.pngwing.com/pngs/490/157/png-transparent-male-avatar-boy-face-man-user-flat-classy-users-icon.png"
+                            : "https://cdn-icons-png.flaticon.com/256/6997/6997662.png"
+                        }
                         alt="Profile"
                         className="rounded-circle border border-2"
                         style={{
@@ -194,7 +201,6 @@ const ProfilePage = () => {
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "center",
-                          cursor: "pointer",
                           boxShadow: "0 0 5px rgba(0, 0, 0, 0.3)",
                         }}
                         onClick={() => {
@@ -329,12 +335,25 @@ const ProfilePage = () => {
                                     <option value="female">Female</option>
                                   </select>
                                 </div>
+                                {profilePic && (
+                                  <div>
+                                    <button
+                                      className="bg-red-500 w-100 hover:bg-red-800 text-white px-4 py-2 rounded-lg text-sm font-medium shadow"
+                                      onClick={() => {
+                                        handleProfilePicUpdate(null);
+                                        setIsEditModeOpen(null);
+                                      }}
+                                    >
+                                      Remove Profile Image
+                                    </button>
+                                  </div>
+                                )}
                               </div>
 
-                              <div className="flex justify-center gap-3 pt-2">
+                              <div className="flex gap-2 justify-center">
                                 <button
                                   onClick={() => setIsEditModeOpen(null)}
-                                  className="px-5 py-2 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-100 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2"
+                                  className="px-5 w-50 py-2 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-100 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2"
                                 >
                                   Cancel
                                 </button>

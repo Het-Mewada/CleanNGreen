@@ -1,20 +1,35 @@
 @import "tailwindcss";
 
 @font-face {
-  font-family: 'NeuropolX' , 'Orbitron';
+  font-family: 'NeuropolX', 'Orbitron';
   src: url('./assets/fonts/neuropol_x.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
+*{
+  cursor: none;
+}
+/* Reset scrolling behavior */
+html {
+  scroll-behavior: auto; /* Disables smooth scroll (optional) */
+  overflow-y: scroll;    /* Always show vertical scrollbar to prevent jumps */
+}
 
 body {
   font-family: 'NeuropolX', sans-serif;
-}
-html, body, #root {
-  height: 100%;
-  overflow: auto; /* or overflow-y: auto */
+  min-height: 100vh;     /* Use viewport height instead of fixed 100% */
+  overflow-x: hidden;    /* Only hide horizontal overflow on body */
 }
 
+/* Remove custom cursor if not needed (or keep it) */
+body.custom-cursor-active {
+  cursor: none !important; /* Apply only when a custom cursor is active */
+}
+
+/* Scrollbar hiding (safer approach) */
+body::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
+}
 
 body,
 * {
@@ -22,6 +37,17 @@ body,
   -ms-overflow-style: none;     /* IE/Edge */
 }
 
-*::-webkit-scrollbar {
-  display: none;                /* Chrome, Safari */
+/* Fix for root container */
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Font overrides */
+.heading {
+  font-family: "Oswald", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
 }

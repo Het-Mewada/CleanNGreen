@@ -87,7 +87,7 @@ const Home = () => {
                 Explore how solar technology helps reduce carbon footprints, save energy, and support a sustainable lifestyle.
                 </p>
                 <Link
-                  to="/solar-projects"
+                  to="/initiatives/solar-projects"
                   className="text-green-700 font-medium hover:underline"
                 >
                   Learn More →
@@ -101,7 +101,7 @@ const Home = () => {
                 Get to know what land waste is, where it goes, and how simple changes in your daily routine can make a huge difference.
                 </p>
                 <Link
-                  to="/manage-waste"
+                  to="/initiatives/manage-waste"
                   className="text-green-700 font-medium hover:underline"
                 >
                   Learn More →
@@ -115,7 +115,7 @@ const Home = () => {
                 Forests are more than just trees—they're home to thousands of species and the lungs of our planet.Discover how you can be part of the global reforestation movement.
                 </p>
                 <Link
-                  to="/reforestation"
+                  to="/initiatives/reforestation"
                   className="text-green-700 font-medium hover:underline"
                 >
                   Learn More →

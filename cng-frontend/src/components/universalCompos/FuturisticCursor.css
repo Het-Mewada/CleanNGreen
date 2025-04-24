@@ -1,0 +1,28 @@
+/* FuturisticCursor.css */
+
+.futuristic-cursor {
+    position: fixed;
+    width: 32px;
+    height: 32px;
+    transform: translate(-8px, -4px); /* align with pointer tip */
+    pointer-events: none;
+    z-index: 9999;
+    background: url('pastel-cursor.svg') no-repeat center center;
+    background-size: contain;
+  }
+  
+  .cursor-pointer,
+  .cursor-trail {
+    display: none; /* Hide inner elements since we're using the full SVG */
+  }
+  
+  .cursor-hover {
+    filter: brightness(0.9);
+  }
+  
+
+  @media (max-width: 768px) {
+    .futuristic-cursor{
+      display: none;
+    }
+  }

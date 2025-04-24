@@ -99,7 +99,10 @@ export default function BlockedUsers() {
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+    <div className="bg-white min-w-screen rounded-lg shadow-sm border border-gray-200 overflow-hidden" 
+    style={{
+      height:'100vh',
+    }}>
       {/* Header */}
       <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
         <div className="flex items-center">

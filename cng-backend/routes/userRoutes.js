@@ -6,7 +6,7 @@ import { updateProfilePic } from "../controllers/userController.js";
 import { getUserProfile } from "../controllers/userController.js";
 import { updateUser } from "../controllers/userController.js";
 const router = express.Router();
-router.get("/", protect , admin , getUserData);
+
 router.get("/profile", protect ,  getUserProfile ); 
 router.put("/profile-pic", protect, updateProfilePic);
 router.post("/edit-profile", protect , updateUser ); 

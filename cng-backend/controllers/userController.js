@@ -93,8 +93,8 @@ export const updateProfilePic = asyncHandler(async (req, res) => {
   }
 
   if (!req.body.profilePic) {
-    res.status(400);
-    throw new Error("No image URL provided");
+    // res.status(400);
+    user.profilePic = null;
   }
 
   user.profilePic = req.body.profilePic; // Update profile picture URL

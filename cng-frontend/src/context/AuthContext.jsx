@@ -5,30 +5,30 @@ import { jwtDecode } from "jwt-decode";
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState({name:"Patel Himisha" , email:"patelhimi48@gmail.com"  , role : "admin" , gender:"female" , createdAt:Date.now() , updatedAt :Date.now()});
+  const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
 
   // Load user from local storage
   useEffect( () => {
-
-    const fetchData = async () => {
-
-      const token = JSON.parse(localStorage.getItem("user"))?.token;
-      if (token) {
-        try {
-          const data = await axios.get(`${__API_URL__}/admin`,{
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
-          })
-        } catch (error) {
-          setError(error);
-          
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      try {
+        const parsedUser = JSON.parse(storedUser);
+        const decodedToken = jwtDecode(parsedUser.token);
+        
+        // Optionally: Check if the token is expired
+        const isTokenExpired = decodedToken.exp * 1000 < Date.now();
+        if (!isTokenExpired) {
+          setUser(parsedUser);
+        } else {
+          localStorage.removeItem("user");
+          setUser(null);
         }
+      } catch (err) {
+        console.error("Error decoding token", err);
+        localStorage.removeItem("user");
       }
-    };
-
-    fetchData()
+    }
   }, []);
 
   const login = async (email, password, navigate) => {
@@ -50,7 +50,7 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem("user", JSON.stringify(userData));
 
       if (data.role === "user") {
-        navigate("/dashboard");
+        navigate("/home");
       } else if (data.role === "admin") {
         navigate("/admin-dashboard");
       } else {
