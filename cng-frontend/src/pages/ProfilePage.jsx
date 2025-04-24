@@ -46,8 +46,6 @@ const ProfilePage = () => {
         });
 
         setUser(res.data);
-        console.log("profile data chexk ", res.data.profilePic);
-        console.log("User data after decode:", res.data);
 
         setProfilePic(res.data.profilePic);
       } catch (err) {
@@ -115,7 +113,6 @@ const ProfilePage = () => {
           },
         }
       );
-      console.log(response);
       if (response.status === 200) {
         setEditStatus({ status: "success", message: response.data.message });
         setUser(response.data.user); // Update the user context with the returned user data
@@ -129,9 +126,6 @@ const ProfilePage = () => {
       });
       return false;
     }
-  }
-  function removeProfilepic() {
-    alert("hello");
   }
 
   return (
@@ -170,7 +164,6 @@ const ProfilePage = () => {
                     <div
                       style={{ position: "relative", display: "inline-block" }}
                     >
-                      {console.log("hello user : ", user)}
                       <img
                         src={
                           profilePic

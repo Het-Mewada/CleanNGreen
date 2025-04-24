@@ -2,7 +2,6 @@ import { useState } from "react";
 import axios from "axios";
 import { Button } from "react-bootstrap";
 import {Spinner} from "react-bootstrap";
-
 const FileUpload = ({ onUploadSuccess }) => {
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState("");
@@ -72,8 +71,7 @@ const FileUpload = ({ onUploadSuccess }) => {
         file: file:border-0
         file:text-sm file:font-medium
         file:bg-emerald-50 file:text-emerald-700
-        hover:file:bg-emerald-100
-        
+        hover:file:bg-emerald-100  
         border border-gray-300 rounded-lg
         focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent
         transition-all duration-200"

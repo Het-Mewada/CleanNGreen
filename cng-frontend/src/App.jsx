@@ -20,14 +20,12 @@ import EventForm from "./admin/EventEdit";
 import Footer from "./components/Footer";
 import ClickSpark from "./components/universalCompos/ClickSparkComponent";
 import FuturisticCursor from "./components/universalCompos/CursorComponent";
-import Back from "./components/Back";
 import Initiatives from "./pages/Initiatives";
 import "./index.css";
-
 function App() {
   return (
     <Router>
-      <ScrollToTop /> {/* Move ScrollToTop here */}
+      <ScrollToTop />
       <MainApp />
     </Router>
   );
@@ -40,7 +38,6 @@ function MainApp() {
   return (
     <>
       <div className="flex flex-col min-h-screen" style={{}}>
-        {/* <Back/> */}
         <FuturisticCursor />
         <ClickSpark
           sparkColor="black"
@@ -70,14 +67,7 @@ function MainApp() {
               <Route path="/profile" element={<ProfilePage />} />
               <Route path="/social-auth-success" element={<OAuthSuccess />} />
 
-              <Route
-                path="/initiatives/*"
-                element={<Initiatives />}
-              />
-
-              {/* <Route path="/solar-projects" element={<SolarImpact/>} />
-            <Route path="/manage-waste" element={<WasteReducing/>} />
-            <Route path="/reforestation" element={<ReforestationCard/>} /> */}
+              <Route path="/initiatives/*" element={<Initiatives />} />
 
               <Route element={<ProtectedRoute usersOnly={true} />}>
                 {/* Protected User Routes */}
@@ -104,5 +94,4 @@ function MainApp() {
     </>
   );
 }
-
 export default App;
