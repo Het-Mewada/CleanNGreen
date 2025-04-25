@@ -17,5 +17,8 @@ export default defineConfig({
     allowedHosts: [
       '0297-2409-4041-6dc5-e97b-8d6f-d662-a0d7-a2ca.ngrok-free.app', // Your Localtunnel URL
       'localhost' // Keep local access
-    ]  }
+    ]  },
+    css : {
+      postcss:{},
+    }
 })
