@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 @font-face {
   font-family: 'NeuropolX', 'Orbitron';
   src: url('./assets/fonts/neuropol_x.ttf') format('truetype');
