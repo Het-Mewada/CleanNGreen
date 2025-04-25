@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import "./Home.css";
-import NewsSection from "../components/NewsSection";
+import NewsSection from "../components/homePageCompo/NewsSection";
 import CarbonFootprintCalculator from "../components/homePageCompo/CarbonCalculator";
 import ProductsComponent from "../components/homePageCompo/EcoProducts";
 import HeroComponent from "../components/homePageCompo/HeroSection";

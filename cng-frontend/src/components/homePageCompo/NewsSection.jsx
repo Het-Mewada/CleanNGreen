@@ -159,7 +159,10 @@ const NewsSection = ({ apiKey, newsSource = 'newsapi', limit = 3 }) => {
                       href={item.url} 
                       target="_blank" 
                       rel="noopener noreferrer" 
-                      className="no-underline hover:underline"
+                      style={{
+                        textDecoration:'none',
+                        color:'black'
+                      }}
                     >
                       {item.title}
                     </a>
@@ -170,6 +173,9 @@ const NewsSection = ({ apiKey, newsSource = 'newsapi', limit = 3 }) => {
                     target="_blank" 
                     rel="noopener noreferrer" 
                     className="text-sm font-medium text-green-700 hover:text-green-900 transition-colors inline-flex items-center"
+                    style={{
+                      textDecoration:'none',
+                    }}
                   >
                     Continue reading
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -187,6 +193,9 @@ const NewsSection = ({ apiKey, newsSource = 'newsapi', limit = 3 }) => {
               target="_blank" 
               rel="noopener noreferrer" 
               className="inline-flex items-center bg-green-100 hover:bg-green-200 px-4 py-2 border border-green-300 text-green-800 transition-colors rounded-md no-underline"
+              style={{
+                textDecoration:'none',
+              }}
             >
               View all environmental news
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
