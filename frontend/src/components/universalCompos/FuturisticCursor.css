@@ -1,28 +1,24 @@
 /* FuturisticCursor.css */
+* {
+  cursor: none !important;
+}
 
 .futuristic-cursor {
-    position: fixed;
-    width: 32px;
-    height: 32px;
-    transform: translate(-8px, -4px); /* align with pointer tip */
-    pointer-events: none;
-    z-index: 9999;
-    background: url('pastel-cursor.svg') no-repeat center center;
-    background-size: contain;
-  }
-  
-  .cursor-pointer,
-  .cursor-trail {
-    display: none; /* Hide inner elements since we're using the full SVG */
-  }
-  
-  .cursor-hover {
-    filter: brightness(0.8);
-  }
-  
+  position: fixed;
+  width: 32px;
+  height: 32px;
+  transform: translate(30%, 50%);
+  pointer-events: none;
+  z-index: 9999999;
+  background: url('pastel-cursor.svg') no-repeat center center;
+  background-size: contain;
+  transition: transform 0.1s ease;
+}
 
-  /* @media (max-width: 768px) {
-    .futuristic-cursor{
-      display: none;
-    }
-  } */
+.cursor-pointer {
+    display: none;
+}
+
+.cursor-trail {
+  display: none;
+}

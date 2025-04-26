@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './FuturisticCursor.css';
+import './FuturisticCursor.css'; 
 
 const FuturisticCursor = () => {
   const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -44,16 +44,16 @@ const FuturisticCursor = () => {
   if (isHidden) return null;
 
   return (
-    <div 
-      className={`futuristic-cursor ${isHovering ? 'cursor-hover' : ''}`}
-      style={{
-        left: `${position.x}px`,
-        top: `${position.y}px`,
-      }}
-    >
+<div 
+  className='futuristic-cursor transform -translate-x-1/2 -translate-y-1/2 transition-all duration-100 scale-100 brightness-100'
+  style={{
+    left: `${position.x}px`,
+    top: `${position.y}px`,
+  }}
+>
       <div className="cursor-pointer"></div>
       <div className="cursor-trail"></div>
-    </div>
+</div>
   );
 };
 
