@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 
 const rotatingWords = [
-  "Sustainable",
+  // "Sustainable",
   "Smart",
   "Bold",
   "Green",
   "Digital",
-  "Innovative",
+  // "Innovative",
   "Inclusive",
-  "Connected",
+  // "Connected",
   "Ethical",
   "Resilient"
 ];

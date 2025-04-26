@@ -88,7 +88,7 @@ const Home = () => {
                 </p>
                 <Link
                   to="/initiatives/solar-projects"
-                  className="text-green-700 font-medium hover:underline"
+                  className="text-green-700 font-medium "
                 >
                   Learn More →
                 </Link>
@@ -102,7 +102,7 @@ const Home = () => {
                 </p>
                 <Link
                   to="/initiatives/manage-waste"
-                  className="text-green-700 font-medium hover:underline"
+                  className="text-green-700 font-medium "
                 >
                   Learn More →
                 </Link>
@@ -116,7 +116,7 @@ const Home = () => {
                 </p>
                 <Link
                   to="/initiatives/reforestation"
-                  className="text-green-700 font-medium hover:underline"
+                  className="text-green-700 font-medium "
                 >
                   Learn More →
                 </Link>

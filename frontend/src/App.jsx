@@ -21,6 +21,7 @@ import Footer from "./components/Footer";
 import ClickSpark from "./components/universalCompos/ClickSparkComponent";
 import FuturisticCursor from "./components/universalCompos/CursorComponent";
 import Initiatives from "./pages/Initiatives";
+import AboutUs from "./pages/About";
 import "./index.css";
 function App() {
   return (
@@ -66,7 +67,7 @@ function MainApp() {
               <Route path="/event-edit" element={<EventForm />} />
               <Route path="/profile" element={<ProfilePage />} />
               <Route path="/social-auth-success" element={<OAuthSuccess />} />
-
+              <Route path="/about" element={<AboutUs/>} />
               <Route path="/initiatives/*" element={<Initiatives />} />
 
               <Route element={<ProtectedRoute usersOnly={true} />}>

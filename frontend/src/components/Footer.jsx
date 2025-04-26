@@ -142,7 +142,7 @@ const Footer = () => {
                     textDecoration: "none",
                   }}
                 >
-                  Sustainability Tips
+                  Contact Us
                 </a>
               </li>
               <li>
@@ -153,29 +153,7 @@ const Footer = () => {
                     textDecoration: "none",
                   }}
                 >
-                  Green Technologies
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="text-gray-400 hover:text-green-400 transition-colors"
-                  style={{
-                    textDecoration: "none",
-                  }}
-                >
-                  Community Events
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="text-gray-400 hover:text-green-400 transition-colors"
-                  style={{
-                    textDecoration: "none",
-                  }}
-                >
-                  Blog
+                  Feedback
                 </a>
               </li>
             </ul>
@@ -185,17 +163,7 @@ const Footer = () => {
           <div className="space-y-4">
             <h3 className="text-lg font-semibold text-white">Resources</h3>
             <ul className="space-y-2">
-              <li>
-                <a
-                  href="#"
-                  className="text-gray-400 hover:text-green-400 transition-colors"
-                  style={{
-                    textDecoration: "none",
-                  }}
-                >
-                  Research Papers
-                </a>
-              </li>
+
               <li>
                 <a
                   href="#"
@@ -216,28 +184,6 @@ const Footer = () => {
                   }}
                 >
                   Eco-Friendly Products
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="text-gray-400 hover:text-green-400 transition-colors"
-                  style={{
-                    textDecoration: "none",
-                  }}
-                >
-                  Volunteer Opportunities
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="text-gray-400 hover:text-green-400 transition-colors"
-                  style={{
-                    textDecoration: "none",
-                  }}
-                >
-                  Sustainability Courses
                 </a>
               </li>
               <li>

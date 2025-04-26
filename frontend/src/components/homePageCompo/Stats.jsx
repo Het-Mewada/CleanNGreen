@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
-
 const formatNumber = (num) => {
   return new Intl.NumberFormat().format(num);
 };
@@ -123,7 +122,7 @@ export default function StatsComponent() {
                   />
                 </svg>
               </div>
-              <h3 className="text-4xl font-bold text-gray-900 mb-1">
+              <h3 className="text-4xl text-gray-900 mb-1">
                 <CountUp value={stats.treesPlanted} />+
               </h3>
               <p className="text-gray-500 font-medium">Trees Planted</p>
@@ -140,7 +139,7 @@ export default function StatsComponent() {
                   />
                 </svg>
               </div>
-              <h3 className="text-4xl font-bold text-gray-900 mb-1">
+              <h3 className="text-4xl  text-gray-900 mb-1">
                 <CountUp value={stats.co2Reduced} /> tons
               </h3>
               <p className="text-gray-500 font-medium">CO₂ Reduced</p>
@@ -153,7 +152,7 @@ export default function StatsComponent() {
                   <path d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" />
                 </svg>
               </div>
-              <h3 className="text-4xl font-bold text-gray-900 mb-1">
+              <h3 className="text-4xl  text-gray-900 mb-1">
                 <CountUp value={stats.cleanEnergy} /> MWh
               </h3>
               <p className="text-gray-500 font-medium">Clean Energy</p>
@@ -166,7 +165,7 @@ export default function StatsComponent() {
                   <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v1h8v-1zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-1a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v1h-3zM4.75 12.094A5.973 5.973 0 004 15v1H1v-1a3 3 0 013.75-2.906z" />
                 </svg>
               </div>
-              <h3 className="text-4xl font-bold text-gray-900 mb-1">
+              <h3 className="text-4xl text-gray-900 mb-1">
                 <CountUp value={stats.users} />+
               </h3>
               <p className="text-gray-500 font-medium">Community Members</p>
