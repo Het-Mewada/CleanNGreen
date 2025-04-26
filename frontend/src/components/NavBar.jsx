@@ -283,6 +283,7 @@ export default function NAV() {
                   <>
                     <NavLink
                       to="/home"
+                      onClick={toggleMenu}
                       className={({ isActive }) =>
                         isActive
                           ? "no-underline px-4 py-2 bg-[#e8b98f] text-dark rounded-full font-semibold shadow transition"
@@ -298,6 +299,7 @@ export default function NAV() {
 
                     <NavLink
                       to="/about"
+                      onClick={toggleMenu}
                       className={({ isActive }) =>
                         isActive
                           ? "no-underline px-4 py-2 bg-[#e8b98f] text-dark rounded-full font-semibold shadow transition"
@@ -313,7 +315,8 @@ export default function NAV() {
                   </>
                 )}
                 <NavLink
-                  to="/about"
+                  to="/profile"
+                  onClick={toggleMenu}
                   className={({ isActive }) =>
                     isActive
                       ? "no-underline px-4 mb-2 py-2 bg-[#e8b98f] text-dark rounded-full font-semibold shadow transition"
