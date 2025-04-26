@@ -57,13 +57,21 @@ export default function NAV() {
                 <Link
                   to="/login"
                   className="px-4 py-2 bg-[#FFEBD0] text-[#278783] rounded-full font-semibold shadow hover:bg-[#f7dbc4] transition"
+                  style={{
+                    textDecoration:'none',
+                    color:'#278783'
+                  }}
                 >
                   Login
                 </Link>
                 <Link
                   to="/register"
                   className="px-4 py-2 bg-[#FFEBD0] text-[#278783] rounded-full font-semibold shadow hover:bg-[#f7dbc4] transition"
-                >
+                  style={{
+                    textDecoration:'none',
+                    color:'#278783'
+                  }}
+               >
                   Register
                 </Link>
               </>
@@ -79,6 +87,10 @@ export default function NAV() {
                             ? "no-underline px-4 py-2 bg-[#e8b98f] text-dark rounded-full font-semibold shadow transition" // active style
                             : "no-underline px-4 py-2 bg-[#FFEBD0] text-[#278783] rounded-full font-semibold shadow hover:bg-[#f7dbc4] transition" // inactive style
                       }
+                      style={{
+                        textDecoration:'none',
+                        color:'#278783'
+                      }}
                     >
                       Home
                     </NavLink>
@@ -90,6 +102,10 @@ export default function NAV() {
                             ? "no-underline px-4 py-2 bg-[#e8b98f] text-dark rounded-full font-semibold shadow transition" // active style
                             : "no-underline px-4 py-2 bg-[#FFEBD0] text-[#278783] rounded-full font-semibold shadow hover:bg-[#f7dbc4] transition" // inactive style
                       }
+                      style={{
+                        textDecoration:'none',
+                        color:'#278783'
+                      }}
                     >
                       Admin Dashboard
                     </NavLink>
@@ -101,6 +117,10 @@ export default function NAV() {
                             ? "no-underline px-4 py-2 bg-[#e8b98f] text-dark rounded-full font-semibold shadow transition" // active style
                             : "no-underline px-4 py-2 bg-[#FFEBD0] text-[#278783] rounded-full font-semibold shadow hover:bg-[#f7dbc4] transition" // inactive style
                       }
+                      style={{
+                        textDecoration:'none',
+                        color:'#278783'
+                      }}
                     >
                       Blocked Users
                     </NavLink>
@@ -112,6 +132,10 @@ export default function NAV() {
                             ? "no-underline px-4 py-2 bg-[#e8b98f] text-dark rounded-full font-semibold shadow transition" // active style
                             : "no-underline px-4 py-2 bg-[#FFEBD0] text-[#278783] rounded-full font-semibold shadow hover:bg-[#f7dbc4] transition" // inactive style
                       }
+                      style={{
+                        textDecoration:'none',
+                        color:'#278783'
+                      }}
                     >
                       Insert Data
                     </NavLink>
@@ -125,6 +149,10 @@ export default function NAV() {
                           ? "no-underline px-4 py-2 bg-[#e8b98f] text-dark rounded-full font-semibold shadow transition"
                           : "no-underline px-4 py-2 bg-[#FFEBD0] text-[#278783] rounded-full font-semibold shadow hover:bg-[#f7dbc4] transition"
                       }
+                      style={{
+                        textDecoration:'none',
+                        color:'#278783'
+                      }}
                     >
                       Home
                     </NavLink>
@@ -136,6 +164,10 @@ export default function NAV() {
                           ? "no-underline px-4 py-2 bg-[#e8b98f] text-dark rounded-full font-semibold shadow transition"
                           : "no-underline px-4 py-2 bg-[#FFEBD0] text-[#278783] rounded-full font-semibold shadow hover:bg-[#f7dbc4] transition"
                       }
+                      style={{
+                        textDecoration:'none',
+                        color:'#278783'
+                      }}
                     >
                       About Us
                     </NavLink>
