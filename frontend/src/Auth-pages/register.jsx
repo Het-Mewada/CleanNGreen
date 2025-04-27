@@ -15,6 +15,8 @@ const Register = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [registrationData, setRegistrationData] = useState(null);
   const [OtpSentTime, setOtpSentTime] = useState(null);
+  const [adminpassword, setAdminpassword] = useState(null);
+
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -24,6 +26,12 @@ const Register = () => {
 
     try {
       if (!showOtpField) {
+        if (role === "admin") {
+          if (adminpassword != "ecosphereofficials") {
+            setError("Admin Password not matched");
+            return;
+          }
+        }
         // First step - submit initial registration (to trigger OTP)
         await register(name, email, password, gender, role, navigate, false);
         setRegistrationData({ name, email, password, gender, role });
@@ -44,7 +52,7 @@ const Register = () => {
         );
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
       setError(error.message);
     } finally {
       setIsSubmitting(false);
@@ -105,7 +113,7 @@ const Register = () => {
                   <p className="text-muted mb-4 text-center">
                     Get started with your free account
                   </p>
-                  <div className="mb-3">
+                  <div className="mb-1">
                     <label htmlFor="name" className="form-label">
                       Full Name
                     </label>
@@ -120,7 +128,7 @@ const Register = () => {
                       disabled={isSubmitting}
                     />
                   </div>
-                  <div className="mb-3">
+                  <div className="mb-1">
                     <label htmlFor="email" className="form-label">
                       Email
                     </label>
@@ -151,41 +159,58 @@ const Register = () => {
                     />
                     <div className="form-text">
                       Use 8 or more characters with a mix of letters, numbers &
-                      symbols
+                      symbols for more security
                     </div>
                   </div>
-                  <div className="mb-3">
-                    <label htmlFor="role" className="form-label">
-                      Select Gender
-                    </label>
-                    <select
-                      className="form-control py-2"
-                      id="role"
-                      value={gender}
-                      onChange={(e) => setGender(e.target.value)}
-                      required
-                      disabled={isSubmitting}
-                    >
-                      <option value="male">Male</option>
-                      <option value="female">Female</option>
-                    </select>
+                  <div className="flex gap-4">
+                    <div className="mb-3 w-50">
+                      <label htmlFor="role" className="form-label">
+                        Select Gender
+                      </label>
+                      <select
+                        className="form-control py-2"
+                        id="role"
+                        value={gender}
+                        onChange={(e) => setGender(e.target.value)}
+                        required
+                        disabled={isSubmitting}
+                      >
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                      </select>
+                    </div>
+                    <div className="mb-3 w-50">
+                      <label htmlFor="role" className="form-label">
+                        Select Role
+                      </label>
+                      <select
+                        className="form-control py-2"
+                        id="role"
+                        value={role}
+                        onChange={(e) => setRole(e.target.value)}
+                        required
+                        disabled={isSubmitting}
+                      >
+                        <option value="user">User</option>
+                        <option value="admin">Admin</option>
+                      </select>
+                    </div>
                   </div>
-                  <div className="mb-3">
-                    <label htmlFor="role" className="form-label">
-                      Select Role
-                    </label>
-                    <select
-                      className="form-control py-2"
-                      id="role"
-                      value={role}
-                      onChange={(e) => setRole(e.target.value)}
-                      required
-                      disabled={isSubmitting}
-                    >
-                      <option value="user">User</option>
-                      <option value="admin">Admin</option>
-                    </select>
-                  </div>
+                  {role === "admin" && (
+                    <div className="mb-3">
+                      <label htmlFor="role" className="form-label">
+                        Enter Admin Password
+                      </label>
+                      <input
+                        type="password"
+                        onChange={(e) => setAdminpassword(e.target.value)}
+                        value={adminpassword}
+                        className="form-control py-2"
+                        required
+                        disabled={isSubmitting}
+                      />
+                    </div>
+                  )}
                 </>
               ) : (
                 <>
@@ -239,7 +264,7 @@ const Register = () => {
                 </>
               )}
 
-              <div className="d-grid gap-2 mb-3">
+              <div className="d-grid gap-2 ">
                 <button
                   type="submit"
                   className="btn btn-dark py-2 fw-semibold"

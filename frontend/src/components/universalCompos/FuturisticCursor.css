@@ -22,3 +22,11 @@
 .cursor-trail {
   display: none;
 }
+
+
+
+@media (max-width: 768px) {
+  .futuristic-cursor {
+    display: none;
+  }
+}

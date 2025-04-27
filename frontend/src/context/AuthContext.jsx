@@ -9,34 +9,32 @@ export const AuthProvider = ({ children }) => {
   const [error, setError] = useState(null);
 
   // Load user from local storage
-  useEffect( () => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
+  useEffect(async () => {
+    const token = JSON.parse(localStorage.getItem("user")).token;
+    if (token) {
       try {
-        const parsedUser = JSON.parse(storedUser);
-        const decodedToken = jwtDecode(parsedUser.token);
-        
-        // Optionally: Check if the token is expired
-        const isTokenExpired = decodedToken.exp * 1000 < Date.now();
-        if (!isTokenExpired) {
-          setUser(parsedUser);
-        } else {
-          localStorage.removeItem("user");
-          setUser(null);
-        }
+        const res = await axios.get(`${__API_URL__}/users/profile`, {
+          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        setUser(res.data);
+
       } catch (err) {
-        console.error("Error decoding token", err);
-        localStorage.removeItem("user");
-      }
+        console.error("Error fetching profile:", err);
+        setError("Failed to fetch profile. Please try again.");
+      } 
     }
   }, []);
 
   const login = async (email, password, navigate) => {
     try {
-      const { data } = await axios.post(
-        `${__API_URL__}/auth/login`,
-        { email, password }
-      );
+      const { data } = await axios.post(`${__API_URL__}/auth/login`, {
+        email,
+        password,
+      });
 
       if (!data || !data._id) {
         throw new Error("Server Sent and Unexpected Response");
@@ -57,7 +55,7 @@ export const AuthProvider = ({ children }) => {
         throw new Error("No valid role assigned to you.");
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
       const errorMessage = error.response?.data?.error || error.message;
       throw new Error(errorMessage);
     }
@@ -74,7 +72,7 @@ export const AuthProvider = ({ children }) => {
     isOtpVerification = false,
     otp = null
   ) => {
-    console.log("gender = " + gender)
+    console.log("gender = " + gender);
     try {
       const endpoint = isOtpVerification
         ? `${__API_URL__}/auth/verify-otp`
@@ -82,7 +80,7 @@ export const AuthProvider = ({ children }) => {
 
       const payload = isOtpVerification
         ? { email, otp }
-        : { name, email, password, gender , role  };
+        : { name, email, password, gender, role };
 
       const { data } = await axios.post(endpoint, payload);
 

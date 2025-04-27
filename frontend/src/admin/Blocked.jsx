@@ -99,7 +99,7 @@ export default function BlockedUsers() {
   }
 
   return (
-    <div className="bg-white min-w-screen rounded-lg shadow-sm border border-gray-200 overflow-hidden" 
+    <div className="bg-white min-w-100 rounded-lg shadow-sm border border-gray-200 overflow-hidden" 
     style={{
       height:'100vh',
     }}>

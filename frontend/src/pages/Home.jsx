@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect , useContext } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import "./Home.css";
@@ -7,11 +7,48 @@ import CarbonFootprintCalculator from "../components/homePageCompo/CarbonCalcula
 import ProductsComponent from "../components/homePageCompo/EcoProducts";
 import HeroComponent from "../components/homePageCompo/HeroSection";
 import StatsComponent from "../components/homePageCompo/Stats";
+import AuthContext from "../context/AuthContext";
+
+
+
 const Home = () => {
   // const [news, setNews] = useState([]);
+  const { user, setUser  } = useContext(AuthContext);
   const [activeTab, setActiveTab] = useState("initiatives");
   const [email, setEmail] = useState("");
+  const [error,setError] = useState(null)
+  const [loading,setLoading] = useState(false)
   const [subscriptionSuccess, setSubscriptionSuccess] = useState(false);
+
+
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      setLoading(true);
+      const token = JSON.parse(localStorage.getItem("user"))?.token;
+      if (!token) {
+        setError("No token found. Please log in.");
+        setLoading(false);
+        return;
+      }
+      try {
+        const res = await axios.get(`${__API_URL__}/users/profile`, {
+          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        setUser(res.data);
+      } catch (err) {
+        console.error("Error fetching profile:", err);
+        setError("Failed to fetch profile. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserProfile();
+  }, []);
 
   const handleSubscribe = (e) => {
     e.preventDefault();

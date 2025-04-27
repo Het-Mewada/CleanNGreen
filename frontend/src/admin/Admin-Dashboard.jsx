@@ -171,7 +171,7 @@ const AdminDashboard = () => {
         );
         setBlockStatus({
         status: 'success', 
-        message: `User ${response.data.isBlocked ? 'Blocked' : 'UnBlocked'} successfully!`
+        message: response.data.message 
         });
       }
     } catch (error) {
@@ -221,7 +221,7 @@ const AdminDashboard = () => {
   }
 
   return (
-    <div className="min-h-screen pt-27 px-9">
+    <div className="min-h-screen py-5 px-9">
       <div className="bg-white shadow-xl rounded-2xl p-6">
         <h2 className="text-2xl font-bold text-[#278783] font-neuropol border-b-2 border-[#278783] pb-2 flex justify-between">
           Admin Dashboard

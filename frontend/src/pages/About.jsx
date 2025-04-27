@@ -214,28 +214,28 @@ const AboutUs = () => {
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
               {
-                name: "Het Mewada",
+                name: "Ruchi Gondaliya",
                 role: "Founder & CEO",
                 bio: "Environmental scientist with 15 years in sustainability research",
-                img: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=1888&auto=format&fit=crop"
-              },
-              {
-                name: "Yogesh Patel",
-                role: "CTO",
-                bio: "Green tech innovator building our digital platforms",
-                img: "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=1887&auto=format&fit=crop"
-              },
-              {
-                name: "Ruchi Gondaliya",
-                role: "Head of Education",
-                bio: "Former teacher creating our sustainability curriculum",
-                img: "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=1961&auto=format&fit=crop"
+                img: "https://res-console.cloudinary.com/dxomggimq/thumbnails/v1/image/upload/v1745744346/U2NyZWVuc2hvdF8yMDI1MDQyNy0xNDIzNDVfSW5zdGFncmFtXzFfanZ5a3Z0/template_primary/Y19jcm9wLHdfMTA3MCxoXzkwMCxnX2F1dG8="
               },
               {
                 name: "Nandini Patel",
+                role: "CTO",
+                bio: "Green tech innovator building our digital platforms",
+                img: "https://res.cloudinary.com/dxomggimq/image/upload/v1745743822/Screenshot_20231009_150442_Instagram_1_jrel2v.jpg"
+              },
+              {
+                name: "Yogesh Patel",
+                role: "Head of Education",
+                bio: "Former teacher creating our sustainability curriculum",
+                img: "https://res.cloudinary.com/dxomggimq/image/upload/v1745743853/Snapchat-1538122839_1_qkm1ad.jpg"
+              },
+              {
+                name: "Het Mewada",
                 role: "Community Manager",
                 bio: "Connects our members to local environmental initiatives",
-                img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1887&auto=format&fit=crop"
+                img: "https://res.cloudinary.com/dxomggimq/image/upload/v1745743728/IMG-20240214-WA0041_1_vdtuk9.jpg"
               }
             ].map((member, index) => (
               <div key={index} className="bg-green-800 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">

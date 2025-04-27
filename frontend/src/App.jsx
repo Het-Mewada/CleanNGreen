@@ -22,6 +22,7 @@ import ClickSpark from "./components/universalCompos/ClickSparkComponent";
 import FuturisticCursor from "./components/universalCompos/CursorComponent";
 import Initiatives from "./pages/Initiatives";
 import AboutUs from "./pages/About";
+import AdminPanel from "./admin/AdminTrial"
 import "./index.css";
 function App() {
   return (
@@ -33,7 +34,7 @@ function App() {
 }
 function MainApp() {
   const location = useLocation();
-  const hideNavRoutes = ["/login", "/register"];
+  const hideNavRoutes = ["/login", "/register" , "/admin-trial"];
   const showComponents = !hideNavRoutes.includes(location.pathname);
 
   return (
@@ -73,7 +74,7 @@ function MainApp() {
               <Route element={<ProtectedRoute usersOnly={true} />}>
                 {/* Protected User Routes */}
               </Route>
-
+              <Route path="admin-trial" element={<AdminPanel/>} />
               <Route path="/admin-dashboard" element={<AdminDashboard />} />
               <Route path="/insert-data" element={<Data />} />
               <Route path="/blocked-users" element={<Blocked />} />
