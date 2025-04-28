@@ -9,7 +9,6 @@ import Register from "./Auth-pages/register";
 import Login from "./Auth-pages/login";
 import Home from "./pages/Home";
 import ProtectedRoute from "./protected/protectedRoute";
-import AdminDashboard from "./admin/Admin-Dashboard";
 import Nav from "./components/NavBar";
 import OAuthSuccess from "./Auth-pages/SuccessOAuth";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -34,7 +33,7 @@ function App() {
 }
 function MainApp() {
   const location = useLocation();
-  const hideNavRoutes = ["/login", "/register" , "/admin-trial"];
+  const hideNavRoutes = ["/login", "/register" , "/admin-trial" , "/admin-dashboard"];
   const showComponents = !hideNavRoutes.includes(location.pathname);
 
   return (
@@ -74,8 +73,7 @@ function MainApp() {
               <Route element={<ProtectedRoute usersOnly={true} />}>
                 {/* Protected User Routes */}
               </Route>
-              <Route path="admin-trial" element={<AdminPanel/>} />
-              <Route path="/admin-dashboard" element={<AdminDashboard />} />
+              <Route path="/admin-dashboard" element={<AdminPanel/>} />
               <Route path="/insert-data" element={<Data />} />
               <Route path="/blocked-users" element={<Blocked />} />
 

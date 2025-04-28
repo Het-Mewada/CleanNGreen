@@ -217,7 +217,7 @@ const AboutUs = () => {
                 name: "Ruchi Gondaliya",
                 role: "Founder & CEO",
                 bio: "Environmental scientist with 15 years in sustainability research",
-                img: "https://res-console.cloudinary.com/dxomggimq/thumbnails/v1/image/upload/v1745744346/U2NyZWVuc2hvdF8yMDI1MDQyNy0xNDIzNDVfSW5zdGFncmFtXzFfanZ5a3Z0/template_primary/Y19jcm9wLHdfMTA3MCxoXzkwMCxnX2F1dG8="
+                img: "https://res.cloudinary.com/dxomggimq/image/upload/v1745827591/ruchi_khvlf8.jpg"
               },
               {
                 name: "Nandini Patel",
@@ -229,7 +229,7 @@ const AboutUs = () => {
                 name: "Yogesh Patel",
                 role: "Head of Education",
                 bio: "Former teacher creating our sustainability curriculum",
-                img: "https://res.cloudinary.com/dxomggimq/image/upload/v1745743853/Snapchat-1538122839_1_qkm1ad.jpg"
+                img: "https://res.cloudinary.com/dxomggimq/image/upload/v1745827916/yogesh_xgp8kw.jpg"
               },
               {
                 name: "Het Mewada",
