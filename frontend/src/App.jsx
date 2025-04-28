@@ -74,7 +74,7 @@ function MainApp() {
               <Route element={<ProtectedRoute usersOnly={true} />}>
                 {/* Protected User Routes */}
               </Route>
-              <Route path="admin-trial" element={<AdminPanel/>} />
+              <Route path="/admin-trial" element={<AdminPanel/>} />
               <Route path="/admin-dashboard" element={<AdminDashboard />} />
               <Route path="/insert-data" element={<Data />} />
               <Route path="/blocked-users" element={<Blocked />} />
