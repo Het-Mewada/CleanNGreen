@@ -33,7 +33,7 @@ function App() {
 }
 function MainApp() {
   const location = useLocation();
-  const hideNavRoutes = ["/login", "/register" , "/admin-trial" , "/admin-dashboard"];
+  const hideNavRoutes = ["/login", "/register" , "/admin-trial","/admin-dashboard"];
   const showComponents = !hideNavRoutes.includes(location.pathname);
 
   return (
@@ -73,6 +73,7 @@ function MainApp() {
               <Route element={<ProtectedRoute usersOnly={true} />}>
                 {/* Protected User Routes */}
               </Route>
+
               <Route path="/admin-dashboard" element={<AdminPanel/>} />
               <Route path="/insert-data" element={<Data />} />
               <Route path="/blocked-users" element={<Blocked />} />
