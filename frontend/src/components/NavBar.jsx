@@ -270,14 +270,7 @@ export default function NAV() {
                     >
                       Blocked Users
                     </Link>
-                    <Link
-                      to="/profile"
-                      onClick={toggleMenu}
-                      className="no-underline text-inherit px-4 py-2 bg-[#FFEBD0] text-[#278783] rounded-full font-semibold shadow hover:bg-[#f7dbc4] transition"
-                      style={{ textDecoration: "none", color: "#278783" }}
-                    >
-                      Profile
-                    </Link>
+                    
                   </>
                 ) : (
                   <>
