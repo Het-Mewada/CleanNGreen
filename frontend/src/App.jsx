@@ -34,7 +34,7 @@ function App() {
 }
 function MainApp() {
   const location = useLocation();
-  const hideNavRoutes = ["/login", "/register" , "/admin-trial"];
+  const hideNavRoutes = ["/login", "/register" , "/admin-trial","/admin-dashboard"];
   const showComponents = !hideNavRoutes.includes(location.pathname);
 
   return (
