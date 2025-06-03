@@ -1,4 +1,5 @@
 import User from "../models/UserModel.js";
+import Feedback from "../models/FeedbackModel.js";
 import asyncHandler from "express-async-handler";
 
 const getUserData = asyncHandler(async (req, res) => {
@@ -49,6 +50,7 @@ const getUserData = asyncHandler(async (req, res) => {
     profilePic: user.profilePic || "", // Default empty if not set
     createdAt: user.createdAt,
     updatedAt: user.updatedAt,
+    cart:user.cart
   });
 });
 
@@ -93,7 +95,6 @@ export const updateProfilePic = asyncHandler(async (req, res) => {
   }
 
   if (!req.body.profilePic) {
-    // res.status(400);
     user.profilePic = null;
   }
 
@@ -103,4 +104,55 @@ export const updateProfilePic = asyncHandler(async (req, res) => {
   res.json({ message: "Profile picture updated", profilePic: user.profilePic });
 });
 
-export { getUserData , getUserProfile , updateUser  };
+
+const sendFeedback = asyncHandler(async (req, res) => {
+  console.log(req.body)
+  const { rating, email, name, comment, userId } = req.body;
+
+  if (!rating || !email || !comment || !userId) {
+    res.status(400);
+    throw new Error('Please provide all required fields: rating, email, comment, userId');
+  }
+
+  if (rating < 1 || rating > 5) {
+    res.status(400);
+    throw new Error('Rating must be between 1 and 5');
+  }
+
+
+  try {
+    // Upsert operation (update if exists, insert if not)
+    const feedback = await Feedback.findOneAndUpdate(
+      { email }, 
+      { 
+        name,
+        rating,
+        email,
+        comment,
+        userId,
+        isReviewed: false ,
+        updatedAt: new Date() // Explicitly set update time
+      },
+      {
+        new: true, // Return the updated document
+        upsert: true, // Create if doesn't exist
+        runValidators: true // Run schema validations on update
+      }
+    );
+
+    //  Success response
+    res.status(200).json({
+      success: true,
+      message: feedback.isNew ? 'Feedback submitted successfully' : 'Feedback updated successfully',
+      data: feedback
+    });
+
+  } catch (error) {
+    res.status(500);
+    throw new Error(
+      error.message || 'Failed to process feedback. Please try again later.'
+    );
+  }
+});
+
+export { getUserData , getUserProfile , updateUser , sendFeedback };

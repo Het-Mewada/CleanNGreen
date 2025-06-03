@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-function Data() {
+function InsertData() {
   const [activeTab, setActiveTab] = useState("stats");
   const [successMessage, setSuccessMessage] = useState("");
 
@@ -14,9 +14,9 @@ function Data() {
   const handleSubmit = async (e, endpoint, data) => {
     e.preventDefault();
     try {
-      await axios.put(`${__API_URL__}/admin/${endpoint}`, data , {
+      await axios.put(`${__API_URL__}/admin/${endpoint}`, data, {
         headers: {
-          Authorization : `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
       });
       showSuccess();
@@ -27,73 +27,73 @@ function Data() {
     }
   };
 
-
   const navigate = useNavigate();
   const [product, setProduct] = useState({
-    name: '',
-    description: '',
-    price: '',
-    category: 'home',
-    imageUrl: '',
+    name: "",
+    description: "",
+    price: "",
+    category: "home",
+    imageUrl: "",
     materials: [],
     shippingEcoFriendly: false,
     stock: 0,
-    brand: ''
+    brand: "",
   });
 
-  const [newMaterial, setNewMaterial] = useState('');
-  const [newCertification, setNewCertification] = useState('');
+  const [newMaterial, setNewMaterial] = useState("");
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setProduct(prev => ({
+    setProduct((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: type === "checkbox" ? checked : value,
     }));
   };
 
   const addMaterial = () => {
     if (newMaterial && !product.materials.includes(newMaterial)) {
-      setProduct(prev => ({
+      setProduct((prev) => ({
         ...prev,
-        materials: [...prev.materials, newMaterial]
+        materials: [...prev.materials, newMaterial],
       }));
-      setNewMaterial('');
+      setNewMaterial("");
     }
   };
 
-
-
   const removeTag = (type, value) => {
-    setProduct(prev => ({
+    setProduct((prev) => ({
       ...prev,
-      [type]: prev[type].filter(item => item !== value)
+      [type]: prev[type].filter((item) => item !== value),
     }));
   };
 
   const handleSubmit2 = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`${__API_URL__}/admin/products/add`, {
-        ...product,
-        price: parseFloat(product.price),
-        carbonFootprint: parseFloat(product.carbonFootprint) || 0,
-        stock: parseInt(product.stock)
-      },{
-        headers: {
-          Authorization : `Bearer ${token}`,
+      await axios.post(
+        `${__API_URL__}/admin/products/add`,
+        {
+          ...product,
+          price: parseFloat(product.price),
+          carbonFootprint: parseFloat(product.carbonFootprint) || 0,
+          stock: parseInt(product.stock),
         },
-      });
-      alert('Product added successfully!');
-      navigate('/products');
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      alert("Product added successfully!");
+      navigate("/products");
     } catch (error) {
-      console.error('Error adding product:', error);
-      alert('Failed to add product');
+      console.error("Error adding product:", error);
+      alert("Failed to add product");
     }
   };
 
   return (
-    <div className="bg-gray-100 py-27 min-h-screen">
+    <div className="bg-gray-100  min-h-screen">
       <div className="container mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold text-green-700 mb-8">
           Eco Admin Dashboard
@@ -101,7 +101,7 @@ function Data() {
 
         {/* Navigation Tabs */}
         <div className="flex border-b border-gray-200 mb-6">
-          {["stats", "news", "products", "events", "subscribers"].map((tab) => (
+          {["stats", "products"].map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
@@ -127,7 +127,7 @@ function Data() {
         {activeTab === "stats" && (
           <div className="bg-white p-6 rounded-lg shadow-md">
             <h2 className="text-xl font-semibold mb-4 text-green-700">
-              Add Statistics
+              Update Statistics
             </h2>
             <form
               onSubmit={(e) =>
@@ -162,7 +162,7 @@ function Data() {
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
               />{" "}
               <label className="block text-sm font-medium text-gray-700">
-              cleanEnergy
+                cleanEnergy
               </label>
               <input
                 type="number"
@@ -171,7 +171,7 @@ function Data() {
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
               />{" "}
               <label className="block text-sm font-medium text-gray-700">
-              users
+                users
               </label>
               <input
                 type="number"
@@ -192,165 +192,177 @@ function Data() {
 
         {/* Product Form */}
         {activeTab === "products" && (
-          <div className="add-product-container">
-          <h1>Add New Sustainable Product</h1>
-          <form onSubmit={handleSubmit2}>
-            <div className="form-group">
-              <label>Product Name*</label>
-              <input
-                type="text"
-                name="name"
-                value={product.name}
-                onChange={handleChange}
-                required
-              />
-            </div>
-    
-            <div className="form-group">
-              <label>Description*</label>
-              <textarea
-                name="description"
-                value={product.description}
-                onChange={handleChange}
-                required
-                rows="4"
-              />
-            </div>
-    
-            <div className="form-row">
-              <div className="form-group">
-                <label>Price ($)*</label>
-                <input
-                  type="number"
-                  name="price"
-                  value={product.price}
-                  onChange={handleChange}
-                  min="0"
-                  step="0.01"
-                  required
-                />
-              </div>
-            </div>
-    
-            <div className="form-row">
-              <div className="form-group">
-                <label>Category*</label>
-                <select
-                  name="category"
-                  value={product.category}
-                  onChange={handleChange}
-                  required
-                >
-                  <option value="home">Home Goods</option>
-                  <option value="fashion">Fashion</option>
-                  <option value="beauty">Beauty</option>
-                  <option value="food">Food</option>
-                  <option value="electronics">Electronics</option>
-                </select>
-              </div>
-    
-              <div className="form-group">
-                <label>Stock Quantity*</label>
-                <input
-                  type="number"
-                  name="stock"
-                  value={product.stock}
-                  onChange={handleChange}
-                  min="0"
-                  required
-                />
-              </div>
-            </div>
-    
-            <div className="form-group">
-              <label>Image URL*</label>
-              <input
-                type="url"
-                name="imageUrl"
-                value={product.imageUrl}
-                onChange={handleChange}
-                required
-              />
-            </div>
-    
-            <div className="form-group">
-              <label>Brand</label>
-              <input
-                type="text"
-                name="brand"
-                value={product.brand}
-                onChange={handleChange}
-              />
-            </div>
-    
-            <div className="form-group">
-              <label>Materials</label>
-              <div className="tag-input">
+          <div className=" mx-auto p-6 bg-white rounded-lg shadow-md">
+            <h1 className="text-2xl font-bold text-green-700 mb-6">
+              Add New Sustainable Product
+            </h1>
+            <form onSubmit={handleSubmit2} className="space-y-4">
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-gray-700">
+                  Product Name*
+                </label>
                 <input
                   type="text"
-                  value={newMaterial}
-                  onChange={(e) => setNewMaterial(e.target.value)}
-                  placeholder="Add material (e.g. organic cotton)"
+                  name="name"
+                  value={product.name}
+                  onChange={handleChange}
+                  required
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                 />
-                <button type="button" onClick={addMaterial}>+</button>
               </div>
-              <div className="tags">
-                {product.materials.map(material => (
-                  <span key={material} className="tag">
-                    {material}
-                    <button type="button" onClick={() => removeTag('materials', material)}>×</button>
-                  </span>
-                ))}
+
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-gray-700">
+                  Description*
+                </label>
+                <textarea
+                  name="description"
+                  value={product.description}
+                  onChange={handleChange}
+                  required
+                  rows="4"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                />
               </div>
-            </div>
-    
-            <div className="form-group checkbox-group">
-              <label>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-gray-700">
+                    Price ($)*
+                  </label>
+                  <input
+                    type="number"
+                    name="price"
+                    value={product.price}
+                    onChange={handleChange}
+                    min="0"
+                    step="0.01"
+                    required
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-gray-700">
+                    Category*
+                  </label>
+                  <select
+                    name="category"
+                    value={product.category}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                  >
+                    <option value="home">Home Goods</option>
+                    <option value="fashion">Fashion</option>
+                    <option value="beauty">Beauty</option>
+                    <option value="food">Food</option>
+                    <option value="electronics">Electronics</option>
+                  </select>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-gray-700">
+                    Stock Quantity*
+                  </label>
+                  <input
+                    type="number"
+                    name="stock"
+                    value={product.stock}
+                    onChange={handleChange}
+                    min="0"
+                    required
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-gray-700">
+                  Image URL*
+                </label>
+                <input
+                  type="url"
+                  name="imageUrl"
+                  value={product.imageUrl}
+                  onChange={handleChange}
+                  required
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-gray-700">
+                  Brand
+                </label>
+                <input
+                  type="text"
+                  name="brand"
+                  value={product.brand}
+                  onChange={handleChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-gray-700">
+                  Materials
+                </label>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={newMaterial}
+                    onChange={(e) => setNewMaterial(e.target.value)}
+                    placeholder="Add material (e.g. organic cotton)"
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                  />
+                  <button
+                    type="button"
+                    onClick={addMaterial}
+                    className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
+                  >
+                    +
+                  </button>
+                </div>
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {product.materials.map((material) => (
+                    <span
+                      key={material}
+                      className="inline-flex items-center px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm"
+                    >
+                      {material}
+                      <button
+                        type="button"
+                        onClick={() => removeTag("materials", material)}
+                        className="ml-2 text-green-600 hover:text-green-800 focus:outline-none"
+                      >
+                        ×
+                      </button>
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              <div className="flex items-center">
                 <input
                   type="checkbox"
                   name="shippingEcoFriendly"
                   checked={product.shippingEcoFriendly}
                   onChange={handleChange}
+                  className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
                 />
-                Eco-friendly shipping
-              </label>
-            </div>
-    
-            <button type="submit" className="submit-btn">Add Sustainable Product</button>
-          </form>
-        </div>
-        )}
-
-        {/* Subscriber Form */}
-        {activeTab === "subscribers" && (
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <h2 className="text-xl font-semibold mb-4 text-green-700">
-              Add Subscriber
-            </h2>
-            <form
-              onSubmit={(e) =>
-                handleSubmit(e, "subscribers", {
-                  email: e.target.email.value,
-                })
-              }
-              className="space-y-4"
-            >
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Email
+                <label className="ml-2 block text-sm text-gray-700">
+                  Eco-friendly shipping
                 </label>
-                <input
-                  type="email"
-                  name="email"
-                  required
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
-                />
               </div>
+
               <button
                 type="submit"
-                className="bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+                className="w-full py-2 px-4 bg-green-600 text-white font-medium rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
               >
-                Add Subscriber
+                Add Sustainable Product
               </button>
             </form>
           </div>
@@ -360,4 +372,4 @@ function Data() {
   );
 }
 
-export default Data;
+export default InsertData;

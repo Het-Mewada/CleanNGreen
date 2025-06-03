@@ -81,7 +81,7 @@ const EventForm = () => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="max-w-2xl mx-auto p-6 my-27 bg-white rounded-2xl shadow-md space-y-5"
+      className="max-w-2xl mx-auto p-6 my-27 bg-slate-50 rounded-2xl shadow-md space-y-5"
     >
       <h2 className="text-2xl font-semibold text-center text-gray-800">
         Create New Event

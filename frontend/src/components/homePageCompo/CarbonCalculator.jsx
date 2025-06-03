@@ -7,7 +7,6 @@
       vehicleKm: '',
       vehicleType: 'petrol',
       publicTransportKm: '',
-      dietType: 'vegetarian', // Default to vegetarian as it's more common in India
       flightHours: '',
       wasteProduction: 'medium'
     });
@@ -16,7 +15,6 @@
       totalCO2: null,
       electricityCO2: 0,
       transportCO2: 0,
-      dietCO2: 0,
       flightsCO2: 0,
       wasteCO2: 0,
       comparison: '',
@@ -51,14 +49,6 @@
       // Public transport emissions (kg CO2/km)
       const PUBLIC_TRANSPORT_EMISSIONS = 0.06; // Average for metro/bus
       
-      // Diet emissions (kg CO2/year)
-      const DIET_EMISSIONS = {
-        'vegan': 800,
-        'vegetarian': 1100,
-        'eggetarian': 1300,
-        'meat-occasional': 1800,  // Meat 1-2 times/week
-        'meat-regular': 2500      // Meat 3+ times/week
-      };
       
       // Flight emissions (kg CO2/hour)
       const FLIGHT_EMISSIONS = 85; // Domestic flights in India
@@ -80,12 +70,11 @@
       const electricityCO2 = electricity * ELECTRICITY_EMISSIONS[inputs.electricitySource] * 12; // Monthly to yearly
       const vehicleCO2 = vehicleKm * VEHICLE_EMISSIONS[inputs.vehicleType] * 52; // Weekly to yearly
       const publicTransportCO2 = publicTransportKm * PUBLIC_TRANSPORT_EMISSIONS * 52;
-      const dietCO2 = DIET_EMISSIONS[inputs.dietType] || 1100;
       const flightsCO2 = flightHours * FLIGHT_EMISSIONS;
       const wasteCO2 = WASTE_EMISSIONS[inputs.wasteProduction];
       
       // Total in metric tons
-      const totalCO2 = Math.round((electricityCO2 + vehicleCO2 + publicTransportCO2 + dietCO2 + flightsCO2 + wasteCO2) / 1000);
+      const totalCO2 = Math.round((electricityCO2 + vehicleCO2 + publicTransportCO2  + flightsCO2 + wasteCO2) / 1000);
       
       // Comparison text for Indian context
       let comparison;
@@ -126,13 +115,7 @@
         });
       }
       
-      if (inputs.dietType.includes('meat') && dietCO2 > 1500) {
-        suggestions.push({
-          text: "Reducing meat consumption and choosing local vegetarian options can lower your diet footprint.",
-          impact: `Potential savings: ~${Math.round((dietCO2 - DIET_EMISSIONS['vegetarian'])/1000)} ton/year`,
-          icon: "🍛"
-        });
-      }
+
       
       if (flightsCO2 > 500) {
         suggestions.push({
@@ -162,7 +145,6 @@
         totalCO2,
         electricityCO2,
         transportCO2: vehicleCO2 + publicTransportCO2,
-        dietCO2,
         flightsCO2,
         wasteCO2,
         comparison,
@@ -188,16 +170,16 @@
       <section className="max-w-5xl mx-auto my-10 p-6 bg-white rounded-xl shadow-lg">
         <div className="flex justify-center mb-8 border-b">
           <button
-            className={`px-6 py-2 font-medium ${activeTab === 'calculator' ? 'text-green-600 border-b-2 border-green-600' : 'text-gray-500'}`}
-            onClick={() => setActiveTab('calculator')}
-          >
-            Calculator
-          </button>
-          <button
             className={`px-6 py-2  font-medium ${activeTab === 'info' ? 'text-green-600 border-b-2 border-green-600' : 'text-gray-500'}`}
             onClick={() => setActiveTab('info')}
           >
             Understanding Carbon Footprint
+          </button>
+          <button
+            className={`px-6 py-2 font-medium ${activeTab === 'calculator' ? 'text-green-600 border-b-2 border-green-600' : 'text-gray-500'}`}
+            onClick={() => setActiveTab('calculator')}
+          >
+            Calculator
           </button>
         </div>
 
@@ -310,28 +292,7 @@
                   </div>
                 </div>
 
-                {/* Diet Section */}
-                <div className="bg-gray-50 p-4 rounded-lg">
-                  <h3 className="font-medium text-gray-800 mb-3 flex items-center">
-                    <span className="bg-green-100 p-2 rounded-full mr-2">🍛</span>
-                    Diet
-                  </h3>
-                  <div className="space-y-1">
-                    <label className="block text-sm font-medium text-gray-700">Diet Type</label>
-                    <select 
-                      name="dietType"
-                      value={inputs.dietType}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-green-500"
-                    >
-                      <option value="vegan">Vegan (no animal products)</option>
-                      <option value="vegetarian">Vegetarian (dairy included)</option>
-                      <option value="eggetarian">Eggetarian (eggs + dairy)</option>
-                      <option value="meat-occasional">Meat-Occasional (1-2 times/week)</option>
-                      <option value="meat-regular">Meat-Regular (3+ times/week)</option>
-                    </select>
-                  </div>
-                </div>
+
 
                 {/* Flights Section */}
                 <div className="bg-gray-50 p-4 rounded-lg">
@@ -458,13 +419,7 @@
                         </div>
                         <span className="text-sm font-medium">{(results.transportCO2/1000).toFixed(2)} tons</span>
                       </div>
-                      <div className="flex justify-between items-center">
-                        <div className="flex items-center">
-                          <span className="bg-green-100 p-2 rounded-full mr-2">🍛</span>
-                          <span className="text-sm text-gray-700">Diet</span>
-                        </div>
-                        <span className="text-sm font-medium">{(results.dietCO2/1000).toFixed(2)} tons</span>
-                      </div>
+
                       <div className="flex justify-between items-center">
                         <div className="flex items-center">
                           <span className="bg-green-100 p-2 rounded-full mr-2">✈️</span>
@@ -551,7 +506,7 @@
 
               <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
                 <h3 className="font-medium text-gray-800 mb-2">Key Areas to Reduce</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 pt-7 md:grid-cols-2 gap-4">
                   <div className="flex items-start">
                     <span className="bg-green-100 p-2 rounded-full mr-2">⚡</span>
                     <div>
@@ -564,13 +519,6 @@
                     <div>
                       <h4 className="font-medium text-gray-700">Transport</h4>
                       <p className="text-sm text-gray-600">Use public transport, carpool, or switch to electric vehicles. Indian railways emit 75% less than flights.</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start">
-                    <span className="bg-green-100 p-2 rounded-full mr-2">🍛</span>
-                    <div>
-                      <h4 className="font-medium text-gray-700">Food</h4>
-                      <p className="text-sm text-gray-600">Reduce food waste, eat seasonal local produce, and moderate meat consumption.</p>
                     </div>
                   </div>
                   <div className="flex items-start">
@@ -591,7 +539,6 @@
                 <ul className="list-disc pl-5 text-gray-600 space-y-1 text-sm">
                   <li>Electricity: Central Electricity Authority (CEA) 2022 data</li>
                   <li>Transport: TERI and ARAI vehicle emission studies</li>
-                  <li>Diet: IPCC agricultural emissions adjusted for Indian diets</li>
                   <li>Waste: CPCB estimates for Indian waste management</li>
                 </ul>
               </div>

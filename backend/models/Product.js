@@ -1,6 +1,9 @@
 // models/Product.js
 import mongoose from "mongoose";
 
+
+
+
 const productSchema = new mongoose.Schema(
   {
     name: {
@@ -21,7 +24,7 @@ const productSchema = new mongoose.Schema(
     category: {
       type: String,
       default: "home",
-      enum: ["home", "clothing", "electronics", "beauty", "food", "other"], // you can adjust categories
+      enum: ["home", "fashion" , "clothing", "electronics", "beauty", "food", "other"], // you can adjust categories
     },
     imageUrl: {
       type: String,

@@ -21,8 +21,14 @@ import ClickSpark from "./components/universalCompos/ClickSparkComponent";
 import FuturisticCursor from "./components/universalCompos/CursorComponent";
 import Initiatives from "./pages/Initiatives";
 import AboutUs from "./pages/About";
-import AdminPanel from "./admin/AdminTrial"
+import AdminPanel from "./admin/AdminTrial";
+import FeedbackForm from "./pages/Feedback";
+import FeedbackDashboard from "./admin/User-feedbacks";
+import ProductsComponent from "./components/homePageCompo/EcoProducts";
+import { Toaster } from "react-hot-toast";
 import "./index.css";
+import NeedHelpForm from "./components/homePageCompo/NeedHelpCompo";
+import HelpRequestsList from "./admin/NeedHelp";
 function App() {
   return (
     <Router>
@@ -33,7 +39,12 @@ function App() {
 }
 function MainApp() {
   const location = useLocation();
-  const hideNavRoutes = ["/login", "/register" , "/admin-trial","/admin-dashboard"];
+  const hideNavRoutes = [
+    "/login",
+    "/register",
+    "/admin-trial",
+    "/admin-dashboard",
+  ];
   const showComponents = !hideNavRoutes.includes(location.pathname);
 
   return (
@@ -57,8 +68,8 @@ function MainApp() {
             </div>
           )}
           {/* Spacer div to push content below fixed navbar */}
-          {/* {showComponents && <div className="h-[60px]" />} adjust height to match navbar */}
           <div className="flex-grow">
+            <Toaster position="top-right" reverseOrder={false} />
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/home" element={<Home />} />
@@ -67,17 +78,17 @@ function MainApp() {
               <Route path="/event-edit" element={<EventForm />} />
               <Route path="/profile" element={<ProfilePage />} />
               <Route path="/social-auth-success" element={<OAuthSuccess />} />
-              <Route path="/about" element={<AboutUs/>} />
+              <Route path="/about" element={<AboutUs />} />
               <Route path="/initiatives/*" element={<Initiatives />} />
-
-              <Route element={<ProtectedRoute usersOnly={true} />}>
-                {/* Protected User Routes */}
-              </Route>
-
-              <Route path="/admin-dashboard" element={<AdminPanel/>} />
+              <Route path="/marketplace" element={<div className="mt-9"><ProductsComponent /></div>} />
+              <Route path="/feedback-admin" element={<FeedbackDashboard />} />
+              <Route path="/feedback-form" element={<FeedbackForm />} />
+              <Route element={<ProtectedRoute usersOnly={true} />} /> 
+              <Route path="/admin-dashboard" element={<AdminPanel />} />
               <Route path="/insert-data" element={<Data />} />
               <Route path="/blocked-users" element={<Blocked />} />
-
+              <Route path="/help-form" element={<NeedHelpForm/>} />
+              <Route path="/help-list" element={<HelpRequestsList/>} />
               <Route
                 path="*"
                 element={

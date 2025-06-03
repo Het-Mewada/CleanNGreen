@@ -10,7 +10,7 @@
   transform: translate(30%, 50%);
   pointer-events: none;
   z-index: 9999999;
-  background: url('pastel-cursor.svg') no-repeat center center;
+  background: url('https://img.icons8.com/?size=48&id=gKFt9iFv39hT&format=png') no-repeat center center;
   background-size: contain;
   transition: transform 0.1s ease;
 }

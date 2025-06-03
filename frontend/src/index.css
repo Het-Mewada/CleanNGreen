@@ -9,8 +9,8 @@
   font-weight: normal;
   font-style: normal;
 }
-*{
-  cursor: none;
+* {
+  cursor: url('./components/universalCompos/pastel-cursor.svg') ;
 }
 /* Reset scrolling behavior */
 html {

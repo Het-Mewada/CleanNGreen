@@ -4,7 +4,9 @@ import { FiUserX } from "react-icons/fi";
 // components
 import AdminDashboard from "./Admin-Dashboard";
 import BlockedUsers from "./Blocked";
-
+import InsertData from "../pages/InsertData";
+import AdminFeedbackDashboard from "./User-feedbacks";
+import NewsSubs from "./LetterSubs";
 const AdminPanel = () => {
   const [activeTab, setActiveTab] = useState("users");
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -17,37 +19,30 @@ const AdminPanel = () => {
     switch (activeTab) {
       case "users":
         return <AdminDashboard />;
+
       case "blocked":
         return <BlockedUsers />;
-      case "subscribers":
-        return (
-          <div className="p-6">
-            <h2 className="text-2xl font-bold mb-4">Newsletter Subscribers</h2>
-            <p className="text-gray-600">
-              View and manage users who have subscribed to your newsletter. Stay
-              connected and grow your audience.
-            </p>
-          </div>
-        );
+
+      case "insert":
+        return <InsertData />;
+
+      case "subscribers": 
+        return <NewsSubs/>
+       
       case "feedbacks":
-        return (
-          <div className="p-6">
-            <h2 className="text-2xl font-bold mb-4">User Feedbacks</h2>
-            <p className="text-gray-600">
-              Review feedback submitted by users to improve your application's
-              features, usability, and overall experience.
-            </p>
-          </div>
-        );
+        return <AdminFeedbackDashboard/>;
+        
       case "contact":
         return (
-<div className="p-6">
-  <h2 className="text-2xl font-bold mb-4">Contact Form Submissions</h2>
-  <p className="text-gray-600">
-    View and manage form entries submitted by users who reached out through the Contact Us page.
-  </p>
-</div>
-
+          <div className="p-6">
+            <h2 className="text-2xl font-bold mb-4">
+              Contact Form Submissions
+            </h2>
+            <p className="text-gray-600">
+              View and manage form entries submitted by users who reached out
+              through the Contact Us page.
+            </p>
+          </div>
         );
       default:
         return (
@@ -120,6 +115,34 @@ const AdminPanel = () => {
                 <FiUserX className=" text-xl mr-1" />
 
                 {sidebarOpen && <span className="ml-3">Blocked Users</span>}
+              </button>
+            </li>
+            <li>
+              <button
+                onClick={() => {
+                  setActiveTab("insert");
+                  toggleSidebar();
+                }}
+                className={`w-full flex items-center px-5 py-4 ${
+                  activeTab === "orders" ? "bg-[#1f6d69]" : "hover:bg-[#1f6d69]"
+                } transition`}
+              >
+                <svg
+                  className="w-6 h-6"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M4 4h16v16H4z" fill="none" stroke="currentColor" />
+                  <path d="M12 8v8" stroke="currentColor" />
+                  <path d="M8 12h8" stroke="currentColor" />
+                </svg>
+
+                {sidebarOpen && <span className="ml-3">Insert Data</span>}
               </button>
             </li>
             <li>

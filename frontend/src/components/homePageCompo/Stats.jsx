@@ -78,7 +78,7 @@ export default function StatsComponent() {
   return (
     <section className="relative py-16 overflow-hidden" id="stats">
       {/* Background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-green-50 to-blue-50 transform skew-y-3 -rotate-4 origin-top-left"></div>
+      <div className="absolute top-0 h-150 inset-1 bg-gradient-to-br from-green-50 to-blue-50 transform skew-y-1  -rotate-4 origin-top-left"></div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <h2 className="text-4xl font-bold text-center mb-16">

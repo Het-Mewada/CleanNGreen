@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { Link, useNavigate, NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import AuthContext from "../context/AuthContext";
 import { Menu, X } from "lucide-react"; // Icons
 
@@ -109,36 +109,6 @@ export default function NAV() {
                     >
                       Admin Dashboard
                     </NavLink>
-                    <NavLink
-                      to="/blocked-users"
-                      className={
-                        ({ isActive }) =>
-                          isActive
-                            ? "no-underline px-4 py-2 bg-[#e8b98f] text-dark rounded-full font-semibold shadow transition" // active style
-                            : "no-underline px-4 py-2 bg-[#FFEBD0] text-[#278783] rounded-full font-semibold shadow hover:bg-[#f7dbc4] transition" // inactive style
-                      }
-                      style={{
-                        textDecoration: "none",
-                        color: "#278783",
-                      }}
-                    >
-                      Blocked Users
-                    </NavLink>
-                    <NavLink
-                      to="/insert-data"
-                      className={
-                        ({ isActive }) =>
-                          isActive
-                            ? "no-underline px-4 py-2 bg-[#e8b98f] text-dark rounded-full font-semibold shadow transition" // active style
-                            : "no-underline px-4 py-2 bg-[#FFEBD0] text-[#278783] rounded-full font-semibold shadow hover:bg-[#f7dbc4] transition" // inactive style
-                      }
-                      style={{
-                        textDecoration: "none",
-                        color: "#278783",
-                      }}
-                    >
-                      Insert Data
-                    </NavLink>
                   </>
                 ) : (
                   <>
@@ -170,6 +140,21 @@ export default function NAV() {
                       }}
                     >
                       About Us
+                    </NavLink>
+                    
+                    <NavLink
+                      to="/feedback-form"
+                      className={({ isActive }) =>
+                        isActive
+                          ? "no-underline px-4 py-2 bg-[#e8b98f] text-dark rounded-full font-semibold shadow transition"
+                          : "no-underline px-4 py-2 bg-[#FFEBD0] text-[#278783] rounded-full font-semibold shadow hover:bg-[#f7dbc4] transition"
+                      }
+                      style={{
+                        textDecoration: "none",
+                        color: "#278783",
+                      }}
+                    >
+                      Give Feedback
                     </NavLink>
 
                     {/* <NavLink

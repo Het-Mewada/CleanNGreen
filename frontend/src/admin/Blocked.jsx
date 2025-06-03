@@ -21,6 +21,7 @@ export default function BlockedUsers() {
           withCredentials: true,
         }
       );
+      console.log(response)
       setBlockedUsers(response.data.blockedUsers || []);
       setError(null);
     } catch (err) {
@@ -99,7 +100,7 @@ export default function BlockedUsers() {
   }
 
   return (
-    <div className="bg-white min-w-100 rounded-lg shadow-sm border border-gray-200 overflow-hidden" 
+    <div className="bg-slate-50 min-w-100 rounded-lg shadow-sm border border-gray-200 overflow-hidden" 
     style={{
       height:'100vh',
     }}>

@@ -7,26 +7,46 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true); // Add loading state
 
-  // Load user from local storage
-  useEffect(async () => {
-    const token = JSON.parse(localStorage.getItem("user")).token;
-    if (token) {
+  // Load user from local storage/token on initial render
+  useEffect(() => {
+    const initializeAuth = async () => {
       try {
-        const res = await axios.get(`${__API_URL__}/users/profile`, {
-          withCredentials: true,
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const userData = JSON.parse(localStorage.getItem("user"));
+        
+        if (userData?.token) {
+          // Verify token is still valid
+          const decoded = jwtDecode(userData.token);
+          
+          // Check if token is expired
+          if (decoded.exp * 1000 < Date.now()) {
+            localStorage.removeItem("user");
+            return;
+          }
 
-        setUser(res.data);
-
+          // Fetch fresh user data
+          const res = await axios.get(`${__API_URL__}/users/profile`, {
+            headers: {
+              Authorization: `Bearer ${userData.token}`,
+            },
+          });
+          
+          setUser({
+            ...res.data,
+            token: userData.token,
+            role: userData.role,
+          });
+        }
       } catch (err) {
-        console.error("Error fetching profile:", err);
-        setError("Failed to fetch profile. Please try again.");
-      } 
-    }
+        console.error("Error initializing auth:", err);
+        localStorage.removeItem("user"); // Clear invalid token
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    initializeAuth();
   }, []);
 
   const login = async (email, password, navigate) => {
@@ -37,31 +57,36 @@ export const AuthProvider = ({ children }) => {
       });
 
       if (!data || !data._id) {
-        throw new Error("Server Sent and Unexpected Response");
+        throw new Error("Server sent an unexpected response");
       }
 
+      // Store the complete user data in state
       setUser(data);
+      
+      // Store necessary data in localStorage
       const userData = {
         role: data.role,
         token: data.token,
+        // Add any other minimal necessary data
       };
       localStorage.setItem("user", JSON.stringify(userData));
 
+      // Redirect based on role
       if (data.role === "user") {
         navigate("/home");
       } else if (data.role === "admin") {
         navigate("/admin-dashboard");
       } else {
-        throw new Error("No valid role assigned to you.");
+        throw new Error("No valid role assigned");
       }
     } catch (error) {
-      console.log(error);
+      console.error("Login error:", error);
       const errorMessage = error.response?.data?.error || error.message;
       throw new Error(errorMessage);
     }
   };
 
-  // Register User
+  // Register User (unchanged)
   const register = async (
     name,
     email,
@@ -72,7 +97,6 @@ export const AuthProvider = ({ children }) => {
     isOtpVerification = false,
     otp = null
   ) => {
-    console.log("gender = " + gender);
     try {
       const endpoint = isOtpVerification
         ? `${__API_URL__}/auth/verify-otp`
@@ -85,11 +109,9 @@ export const AuthProvider = ({ children }) => {
       const { data } = await axios.post(endpoint, payload);
 
       if (isOtpVerification) {
-        // If OTP verification successful
         setUser(data);
-        navigate("/login"); // Redirect to login after successful verification
+        navigate("/login");
       } else {
-        // If OTP sent successfully
         return { success: true, email };
       }
     } catch (error) {
@@ -100,17 +122,30 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Logout User
   const logout = (navigate) => {
     setUser(null);
-    console.log("Logged-Out Successfully");
     localStorage.removeItem("user");
-    navigate("/login"); // ✅ Ensure navigate is passed when calling logout
+    navigate("/login");
+  };
+
+  // Add isAuthenticated check
+  const isAuthenticated = () => {
+    return !!user;
   };
 
   return (
-    <AuthContext.Provider value={{ user, setUser, login, register, logout }}>
-      {children}
+    <AuthContext.Provider 
+      value={{ 
+        user, 
+        setUser, 
+        login, 
+        register, 
+        logout, 
+        isAuthenticated,
+        loading 
+      }}
+    >
+      {!loading && children}
     </AuthContext.Provider>
   );
 };

@@ -39,14 +39,14 @@ export default function HeroComponent(){
               Get Involved
             </Link>
             <Link
-              to="/learn-more"
+              to="/help-form"
               className="px-6 py-3 bg-gray-100 hover:bg-gray-300 rounded-lg text-lg font-semibold transition-colors"
               style={{
                 color: "green",
                 textDecoration: "none",
               }}
             >
-              Learn More
+              Need Help ?? 
             </Link>
           </div>
         </div>

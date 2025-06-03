@@ -1,18 +1,45 @@
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 
+const CartItemSchema = new mongoose.Schema(
+  {
+    product: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Product",
+      required: true,
+    },
+    quantity: {
+      type: Number,
+      default: 1,
+      min: 1,
+    },
+    priceAtTime: {
+      type: Number,
+      required: true,
+    },
+  },
+  { _id: false }
+);
+
 const userSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     googleId: { type: String },
-    password: { type: String , required: function () {
-      return !this.googleId;
-    }  },
-    gender: { type: String, enum: ["male" , "female"] , default : "male" },
+    password: {
+      type: String,
+      required: function () {
+        return !this.googleId;
+      },
+    },
+    gender: { type: String, enum: ["male", "female"], default: "male" },
     role: { type: String, enum: ["user", "admin"], default: "user" },
+    cart: {
+      type: [CartItemSchema],
+      default: [],
+    },
     profilePic: { type: String, default: "" },
-    isBlocked : {type : Boolean , enum:[true, false] , default:false}
+    isBlocked: { type: Boolean, enum: [true, false], default: false },
   },
   { timestamps: true }
 );

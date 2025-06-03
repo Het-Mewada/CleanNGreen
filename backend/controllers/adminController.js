@@ -1,8 +1,10 @@
 import asyncHandler from "express-async-handler";
 import User from "../models/UserModel.js";
+import Feedback from "../models/FeedbackModel.js";
+import Subscriber from "../models/Subscriber.js";
 
 //delete User
-const deleteUser = asyncHandler(async (req, res) => {
+export const deleteUser = asyncHandler(async (req, res) => {
   const id = req.body.userId;
 
   if (!id) {
@@ -82,6 +84,7 @@ export const updateUser = asyncHandler(async (req, res) => {
   }
 });
 
+//Fetch blockeed user
 export const blockedUsers = asyncHandler(async (req, res) => {
   try {
     const blockedUsers = await User.find({ isBlocked: true });
@@ -91,4 +94,38 @@ export const blockedUsers = asyncHandler(async (req, res) => {
   }
 });
 
-export default deleteUser;
+//Fetch User Feedbacks
+export const getFeedbacks = asyncHandler(async(req,res) => {
+      const feedbacks = await Feedback.find({})
+      res.status(200).json(feedbacks)
+})
+
+//Edit Feedback Review Status
+export const editFeedback = asyncHandler(async(req,res)=> {
+  const {id} = req.params;
+  const {reviewed} = req.body;
+  console.log(reviewed)
+
+  try {
+    const updated = await Feedback.findByIdAndUpdate(
+      id,
+      { isReviewed : reviewed },
+      { new: true } // return the updated document
+    );
+
+    if (!updated) {
+      return res.status(404).json({ message: "Feedback not found" });
+    }
+    console.log(updated)
+    // res.status(200).json(updated);
+  } catch (error) {
+    console.error("Error updating feedback:", error);
+    res.status(500).json({ message: "Server error while updating feedback" });
+  }
+})
+
+export const getSubscribers = asyncHandler(async(req,res) => {
+  const subscribers = await Subscriber.find({})
+  res.status(200).json(subscribers)
+})
+

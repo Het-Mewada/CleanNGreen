@@ -18,6 +18,8 @@ import eventRouter from './routes/eventRouter.js'
 import subscriberRouter from './routes/subscriberRouter.js'
 
 
+import feedbackRoutes from './routes/feedbackRoutes.js'
+
 
 // Import passport config (important!)
 import "./config/passport.js";
@@ -56,7 +58,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/upload", uploadRoutes);
 app.use("/api/home", projectRoutes);
-
+app.use('/api/feedback',feedbackRoutes)
 // ✅ Static folder for uploaded files
 app.use("/uploads", express.static("uploads"));
 
@@ -65,7 +67,7 @@ app.use("/uploads", express.static("uploads"));
 app.use('/api/stats', statsRouter);
 app.use('/api/products', productRouter);
 app.use('/api/events', eventRouter);
-app.use('/api/subscribers', subscriberRouter);
+app.use('/api/subscribe', subscriberRouter);
 
 // ✅ Test route
 app.get("/api", (req, res) => {
