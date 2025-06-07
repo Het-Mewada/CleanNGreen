@@ -29,6 +29,8 @@ import { Toaster } from "react-hot-toast";
 import "./index.css";
 import NeedHelpForm from "./components/homePageCompo/NeedHelpCompo";
 import HelpRequestsList from "./admin/NeedHelp";
+import OrderSuccess from "./pages/OrdSuccess";
+import PaymentCancelled from "./pages/OrdCancled";
 function App() {
   return (
     <Router>
@@ -89,6 +91,8 @@ function MainApp() {
               <Route path="/blocked-users" element={<Blocked />} />
               <Route path="/help-form" element={<NeedHelpForm/>} />
               <Route path="/help-list" element={<HelpRequestsList/>} />
+              <Route path="/success" element={<OrderSuccess/>} />
+              <Route path="/cancel" element={<PaymentCancelled/>} />
               <Route
                 path="*"
                 element={

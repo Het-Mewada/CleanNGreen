@@ -19,7 +19,7 @@ import subscriberRouter from './routes/subscriberRouter.js'
 
 
 import feedbackRoutes from './routes/feedbackRoutes.js'
-
+import { verifyPayment } from "./controllers/cartController.js";
 
 // Import passport config (important!)
 import "./config/passport.js";
@@ -37,6 +37,9 @@ app.use(
     credentials: true,
   })
 );
+
+app.use("/api/cart/webhook", express.raw({ type: 'application/json' }) , verifyPayment  )
+
 app.use(express.json());
 app.use(cookieParser());
 
@@ -54,7 +57,7 @@ app.use(passport.session());
 
 // ✅ Routes
 app.use("/api/auth", authRoutes);
-app.use("/api/users", userRoutes);
+app.use("/api/users",userRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/upload", uploadRoutes);
 app.use("/api/home", projectRoutes);

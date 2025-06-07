@@ -255,14 +255,7 @@ const AboutUs = () => {
             ))}
           </div>
 
-          <div className="mt-12 text-center">
-            <p className="text-green-200 mb-6">
-              We're always looking for passionate individuals to join our mission
-            </p>
-            <button className="bg-white text-green-700 font-bold py-3 px-6 rounded-full hover:bg-green-100 transition-colors duration-300">
-              Join Our Team
-            </button>
-          </div>
+
         </div>
       </section>
 

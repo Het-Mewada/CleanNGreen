@@ -7,7 +7,7 @@ import {blockUser} from "../controllers/adminController.js"
 import { updateUser } from "../controllers/adminController.js";
 import { blockedUsers } from "../controllers/adminController.js";
 import {editStats} from '../controllers/statsController.js'
-import { addProducts } from './productController.js';
+import { addProducts } from '../controllers/productController.js';
 import { getFeedbacks } from "../controllers/adminController.js";
 import { editFeedback } from "../controllers/adminController.js";
 import { getSubscribers } from "../controllers/adminController.js";

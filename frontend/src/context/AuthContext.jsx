@@ -8,6 +8,7 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true); // Add loading state
+  const [defaultAddress , setDefaultaddress] = useState(null)
 
   // Load user from local storage/token on initial render
   useEffect(() => {
@@ -142,7 +143,9 @@ export const AuthProvider = ({ children }) => {
         register, 
         logout, 
         isAuthenticated,
-        loading 
+        loading ,
+        defaultAddress,
+        setDefaultaddress
       }}
     >
       {!loading && children}

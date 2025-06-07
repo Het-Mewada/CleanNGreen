@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import FileUpload from "../components/FileUpload";
-
+import toast from "react-hot-toast";
 import {
   Container,
   Card,
@@ -19,8 +19,19 @@ const ProfilePage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [isEditModeOpen, setIsEditModeOpen] = useState(false);
-  const [editFormData, setEditFormData] = useState(null);
-
+  const [editFormData, setEditFormData] = useState();
+  const [openEditAddress, setOpenEditAddress] = useState(false);
+  const [addresses, setAddresses] = useState(null);
+  const [selectedAddress, setSelectedAddress] = useState(null);
+  const [activeState, setActiveState] = useState("edit");
+  const [addAddress, setAddAddress] = useState(false);
+  const [newAddress, setNewAddress] = useState({
+    houseNo: "",
+    street: "",
+    locality: "",
+    pincode: "",
+    state: "",
+  });
   const [editStatus, setEditStatus] = useState({
     status: "idle",
     message: "",
@@ -46,6 +57,8 @@ const ProfilePage = () => {
         });
 
         setUser(res.data);
+        // console.log(res.data.address)
+        setAddresses(res.data.address);
 
         setProfilePic(res.data.profilePic);
       } catch (err) {
@@ -58,7 +71,6 @@ const ProfilePage = () => {
 
     fetchUserProfile();
   }, []);
-
   const handleProfilePicUpdate = async (filePath) => {
     setLoading(true);
     const token = JSON.parse(localStorage.getItem("user"))?.token;
@@ -104,7 +116,13 @@ const ProfilePage = () => {
       const response = await axios.post(
         `${__API_URL__}/users/edit-profile`,
         {
-          data: user, // Send the user object directly, not wrapped in a data property
+          data: {
+            _id: user._id,
+            name: user.name,
+            gender: user.gender,
+            role: user.role,
+            address: user.address,
+          }, // Send the user object directly, not wrapped in a data property
         },
         {
           withCredentials: true,
@@ -128,12 +146,41 @@ const ProfilePage = () => {
     }
   }
 
+  const addAddressHandler = async (e) => {
+    e.preventDefault();
+    try {
+      const token = JSON.parse(localStorage.getItem("user")).token;
+      const res = await axios.post(
+        `${__API_URL__}/users/profile/add-address`,
+        {
+          userId: user._id,
+          addAddress: addAddress,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      console.log("Address added: ", res.data);
+      alert("New address added!");
+
+      setAddresses(res.data.addresses);
+      setSelectedAddress(null);
+      setAddAddress(null)
+    } catch (err) {
+      console.error("Error adding address:", err.message);
+      alert("Failed to add address");
+    }
+  };
+
   return (
     <Container className="mt-25" style={{ paddingBottom: "60px" }}>
       <Row className="justify-content-center">
         <Col md={8}>
           <Card
-            className="shadow-lg p-4 bg-dark border-0"
+            className=" shadow-lg p-4 bg-dark border-0"
             style={{ borderRadius: "20px", backgroundColor: "#ffffff" }}
           >
             <Card.Body>
@@ -160,7 +207,7 @@ const ProfilePage = () => {
                 </div>
               ) : user ? (
                 <>
-                  <div className="text-center flex justify-center mb-4">
+                  <div className=" text-center flex justify-center mb-4">
                     <div
                       style={{ position: "relative", display: "inline-block" }}
                     >
@@ -213,8 +260,8 @@ const ProfilePage = () => {
                       </div>
                     </div>
                     {isEditModeOpen && (
-                      <div className="fixed inset-0 flex items-center justify-center z-50 backdrop-blur-sm bg-slate-900/20">
-                        <div className="bg-slate-50 rounded-xl shadow-lg p-6 w-full max-w-md relative animate-fade-in-down">
+                      <div className="fixed  inset-0 flex  items-center justify-center z-50 backdrop-blur-sm bg-slate-900/20">
+                        <div className="bg-slate-50 max-h-150 max-w-150 overflow-scroll rounded-xl shadow-lg p-6 w-full  relative animate-fade-in-down">
                           {/* Close button (only shown when not in loading state) */}
                           {editStatus.status !== "loading" && (
                             <button
@@ -255,7 +302,7 @@ const ProfilePage = () => {
 
                           {/* Initial Form State */}
                           {editStatus.status === "idle" && (
-                            <div className="text-center space-y-4">
+                            <div className="text-center space-y-4  ">
                               <div className="mx-auto w-16 h-16 rounded-full bg-teal-100 flex items-center justify-center mb-2">
                                 <svg
                                   xmlns="http://www.w3.org/2000/svg"
@@ -284,13 +331,8 @@ const ProfilePage = () => {
                                   </label>
                                   <input
                                     type="email"
-                                    value={editFormData.email}
-                                    onChange={(e) =>
-                                      setEditFormData({
-                                        ...editFormData,
-                                        email: e.target.value,
-                                      })
-                                    }
+                                    value={user.email}
+                                    disabled
                                     className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-transparent"
                                   />
                                 </div>
@@ -328,6 +370,18 @@ const ProfilePage = () => {
                                     <option value="female">Female</option>
                                   </select>
                                 </div>
+                                <h4
+                                  className="mb-3"
+                                  style={{
+                                    color: "#278783",
+                                    fontWeight: "bold",
+                                  }}
+                                >
+                                  Update Profile Picture
+                                </h4>
+                                <FileUpload
+                                  onUploadSuccess={handleProfilePicUpdate}
+                                />
                                 {profilePic && (
                                   <div>
                                     <button
@@ -352,6 +406,10 @@ const ProfilePage = () => {
                                 </button>
                                 <button
                                   onClick={async () => {
+                                    console.log(
+                                      "Form at submit time : ",
+                                      editFormData
+                                    );
                                     const success = await updateUser(
                                       editFormData
                                     );
@@ -486,19 +544,15 @@ const ProfilePage = () => {
                     </Card.Body>
                   </Card>
 
-                  <Card className="bg-dark" style={{ borderColor: "#FFEBD0" }}>
-                    <Card.Body>
-                      <h4
-                        className="mb-3"
-                        style={{ color: "#278783", fontWeight: "bold" }}
-                      >
-                        Update Profile Picture
-                      </h4>
-                      <FileUpload onUploadSuccess={handleProfilePicUpdate} />
-                    </Card.Body>
-                  </Card>
-
-                  <div className="text-center mt-4">
+                  <div className="flex justify-between mt-4">
+                    <Button
+                      variant="primary"
+                      onClick={() => {
+                        setOpenEditAddress(true);
+                      }}
+                    >
+                      Manage Addresses
+                    </Button>
                     <Button
                       variant="danger"
                       onClick={() => logout(navigate)}
@@ -515,6 +569,353 @@ const ProfilePage = () => {
           </Card>
         </Col>
       </Row>
+      {openEditAddress && (
+<div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex justify-center items-center z-50 p-4">
+  <div className="bg-white rounded-2xl shadow-2xl w-full max-w-xl max-h-[90vh] overflow-hidden flex flex-col">
+    {/* Header with tabs */}
+    <div className="flex border-b border-gray-200">
+      <button
+        className={`flex-1 py-4 font-medium text-lg transition-colors ${
+          activeState === "edit"
+            ? "text-blue-600 border-b-2 border-blue-600"
+            : "text-gray-500 hover:text-gray-700"
+        }`}
+        onClick={() => setActiveState("edit")}
+      >
+        <div className="flex items-center justify-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+          </svg>
+          Edit Addresses
+        </div>
+      </button>
+      <button
+        className={`flex-1 py-4 font-medium text-lg transition-colors ${
+          activeState === "add"
+            ? "text-blue-600 border-b-2 border-blue-600"
+            : "text-gray-500 hover:text-gray-700"
+        }`}
+        onClick={() => setActiveState("add")}
+      >
+        <div className="flex items-center justify-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+            <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
+          </svg>
+          Add New
+        </div>
+      </button>
+    </div>
+            {activeState === "edit" ? (
+               <div className="overflow-y-auto flex-1 p-6">
+      <h2 className="text-2xl font-bold mb-6 text-gray-800">Your Addresses</h2>
+      
+      {/* Address Cards */}
+      <div className="grid gap-4 mb-6">
+        {addresses.map((address) => (
+          <div
+            key={address?._id}
+            onClick={() => setSelectedAddress(address)}
+            className={`border rounded-xl p-4  transition-all ${
+              selectedAddress?._id === address?._id
+                ? "border-blue-500 bg-blue-50 shadow-md"
+                : "border-gray-200 hover:border-blue-300 hover:shadow-sm"
+            }`}
+          >
+            <div className="flex justify-between items-start">
+              <div>
+                <h3 className="font-medium text-gray-900">{address?.houseNo}, {address?.street}</h3>
+                <p className="text-gray-600">{address?.locality}</p>
+                <p className="text-gray-500 text-sm mt-1">
+                  {address?.pincode}, {address?.state}
+                </p>
+              </div>
+              {selectedAddress?._id === address?._id && (
+                <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">
+                  Editing
+                </span>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Address Edit Form */}
+      {selectedAddress && (
+        <form
+          onSubmit={async (e) => {
+            e.preventDefault();
+            const token = JSON.parse(localStorage.getItem("user")).token;
+
+            try {
+              const res = await axios.put(
+                `${__API_URL__}/users/profile/update-address`,
+                {
+                  _id: selectedAddress._id,
+                  houseNo: selectedAddress.houseNo,
+                  street: selectedAddress.street,
+                  locality: selectedAddress.locality,
+                  pincode: selectedAddress.pincode,
+                  state: selectedAddress.state,
+                },
+                {
+                  headers: {
+                    Authorization: `Bearer ${token}`,
+                  },
+                }
+              );
+
+              setSelectedAddress(null);
+              setAddresses((prev) =>
+                prev.map((addr) =>
+                  addr._id === selectedAddress._id ? res.data.address : addr
+                )
+              );
+              toast.success("Address updated successfully!");
+            } catch (err) {
+              console.log("Error Editing Address : ", err);
+              toast.error(err.message);
+            }
+          }}
+          className="space-y-4"
+        >
+          <h3 className="text-lg font-semibold text-gray-800">Edit Address</h3>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">House No.</label>
+              <input
+                type="text"
+                value={selectedAddress.houseNo}
+                onChange={(e) =>
+                  setSelectedAddress({
+                    ...selectedAddress,
+                    houseNo: e.target.value,
+                  })
+                }
+                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all"
+                required
+              />
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Street</label>
+              <input
+                type="text"
+                value={selectedAddress.street}
+                onChange={(e) =>
+                  setSelectedAddress({
+                    ...selectedAddress,
+                    street: e.target.value,
+                  })
+                }
+                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all"
+                required
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Locality</label>
+            <input
+              type="text"
+              value={selectedAddress.locality}
+              onChange={(e) =>
+                setSelectedAddress({
+                  ...selectedAddress,
+                  locality: e.target.value,
+                })
+              }
+              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all"
+              required
+            />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Pincode</label>
+              <input
+                type="text"
+                value={selectedAddress.pincode}
+                onChange={(e) =>
+                  setSelectedAddress({
+                    ...selectedAddress,
+                    pincode: e.target.value,
+                  })
+                }
+                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all"
+                required
+              />
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">State</label>
+              <select
+                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all"
+                value={selectedAddress.state}
+                onChange={(e) =>
+                  setSelectedAddress({
+                    ...selectedAddress,
+                    state: e.target.value,
+                  })
+                }
+                required
+              >
+                <option value="West Bengal">West Bengal</option>
+                {/* Add more states if needed */}
+              </select>
+            </div>
+          </div>
+
+          <div className="flex gap-3 pt-2">
+            <button
+              type="button"
+              onClick={() => setSelectedAddress(null)}
+              className="flex-1 bg-gray-200 text-gray-800 font-medium py-2 rounded-lg hover:bg-gray-300 transition-all"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="flex-1 bg-blue-600 text-white font-medium py-2 rounded-lg hover:bg-blue-700 transition-all flex items-center justify-center gap-2"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+              </svg>
+              Save Changes
+            </button>
+          </div>
+        </form>
+      )}
+    </div>
+
+            ) : (
+              <div>
+                <h2 className="text-xl font-bold mb-4 text-center">
+                  New Address
+                </h2>
+
+                <form onSubmit={addAddressHandler} className="space-y-4">
+                  <div className="flex flex-col gap-4  mx-4 ">
+                    <input
+                      type="text"
+                      className="w-full border rounded-lg px-4 py-2"
+                      placeholder="House No."
+                      value={addAddress?.houseNo || "" }
+                      onChange={(e) =>
+                        setAddAddress({
+                          ...addAddress,
+                          houseNo: e.target.value,
+                        })
+                      }
+                      required
+                    />
+                    <input
+                      type="text"
+                      className="w-full border rounded-lg px-4 py-2"
+                      placeholder="Street"
+                      value={addAddress?.street || ""}
+                      onChange={(e) =>
+                        setAddAddress({
+                          ...addAddress,
+                          street: e.target.value,
+                        })
+                      }
+                      required
+                    />
+                    <input
+                      type="text"
+                      className="w-full border rounded-lg px-4 py-2"
+                      placeholder="Locality"
+                      value={addAddress?.locality || ""}
+                      onChange={(e) =>
+                        setAddAddress({
+                          ...addAddress,
+                          locality: e.target.value,
+                        })
+                      }
+                      required
+                    />
+                    <input
+                      type="text"
+                      className="w-full border rounded-lg px-4 py-2"
+                      placeholder="Pincode"
+                      value={addAddress?.pincode || ""}
+                      onChange={(e) =>
+                        setAddAddress({
+                          ...addAddress,
+                          pincode: e.target.value,
+                        })
+                      }
+                      required
+                    />
+                    <select
+                      className="w-full border rounded-lg px-4 py-2"
+                      value={addAddress?.state}
+                      onChange={(e) =>
+                        setAddAddress({ ...addAddress, state: e.target.value })
+                      }
+                      required
+                    >
+                      <option value="" defaultChecked>
+                        Select State
+                      </option>
+                      <option value="Andhra Pradesh">Andhra Pradesh</option>
+                      <option value="Arunachal Pradesh">
+                        Arunachal Pradesh
+                      </option>
+                      <option value="Assam">Assam</option>
+                      <option value="Bihar">Bihar</option>
+                      <option value="Chhattisgarh">Chhattisgarh</option>
+                      <option value="Delhi">Delhi</option>
+                      <option value="Goa">Goa</option>
+                      <option value="Gujarat">Gujarat</option>
+                      <option value="Haryana">Haryana</option>
+                      <option value="Himachal Pradesh">Himachal Pradesh</option>
+                      <option value="Jharkhand">Jharkhand</option>
+                      <option value="Karnataka">Karnataka</option>
+                      <option value="Kerala">Kerala</option>
+                      <option value="Madhya Pradesh">Madhya Pradesh</option>
+                      <option value="Maharashtra">Maharashtra</option>
+                      <option value="Manipur">Manipur</option>
+                      <option value="Meghalaya">Meghalaya</option>
+                      <option value="Mizoram">Mizoram</option>
+                      <option value="Nagaland">Nagaland</option>
+                      <option value="Odisha">Odisha</option>
+                      <option value="Punjab">Punjab</option>
+                      <option value="Rajasthan">Rajasthan</option>
+                      <option value="Sikkim">Sikkim</option>
+                      <option value="Tamil Nadu">Tamil Nadu</option>
+                      <option value="Telangana">Telangana</option>
+                      <option value="Tripura">Tripura</option>
+                      <option value="Uttar Pradesh">Uttar Pradesh</option>
+                      <option value="Uttarakhand">Uttarakhand</option>
+                      <option value="West Bengal">West Bengal</option>
+                    </select>
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="w-full bg-blue-600 text-white font-semibold py-2 rounded-lg hover:bg-blue-700 transition"
+                  >
+                    Save Address
+                  </button>
+                </form>
+              </div>
+            )}
+
+            {/* Close Button */}
+            <button
+              onClick={() => {
+                setSelectedAddress(null);
+                setOpenEditAddress(false);
+              }}
+              className="mt-6 w-full bg-gray-300 text-black py-2 rounded-lg hover:bg-gray-400"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </Container>
   );
 };

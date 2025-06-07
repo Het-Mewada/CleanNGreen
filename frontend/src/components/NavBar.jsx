@@ -1,14 +1,15 @@
 import { useContext, useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import AuthContext from "../context/AuthContext";
 import { Menu, X } from "lucide-react"; // Icons
-
+import { Button } from "react-bootstrap";
 // Define your logo components
 
 export default function NAV() {
-  const { user } = useContext(AuthContext);
+  const { user , logout} = useContext(AuthContext);
   const [isOpen, setIsOpen] = useState(false);
   const toggleMenu = () => setIsOpen(!isOpen);
+  const navigate = useNavigate();
 
   return (
     <nav className="bg-[#278783] shadow-md border-b border-[#236f70]">
@@ -141,7 +142,7 @@ export default function NAV() {
                     >
                       About Us
                     </NavLink>
-                    
+
                     <NavLink
                       to="/feedback-form"
                       className={({ isActive }) =>
@@ -156,29 +157,17 @@ export default function NAV() {
                     >
                       Give Feedback
                     </NavLink>
+                    <div className="text-center">
+                      <Button
+                        variant="danger"
+                        onClick={() => logout(navigate)}
+                        style={{ backgroundColor: "#C0392B", border: "none" }}
+                      >
+                        Logout
+                      </Button>
+                    </div>
 
-                    {/* <NavLink
-                      to="/contact"
-                      className={({ isActive }) =>
-                        isActive
-                          ? "no-underline px-4 py-2 bg-[#e8b98f] text-dark rounded-full font-semibold shadow transition"
-                          : "no-underline px-4 py-2 bg-[#FFEBD0] text-[#278783] rounded-full font-semibold shadow hover:bg-[#f7dbc4] transition"
-                      }
-                    >
-                      Contact Us
-                    </NavLink>
-
-                    <NavLink
-                      to="/feedback"
-                      className={({ isActive }) =>
-                        isActive
-                          ? "no-underline px-4 py-2 bg-[#e8b98f] text-dark rounded-full font-semibold shadow transition"
-                          : "no-underline px-4 py-2 bg-[#FFEBD0] text-[#278783] rounded-full font-semibold shadow hover:bg-[#f7dbc4] transition"
-                      }
-                    >
-                      Feedback
-                    </NavLink>
-
+                    {/* 
                     <NavLink
                       to="/faq"
                       className={({ isActive }) =>
@@ -247,15 +236,6 @@ export default function NAV() {
                     >
                       Admin Dashboard
                     </Link>
-                    <Link
-                      to="/blocked-users"
-                      onClick={toggleMenu}
-                      className="no-underline text-inherit px-4 py-2 bg-[#FFEBD0] text-[#278783] rounded-full font-semibold shadow hover:bg-[#f7dbc4] transition"
-                      style={{ textDecoration: "none", color: "#278783" }}
-                    >
-                      Blocked Users
-                    </Link>
-                    
                   </>
                 ) : (
                   <>
@@ -290,6 +270,21 @@ export default function NAV() {
                     >
                       About Us
                     </NavLink>
+
+                    <NavLink
+                      to="/feedback-form"
+                      className={({ isActive }) =>
+                        isActive
+                          ? "no-underline px-4 py-2 bg-[#e8b98f] text-dark rounded-full font-semibold shadow transition"
+                          : "no-underline px-4 py-2 bg-[#FFEBD0] text-[#278783] rounded-full font-semibold shadow hover:bg-[#f7dbc4] transition"
+                      }
+                      style={{
+                        textDecoration: "none",
+                        color: "#278783",
+                      }}
+                    >
+                      Give Feedback
+                    </NavLink>
                   </>
                 )}
                 <NavLink
@@ -298,7 +293,7 @@ export default function NAV() {
                   className={({ isActive }) =>
                     isActive
                       ? "no-underline px-4 mb-2 py-2 bg-[#e8b98f] text-dark rounded-full font-semibold shadow transition"
-                      : "no-underline px-4 mb-3 py-2 bg-[#FFEBD0] text-[#278783] rounded-full font-semibold shadow hover:bg-[#f7dbc4] transition"
+                      : "no-underline px-4 mb-2 py-2 bg-[#FFEBD0] text-[#278783] rounded-full font-semibold shadow hover:bg-[#f7dbc4] transition"
                   }
                   style={{
                     textDecoration: "none",
@@ -307,6 +302,15 @@ export default function NAV() {
                 >
                   Profile{" "}
                 </NavLink>
+                <div className="text-center mb-2">
+                  <Button
+                    variant="danger"
+                    onClick={() => logout(navigate)}
+                    style={{ backgroundColor: "#C0392B", border: "none" }}
+                  >
+                    Logout
+                  </Button>
+                </div>
               </>
             )}
           </div>
