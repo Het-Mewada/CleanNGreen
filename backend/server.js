@@ -10,11 +10,9 @@ import authRoutes from "./routes/authRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import uploadRoutes from "./routes/uploadRoutes.js";
-import projectRoutes from "./routes/projectRoutes.js";
 
 import statsRouter from './routes/statsRouter.js'
 import productRouter from './routes/productRouter.js'
-import eventRouter from './routes/eventRouter.js'
 import subscriberRouter from './routes/subscriberRouter.js'
 
 
@@ -60,7 +58,6 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users",userRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/upload", uploadRoutes);
-app.use("/api/home", projectRoutes);
 app.use('/api/feedback',feedbackRoutes)
 // ✅ Static folder for uploaded files
 app.use("/uploads", express.static("uploads"));
@@ -69,7 +66,6 @@ app.use("/uploads", express.static("uploads"));
 // insert data
 app.use('/api/stats', statsRouter);
 app.use('/api/products', productRouter);
-app.use('/api/events', eventRouter);
 app.use('/api/subscribe', subscriberRouter);
 
 // ✅ Test route

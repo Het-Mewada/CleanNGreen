@@ -39,6 +39,7 @@ const getUserProfile = asyncHandler(async (req, res) => {
     res.status(404);
     throw new Error("User not found");
   }
+  console.log("Fetched User Data : " , user)
   res.json({
     _id: user._id,
     name: user.name,
@@ -168,19 +169,28 @@ const addAddress = asyncHandler(async (req, res) => {
   if (!userId || !address) {
     res.status(400).json({ message: "Incomplete Request Data" });
   }
+try {
 
   const user = await User.findById(userId);
   if (!user) {
     res.status(404).json({ message: "User Not Found" });
   }
-
+  
   user.address.push(address);
-
+  
   await user.save();
   res.status(200).json({
     message: "Address added successfully",
     addresses: user.address, // return updated list
   });
+} catch (err) {
+if (err.name === 'ValidationError') {
+  const errors = Object.values(err.errors).map((e) => e.message);
+  console.log("extracted error messages ", errors);
+  return res.status(400).json({ errors }); // now an array of messages
+}
+    res.status(500).json({ message: 'Server Error' });
+  }
 });
 
 const updateUserAddress = asyncHandler(async (req, res) => {
@@ -205,7 +215,8 @@ const updateUserAddress = asyncHandler(async (req, res) => {
       .json({ message: "Address not found in user's address list" });
   }
 
-  // Replace existing address with new one
+
+try{  // Replace existing address with new one
   user.address[index] = {
     ...user.address[index],
     ...address,
@@ -216,8 +227,49 @@ const updateUserAddress = asyncHandler(async (req, res) => {
   res.status(200).json({
     message: "Address updated successfully",
     address: user.address[index],
-  });
+  });}catch(err){
+      if (err.name === 'ValidationError') {
+  const errors = Object.values(err.errors).map((e) => e.message);
+  console.log("extracted error messages ", errors);
+  return res.status(400).json({ errors }); // now an array of messages
+}
+
+  }
 });
+
+
+// DELETE /api/users/profile/delete-address?userId=...&addressID=...
+
+const deleteAddress = asyncHandler(async (req, res) => {
+  const { userId, addressID } = req.query;
+
+  if (!userId || !addressID) {
+    return res.status(400).json({ message: "Missing userId or addressID" });
+  }
+
+  try {
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      {
+        $pull: { address: { _id: addressID } }, // removes address with matching _id
+      },
+      { new: true } // return updated user
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    return res.status(200).json({
+      message: "Address deleted successfully",
+      remainingAddresses: updatedUser.address,
+    });
+  } catch (error) {
+    console.error("Error deleting address:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+});
+
 
 export {
   getUserData,
@@ -226,4 +278,5 @@ export {
   sendFeedback,
   addAddress,
   updateUserAddress,
+  deleteAddress
 };

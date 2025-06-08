@@ -74,7 +74,7 @@
       const wasteCO2 = WASTE_EMISSIONS[inputs.wasteProduction];
       
       // Total in metric tons
-      const totalCO2 = Math.round((electricityCO2 + vehicleCO2 + publicTransportCO2  + flightsCO2 + wasteCO2) / 1000);
+      const totalCO2 = ((electricityCO2 + vehicleCO2 + publicTransportCO2  + flightsCO2 + wasteCO2) / 1000).toFixed(2);
       
       // Comparison text for Indian context
       let comparison;
@@ -381,7 +381,7 @@
                     <div className="flex justify-between mb-1">
                       <span className="text-sm font-medium text-gray-700">Your Footprint</span>
                       <span className="text-sm font-medium text-gray-700">
-                        {(results.totalCO2).toFixed(2)} tons
+                        {(results.totalCO2)} tons
                       </span>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-4">

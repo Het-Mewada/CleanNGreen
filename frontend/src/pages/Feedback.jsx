@@ -3,7 +3,7 @@ import { FiSend, FiStar, FiX, FiCheck } from "react-icons/fi";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
 import AuthContext from "../context/AuthContext";
-
+import toast from 'react-hot-toast'
 const FeedbackForm = () => {
   const { user } = useContext(AuthContext);
   const [isMobile, setIsMobile] = useState(false);
@@ -130,6 +130,8 @@ const FeedbackForm = () => {
       setErrors({
         submit: message,
       });
+
+      toast.error(errors.submit)
     } finally {
       setIsSubmitting(false);
     }
@@ -137,15 +139,6 @@ const FeedbackForm = () => {
 
   return (
     <div className="min-h-screen mt-15 flex flex-col gap-4 items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-50 p-4">
-      {errors.submit && (
-        <div className="bg-red-100 text-red-700 p-3 rounded-md mt-3 font-semibold border border-red-700">
-          ⚠️ Error:
-          <ul>
-            {errors.submit && <li>{errors.submit}</li>}
-            {errors.token && <li>{errors.tokenError}</li>}
-          </ul>
-        </div>
-      )}
                 <AnimatePresence>
             {submitSuccess && (
               <motion.div
@@ -427,7 +420,7 @@ const FeedbackForm = () => {
                     className={`block w-100 px-4 py-3 text-gray-700 bg-gray-200 rounded-lg focus:outline-none`}
                     required
                     disabled={true}
-                    value={formData.email || "yourExamplemail@gmail.com"}
+                    value={formData.email}
                     onChange={(e) => handleChange("email", e.target.value)}
                     onFocus={() => setActiveField("email")}
                     onBlur={() => setActiveField(null)}

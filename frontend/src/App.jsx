@@ -15,7 +15,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import ProfilePage from "./pages/ProfilePage";
 import Blocked from "./admin/Blocked";
 import Data from "./pages/InsertData";
-import EventForm from "./admin/EventEdit";
 import Footer from "./components/Footer";
 import ClickSpark from "./components/universalCompos/ClickSparkComponent";
 import FuturisticCursor from "./components/universalCompos/CursorComponent";
@@ -77,7 +76,6 @@ function MainApp() {
               <Route path="/home" element={<Home />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
-              <Route path="/event-edit" element={<EventForm />} />
               <Route path="/profile" element={<ProfilePage />} />
               <Route path="/social-auth-success" element={<OAuthSuccess />} />
               <Route path="/about" element={<AboutUs />} />

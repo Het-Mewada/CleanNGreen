@@ -2,6 +2,7 @@ import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import FileUpload from "../components/FileUpload";
 import toast from "react-hot-toast";
+import { Trash2 } from "lucide-react";
 import {
   Container,
   Card,
@@ -12,7 +13,8 @@ import {
   Button,
 } from "react-bootstrap";
 import AuthContext from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+// import ContextMenuWrapper from "../components/ContextMenuWrapper";
 
 const ProfilePage = () => {
   const [profilePic, setProfilePic] = useState(null);
@@ -24,7 +26,7 @@ const ProfilePage = () => {
   const [addresses, setAddresses] = useState(null);
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [activeState, setActiveState] = useState("edit");
-  const [addAddress, setAddAddress] = useState(false);
+  const [addAddress, setAddAddress] = useState(null);
   const [newAddress, setNewAddress] = useState({
     houseNo: "",
     street: "",
@@ -36,10 +38,20 @@ const ProfilePage = () => {
     status: "idle",
     message: "",
   });
-  const { user, setUser, logout } = useContext(AuthContext);
+  const { user, setUser, logout , orders , setOrders  } = useContext(AuthContext);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const menuOptions = [
+    { label: "Edit", onClick: () => {} },
+    { label: "Delete", onClick: () => alert("Address Deleted") },
+  ];
 
   useEffect(() => {
+    if (location.state?.openEditAddress) {
+      setOpenEditAddress(true);
+      setActiveState(location.state?.activeState);
+    }
     const fetchUserProfile = async () => {
       setLoading(true);
       const token = JSON.parse(localStorage.getItem("user"))?.token;
@@ -55,9 +67,10 @@ const ProfilePage = () => {
             Authorization: `Bearer ${token}`,
           },
         });
-
+        console.log("profile data : ", res.data.orders);
+        setOrders(res.data.orders)
         setUser(res.data);
-        // console.log(res.data.address)
+        // console.log(res.data)
         setAddresses(res.data.address);
 
         setProfilePic(res.data.profilePic);
@@ -106,7 +119,7 @@ const ProfilePage = () => {
     const token = JSON.parse(localStorage.getItem("user"))?.token;
 
     if (!token) {
-      window.location.href = "/login";
+      navigate("/login");
       return;
     }
 
@@ -148,8 +161,16 @@ const ProfilePage = () => {
 
   const addAddressHandler = async (e) => {
     e.preventDefault();
+
+    if(!validateAddress(addAddress)){
+      return
+    }
     try {
       const token = JSON.parse(localStorage.getItem("user")).token;
+      if (!token) {
+        navigate("/login");
+        return;
+      }
       const res = await axios.post(
         `${__API_URL__}/users/profile/add-address`,
         {
@@ -164,16 +185,64 @@ const ProfilePage = () => {
       );
 
       console.log("Address added: ", res.data);
-      alert("New address added!");
-
+      toast.success(res.data.message)
       setAddresses(res.data.addresses);
       setSelectedAddress(null);
-      setAddAddress(null)
+      setAddAddress(null);
     } catch (err) {
-      console.error("Error adding address:", err.message);
-      alert("Failed to add address");
+      console.error("Error adding address:", err);
+      toast.error(err.response.data.errors[0])
     }
   };
+
+  async function deleteAddress(addressId) {
+    try {
+      const token = JSON.parse(localStorage.getItem("user")).token;
+      if (!token) {
+        navigate("/login");
+        return;
+      }
+      const res = await axios.delete(
+        `${__API_URL__}/users/profile/delete-address`,
+        {
+          params: {
+            userId: user._id,
+            addressID: addressId,
+          },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("Address deleted: ", res.data);
+      setAddresses(res.data.remainingAddresses);
+      toast.success(res.data.message);
+    } catch (err) {
+      console.error("Error deleting address:", err);
+      setError(err.message);
+    }
+  }
+  
+const validateAddress = ({ houseNo, street, locality, pincode, state }) => {
+  const errors = [];
+
+  if (!houseNo?.trim()) errors.push("House No is required");
+  if (!street?.trim()) errors.push("Street is required");
+  if (!locality?.trim()) errors.push("Locality is required");
+
+  // Check for 6-digit pincode (India-style)
+  if (!/^\d{6}$/.test(pincode)) errors.push("Enter a valid 6-digit pincode");
+
+  if (!state?.trim()) errors.push("State is required");
+
+  // If there are errors, show the first and stop further
+  if (errors.length > 0) {
+    toast.error(errors[0]);
+    return false; // stop further execution
+  }
+
+  return true; // valid
+};
 
   return (
     <Container className="mt-25" style={{ paddingBottom: "60px" }}>
@@ -570,227 +639,324 @@ const ProfilePage = () => {
         </Col>
       </Row>
       {openEditAddress && (
-<div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex justify-center items-center z-50 p-4">
-  <div className="bg-white rounded-2xl shadow-2xl w-full max-w-xl max-h-[90vh] overflow-hidden flex flex-col">
-    {/* Header with tabs */}
-    <div className="flex border-b border-gray-200">
-      <button
-        className={`flex-1 py-4 font-medium text-lg transition-colors ${
-          activeState === "edit"
-            ? "text-blue-600 border-b-2 border-blue-600"
-            : "text-gray-500 hover:text-gray-700"
-        }`}
-        onClick={() => setActiveState("edit")}
-      >
-        <div className="flex items-center justify-center gap-2">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-            <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
-          </svg>
-          Edit Addresses
-        </div>
-      </button>
-      <button
-        className={`flex-1 py-4 font-medium text-lg transition-colors ${
-          activeState === "add"
-            ? "text-blue-600 border-b-2 border-blue-600"
-            : "text-gray-500 hover:text-gray-700"
-        }`}
-        onClick={() => setActiveState("add")}
-      >
-        <div className="flex items-center justify-center gap-2">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-            <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
-          </svg>
-          Add New
-        </div>
-      </button>
-    </div>
-            {activeState === "edit" ? (
-               <div className="overflow-y-auto flex-1 p-6">
-      <h2 className="text-2xl font-bold mb-6 text-gray-800">Your Addresses</h2>
-      
-      {/* Address Cards */}
-      <div className="grid gap-4 mb-6">
-        {addresses.map((address) => (
-          <div
-            key={address?._id}
-            onClick={() => setSelectedAddress(address)}
-            className={`border rounded-xl p-4  transition-all ${
-              selectedAddress?._id === address?._id
-                ? "border-blue-500 bg-blue-50 shadow-md"
-                : "border-gray-200 hover:border-blue-300 hover:shadow-sm"
-            }`}
-          >
-            <div className="flex justify-between items-start">
-              <div>
-                <h3 className="font-medium text-gray-900">{address?.houseNo}, {address?.street}</h3>
-                <p className="text-gray-600">{address?.locality}</p>
-                <p className="text-gray-500 text-sm mt-1">
-                  {address?.pincode}, {address?.state}
-                </p>
-              </div>
-              {selectedAddress?._id === address?._id && (
-                <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">
-                  Editing
-                </span>
-              )}
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Address Edit Form */}
-      {selectedAddress && (
-        <form
-          onSubmit={async (e) => {
-            e.preventDefault();
-            const token = JSON.parse(localStorage.getItem("user")).token;
-
-            try {
-              const res = await axios.put(
-                `${__API_URL__}/users/profile/update-address`,
-                {
-                  _id: selectedAddress._id,
-                  houseNo: selectedAddress.houseNo,
-                  street: selectedAddress.street,
-                  locality: selectedAddress.locality,
-                  pincode: selectedAddress.pincode,
-                  state: selectedAddress.state,
-                },
-                {
-                  headers: {
-                    Authorization: `Bearer ${token}`,
-                  },
-                }
-              );
-
-              setSelectedAddress(null);
-              setAddresses((prev) =>
-                prev.map((addr) =>
-                  addr._id === selectedAddress._id ? res.data.address : addr
-                )
-              );
-              toast.success("Address updated successfully!");
-            } catch (err) {
-              console.log("Error Editing Address : ", err);
-              toast.error(err.message);
-            }
-          }}
-          className="space-y-4"
-        >
-          <h3 className="text-lg font-semibold text-gray-800">Edit Address</h3>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">House No.</label>
-              <input
-                type="text"
-                value={selectedAddress.houseNo}
-                onChange={(e) =>
-                  setSelectedAddress({
-                    ...selectedAddress,
-                    houseNo: e.target.value,
-                  })
-                }
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all"
-                required
-              />
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Street</label>
-              <input
-                type="text"
-                value={selectedAddress.street}
-                onChange={(e) =>
-                  setSelectedAddress({
-                    ...selectedAddress,
-                    street: e.target.value,
-                  })
-                }
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all"
-                required
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Locality</label>
-            <input
-              type="text"
-              value={selectedAddress.locality}
-              onChange={(e) =>
-                setSelectedAddress({
-                  ...selectedAddress,
-                  locality: e.target.value,
-                })
-              }
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all"
-              required
-            />
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Pincode</label>
-              <input
-                type="text"
-                value={selectedAddress.pincode}
-                onChange={(e) =>
-                  setSelectedAddress({
-                    ...selectedAddress,
-                    pincode: e.target.value,
-                  })
-                }
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all"
-                required
-              />
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">State</label>
-              <select
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all"
-                value={selectedAddress.state}
-                onChange={(e) =>
-                  setSelectedAddress({
-                    ...selectedAddress,
-                    state: e.target.value,
-                  })
-                }
-                required
+        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex justify-center items-center z-50 p-4">
+          <div className="bg-white h-140 rounded-2xl shadow-2xl w-full max-w-xl max-h-[90vh] overflow-hidden flex flex-col">
+            {/* Header with tabs */}
+            <div className="flex border-b border-gray-200">
+              <button
+                className={`flex-1 py-4 font-medium text-lg transition-colors ${
+                  activeState === "edit"
+                    ? "text-blue-600 border-b-2 border-blue-600"
+                    : "text-gray-500 hover:text-gray-700"
+                }`}
+                onClick={() => setActiveState("edit")}
               >
-                <option value="West Bengal">West Bengal</option>
-                {/* Add more states if needed */}
-              </select>
+                <div className="flex items-center justify-center gap-2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-5 w-5"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                  </svg>
+                  Edit Addresses
+                </div>
+              </button>
+              <button
+                className={`flex-1 py-4 font-medium text-lg transition-colors ${
+                  activeState === "add"
+                    ? "text-blue-600 border-b-2 border-blue-600"
+                    : "text-gray-500 hover:text-gray-700"
+                }`}
+                onClick={() => setActiveState("add")}
+              >
+                <div className="flex items-center justify-center gap-2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-5 w-5"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                  Add New
+                </div>
+              </button>
             </div>
-          </div>
+            {activeState === "edit" ? (
+              <div className="overflow-y-auto flex-1 p-6">
+                <h2 className="text-2xl font-bold mb-6 text-gray-800">
+                  Your Addresses
+                </h2>
 
-          <div className="flex gap-3 pt-2">
-            <button
-              type="button"
-              onClick={() => setSelectedAddress(null)}
-              className="flex-1 bg-gray-200 text-gray-800 font-medium py-2 rounded-lg hover:bg-gray-300 transition-all"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="flex-1 bg-blue-600 text-white font-medium py-2 rounded-lg hover:bg-blue-700 transition-all flex items-center justify-center gap-2"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-              </svg>
-              Save Changes
-            </button>
-          </div>
-        </form>
-      )}
-    </div>
+                {/* Address Cards */}
+                <div className="grid gap-4 mb-6">
+                  {addresses.map((address) => (
+                    <div
+                      key={address?._id}
+                      onClick={() => setSelectedAddress(address)}
+                      className={`border rounded-xl p-4  transition-all ${
+                        selectedAddress?._id === address?._id
+                          ? "border-blue-500 bg-blue-50 shadow-md"
+                          : "border-gray-200 hover:border-blue-300 hover:shadow-sm"
+                      }`}
+                    >
+                      <div className="flex justify-between items-start">
+                        <div className="pr-3">
+                          <h3 className="font-medium text-gray-900">
+                            {address?.houseNo}, {address?.street}
+                          </h3>
+                          <p className="text-gray-600">{address?.locality}</p>
+                          <p className="text-gray-500 text-sm mt-1">
+                            {address?.pincode}, {address?.state}
+                          </p>
+                        </div>
+                        {selectedAddress?._id === address?._id && (
+                          <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">
+                            Editing
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
 
+                {/* Address Edit Form */}
+                {selectedAddress && (
+                  <div>
+                    <form
+                      onSubmit={async (e) => {
+                        e.preventDefault();
+
+                        if(!validateAddress(selectedAddress)){
+                          return
+                        }
+    
+                        const token = JSON.parse(
+                          localStorage.getItem("user")
+                        ).token;
+
+                        try {
+                          const res = await axios.put(
+                            `${__API_URL__}/users/profile/update-address`,
+                            {
+                              _id: selectedAddress._id,
+                              houseNo: selectedAddress.houseNo,
+                              street: selectedAddress.street,
+                              locality: selectedAddress.locality,
+                              pincode: selectedAddress.pincode,
+                              state: selectedAddress.state,
+                            },
+                            {
+                              headers: {
+                                Authorization: `Bearer ${token}`,
+                              },
+                            }
+                          );
+
+                          setSelectedAddress(null);
+                          setAddresses((prev) =>
+                            prev.map((addr) =>
+                              addr._id === selectedAddress._id
+                                ? res.data.address
+                                : addr
+                            )
+                          );
+                          toast.success("Address updated successfully!");
+                        } catch (err) {
+                          console.log("Error Editing Address : ", err);
+                        }
+                      }}
+                      className="space-y-4"
+                    >
+                      <h3 className="text-lg font-semibold text-gray-800">
+                        Edit Address
+                      </h3>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                            House No.
+                          </label>
+                          <input
+                            type="text"
+                            value={selectedAddress.houseNo}
+                            onChange={(e) =>
+                              setSelectedAddress({
+                                ...selectedAddress,
+                                houseNo: e.target.value,
+                              })
+                            }
+                            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all"
+                            
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Street
+                          </label>
+                          <input
+                            type="text"
+                            value={selectedAddress.street}
+                            onChange={(e) =>
+                              setSelectedAddress({
+                                ...selectedAddress,
+                                street: e.target.value,
+                              })
+                            }
+                            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all"
+                            
+                          />
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Locality
+                        </label>
+                        <input
+                          type="text"
+                          value={selectedAddress.locality}
+                          onChange={(e) =>
+                            setSelectedAddress({
+                              ...selectedAddress,
+                              locality: e.target.value,
+                            })
+                          }
+                          className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all"
+                          
+                        />
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Pincode
+                          </label>
+                          <input
+                            type="text"
+                            value={selectedAddress.pincode}
+                            onChange={(e) =>
+                              setSelectedAddress({
+                                ...selectedAddress,
+                                pincode: e.target.value,
+                              })
+                            }
+                            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all"
+                            
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                            State
+                          </label>
+                          <select
+                            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all"
+                            value={selectedAddress.state}
+                            onChange={(e) =>
+                              setSelectedAddress({
+                                ...selectedAddress,
+                                state: e.target.value,
+                              })
+                            }
+                          >
+                            <option value="Andhra Pradesh">
+                              Andhra Pradesh
+                            </option>
+                            <option value="Arunachal Pradesh">
+                              Arunachal Pradesh
+                            </option>
+                            <option value="Assam">Assam</option>
+                            <option value="Bihar">Bihar</option>
+                            <option value="Chhattisgarh">Chhattisgarh</option>
+                            <option value="Delhi">Delhi</option>
+                            <option value="Goa">Goa</option>
+                            <option value="Gujarat">Gujarat</option>
+                            <option value="Haryana">Haryana</option>
+                            <option value="Himachal Pradesh">
+                              Himachal Pradesh
+                            </option>
+                            <option value="Jharkhand">Jharkhand</option>
+                            <option value="Karnataka">Karnataka</option>
+                            <option value="Kerala">Kerala</option>
+                            <option value="Madhya Pradesh">
+                              Madhya Pradesh
+                            </option>
+                            <option value="Maharashtra">Maharashtra</option>
+                            <option value="Manipur">Manipur</option>
+                            <option value="Meghalaya">Meghalaya</option>
+                            <option value="Mizoram">Mizoram</option>
+                            <option value="Nagaland">Nagaland</option>
+                            <option value="Odisha">Odisha</option>
+                            <option value="Punjab">Punjab</option>
+                            <option value="Rajasthan">Rajasthan</option>
+                            <option value="Sikkim">Sikkim</option>
+                            <option value="Tamil Nadu">Tamil Nadu</option>
+                            <option value="Telangana">Telangana</option>
+                            <option value="Tripura">Tripura</option>
+                            <option value="Uttar Pradesh">Uttar Pradesh</option>
+                            <option value="Uttarakhand">Uttarakhand</option>
+                            <option value="West Bengal">West Bengal</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <div className="flex gap-3 pt-2">
+                        <button
+                          type="button"
+                          onClick={() => setSelectedAddress(null)}
+                          className="flex-1 bg-gray-200 text-gray-800 font-medium py-2 rounded-lg hover:bg-gray-300 transition-all"
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          type="submit"
+                          className="flex-1 bg-blue-600 text-white font-medium py-2 rounded-lg hover:bg-blue-700 transition-all flex items-center justify-center gap-2"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-5 w-5"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+                          Save Changes
+                        </button>
+                      </div>
+                    </form>
+                    <div className="flex mt-3 w-full text-center items-center gap-3 px-4 py-2 bg-red-400 hover:bg-red-500 rounded-md shadow-sm transition-all duration-200 w-fit">
+                      <div
+                        onClick={() => {
+                          deleteAddress(selectedAddress._id);
+                          setSelectedAddress(null);
+                          console.log("i am here");
+                        }}
+                        className="flex gap-3 mx-auto"
+                      >
+                        <Trash2 className="w-9 h-9 p-2  bg-white text-red-600 rounded-full hover:bg-gray-100  transition duration-200" />
+                        <button className="text-white font-semibold">
+                          Delete Address
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
             ) : (
               <div>
-                <h2 className="text-xl font-bold mb-4 text-center">
+                <h2 className="text-xl font-bold my-4 text-center">
                   New Address
                 </h2>
 
@@ -800,14 +966,14 @@ const ProfilePage = () => {
                       type="text"
                       className="w-full border rounded-lg px-4 py-2"
                       placeholder="House No."
-                      value={addAddress?.houseNo || "" }
+                      value={addAddress?.houseNo || ""}
                       onChange={(e) =>
                         setAddAddress({
                           ...addAddress,
                           houseNo: e.target.value,
                         })
                       }
-                      required
+                      
                     />
                     <input
                       type="text"
@@ -820,7 +986,6 @@ const ProfilePage = () => {
                           street: e.target.value,
                         })
                       }
-                      required
                     />
                     <input
                       type="text"
@@ -833,7 +998,6 @@ const ProfilePage = () => {
                           locality: e.target.value,
                         })
                       }
-                      required
                     />
                     <input
                       type="text"
@@ -846,7 +1010,6 @@ const ProfilePage = () => {
                           pincode: e.target.value,
                         })
                       }
-                      required
                     />
                     <select
                       className="w-full border rounded-lg px-4 py-2"
@@ -854,9 +1017,8 @@ const ProfilePage = () => {
                       onChange={(e) =>
                         setAddAddress({ ...addAddress, state: e.target.value })
                       }
-                      required
                     >
-                      <option value="" defaultChecked>
+                      <option value="" selected={addAddress === null} >
                         Select State
                       </option>
                       <option value="Andhra Pradesh">Andhra Pradesh</option>

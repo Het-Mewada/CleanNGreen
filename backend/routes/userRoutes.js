@@ -15,11 +15,13 @@ import { insertHelp } from "../controllers/helpController.js";
 //address
 import { addAddress } from "../controllers/userController.js";
 import { updateUserAddress } from "../controllers/userController.js";
+import { deleteAddress } from "../controllers/userController.js";
 const router = express.Router();
 
 router.get("/profile", protect ,  getUserProfile ); 
 router.post("/profile/add-address", protect , addAddress )
 router.put("/profile/update-address", protect , updateUserAddress )
+router.delete("/profile/delete-address" , protect , deleteAddress )
 router.put("/profile-pic", protect, updateProfilePic);
 router.post("/edit-profile", protect , updateUser ); 
 

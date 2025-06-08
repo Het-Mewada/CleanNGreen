@@ -11,7 +11,8 @@ export default function ProductsComponent({
   limit = null,
   homePageComponent = false,
 }) {
-  const { user, setUser , setDefaultaddress } = useContext(AuthContext);
+  const { user, setUser  } = useContext(AuthContext);
+  const [orderHistory , setOrderHistory] = useState([null])
   const [state, setState] = useState({
     products: [],
     cartProducts: [],
@@ -20,7 +21,7 @@ export default function ProductsComponent({
     error: null,
     invalidProfileErr: "",
     isCartOpen: false,
-    activeOption: "cart", 
+    activeOption: "cart",
     selectAddress: false,
     selectedAddress: null,
   });
@@ -51,11 +52,13 @@ export default function ProductsComponent({
           productLoading: false,
         }));
 
-        if (token) {
-          await axios.get(`${__API_URL__}/users/orders/view/${user._id}`, {
+      
+        const orders = await axios.get(`${__API_URL__}/users/orders/view/${user._id}`, {
             headers: { Authorization: `Bearer ${token}` },
-          });
-        }
+          })
+
+          setOrderHistory(orders.data.orders)
+
       } catch (err) {
         console.error("Error fetching data:", err);
         setState((prev) => ({ ...prev, productLoading: false }));
@@ -306,11 +309,19 @@ export default function ProductsComponent({
       </div>
     </div>
   );
+  const addAddress = () => {
+    navigate("/profile" , 
+{      state : {
+        openEditAddress : true,
+        activeState:"add"
+      }}
+    )
+  }
 
   const AddressItem = ({ address }) => (
     <div
       onClick={() => {
-        localStorage.setItem('defaultAddress',JSON.stringify(address))
+        localStorage.setItem("defaultAddress", JSON.stringify(address));
         handleStateUpdate({ selectedAddress: address, selectAddress: false });
         handleCheckout();
       }}
@@ -493,20 +504,79 @@ export default function ProductsComponent({
                   )}
                 </>
               ) : (
-                <div className="flex justify-between items-center p-6 border-b border-gray-200">
-                  <h2 className="text-2xl font-bold">Your Shopping History</h2>
-                  {state.invalidProfileErr && (
-                    <div className="bg-red-100 text-red-700 border border-red-400 px-4 py-2 rounded-md mt-2">
-                      {state.invalidProfileErr}
-                    </div>
-                  )}
-                  <button
-                    className="text-gray-500 hover:text-gray-700 text-2xl"
-                    onClick={() => handleStateUpdate({ isCartOpen: false })}
-                  >
-                    &times;
-                  </button>
+<div className="rounded-xl shadow-md overflow-scroll max-w-6xl mx-auto bg-gradient-to-br max-h-120 min-h-120 from-emerald-50 to-teal-50 rounded-xl  shadow-xl w-full max-w-2xl">
+  <div className="flex justify-between items-center p-6 border-b border-gray-200 bg-gradient-to-br from-emerald-50 to-teal-50 sticky top-0 bg-white z-10">
+    <h2 className="text-2xl font-bold text-green-700 ">Your Order History</h2>
+  </div>
+  
+  <div className="p-6">
+    {orderHistory.length === 0 ? (
+      <div className="text-center py-12">
+        <p className="text-gray-500 text-lg">No orders found</p>
+      </div>
+    ) : (
+      orderHistory.map((order, index) => (
+        <div
+          key={index}
+          className="border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow duration-200"
+        >
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-4 gap-4">
+            <div>
+              <h3 className="flex gap-2 text-xl font-semibold text-gray-800">
+                <div> Order #{index + 1} </div> <div className="mb-2"> </div>
+              </h3>
+              <p className="text-sm text-gray-500">
+                Ordered At: {new Date(order.orderedAt).toLocaleString()}
+              </p>
+            </div>
+            <span>
+
+            <p className="text-lg font-medium text-gray-700 bg-gray-50 px-3 py-1 rounded-lg">
+              Total: ₹{order.totalAmount}
+            </p><div className="rounded-full text-sm px-2 bg-red-200">Status : Placed</div>
+            </span>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {order.items.map((item, idx) => (
+              <div
+                key={idx}
+                className="border bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition duration-200 flex flex-col h-full"
+              >
+                <div className="aspect-square bg-gray-100 overflow-hidden">
+                  <img
+                    src={item.product?.imageUrl || '/placeholder-product.jpg'}
+                    alt={item.product?.name}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      e.target.src = '/placeholder-product.jpg';
+                    }}
+                  />
                 </div>
+                <div className="p-4 flex-grow">
+                  <h4 className="text-lg font-semibold text-gray-800 mb-1 line-clamp-2">
+                    {item.product?.name}
+                  </h4>
+                  <p className="text-sm text-gray-500 mb-1">
+                    Brand: {item.product?.brand || 'N/A'}
+                  </p>
+                  <div className="flex justify-between items-center mt-3">
+                    <p className="text-sm text-gray-500">
+                      Qty: {item.quantity}
+                    </p>
+                    <p className="text-base font-medium text-gray-700">
+                      ₹{item.priceAtTime}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))
+    )}
+  </div>
+</div>
               )}
             </div>
           </div>
@@ -520,12 +590,8 @@ export default function ProductsComponent({
               </h2>
               <div className="space-y-4 max-h-80 overflow-y-auto">
                 {Array.isArray(user.address) && user.address.length > 0 ? (
-                  user.address.map((address,index) => (
-                    <AddressItem
-                      key={address._id}
-                      address={address}
-
-                    />
+                  user.address.map((address, index) => (
+                    <AddressItem key={address._id} address={address} />
                   ))
                 ) : (
                   <p className="text-center text-gray-500">
@@ -534,6 +600,12 @@ export default function ProductsComponent({
                 )}
               </div>
               <div className="flex">
+                <button
+                  onClick={() => addAddress()}
+                  className="mt-6 w-full bg-green-500 text-white py-2 rounded-lg hover:bg-green-900"
+                >
+                  + Add New Address
+                </button>
                 <button
                   onClick={() => handleStateUpdate({ selectAddress: false })}
                   className="mt-6 w-full bg-red-500 text-white py-2 rounded-lg hover:bg-red-900"
@@ -569,6 +641,5 @@ export default function ProductsComponent({
         )}
       </div>
     </section>
-
   );
 }

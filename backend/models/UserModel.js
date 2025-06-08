@@ -63,9 +63,9 @@ const userSchema = new mongoose.Schema(
         trim: true
       },
       pincode: {
-        type: Number,
+        type: String,
         required: true,
-        match: [/^\d{6}$/, 'Invalid 6-digit pincode']
+        match: [/^\d{6}$/, 'Enter Valid 6-digit pincode']
       },
       state: {
         type: String,

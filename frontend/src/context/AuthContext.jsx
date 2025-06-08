@@ -9,7 +9,7 @@ export const AuthProvider = ({ children }) => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true); // Add loading state
   const [defaultAddress , setDefaultaddress] = useState(null)
-
+  const  [orders , setOrders] = useState([null])
   // Load user from local storage/token on initial render
   useEffect(() => {
     const initializeAuth = async () => {
@@ -145,7 +145,9 @@ export const AuthProvider = ({ children }) => {
         isAuthenticated,
         loading ,
         defaultAddress,
-        setDefaultaddress
+        setDefaultaddress,
+        orders,
+        setOrders,
       }}
     >
       {!loading && children}
