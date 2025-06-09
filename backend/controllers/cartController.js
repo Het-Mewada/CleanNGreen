@@ -7,7 +7,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 export const addItem = asyncHandler(async (req, res) => {
   const { userId, productId, quantity } = req.body;
-
+  console.log(userId , "AND " , productId , "AND " , quantity)
   try {
     const user = await User.findById(userId);
     const product = await Product.findById(productId);
@@ -36,7 +36,6 @@ export const addItem = asyncHandler(async (req, res) => {
 
 export const deleteItem = asyncHandler(async (req, res) => {
   const { userId, productId } = req.body;
-
   try {
     const user = await User.findById(userId);
 
@@ -89,8 +88,8 @@ console.log(cartProducts)
     payment_method_types: ['card'],
     line_items,
     mode: 'payment',
-    success_url: `http://localhost:5173/success?session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: `http://localhost:5173/cancel`,
+    success_url: `${process.env.FRONTEND_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url: `${process.env.FRONTEND_URL}/cancel`,
     metadata: {
       userId: userId,
     },
@@ -101,12 +100,10 @@ console.log(cartProducts)
 
 
 export const verifyPayment = asyncHandler(async(req,res)=>{
-  console.log("het mewada")
   const sig = req.headers['stripe-signature'];
   let event;
-  
+  console.log("request Body " , req.body)
   try {
-    console.log("try block started")
     event = stripe.webhooks.constructEvent(
       req.body,
       sig,
@@ -114,7 +111,6 @@ export const verifyPayment = asyncHandler(async(req,res)=>{
     );
     console.log(event.type)
     } catch (err) {
-      console.log("catch block started")
       console.log("Error in catch block of verify : " , err)
       return res.status(400).send(`Webhook Error: ${err.message}`);
     }
