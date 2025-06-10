@@ -191,8 +191,8 @@ export default function ProductsComponent({
   };
 
   const ProductCard = ({ product }) => (
-    <div className="group relative bg-white rounded-2xl overflow-scroll shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100">
-      <div className="relative h-64 overflow-scroll">
+    <div className="group relative bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100">
+      <div className="relative h-64 overflow-hidden">
         <img
           src={product.imageUrl}
           alt={product.name}

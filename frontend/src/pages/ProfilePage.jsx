@@ -42,11 +42,6 @@ const ProfilePage = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const menuOptions = [
-    { label: "Edit", onClick: () => {} },
-    { label: "Delete", onClick: () => alert("Address Deleted") },
-  ];
-
   useEffect(() => {
     if (location.state?.openEditAddress) {
       setOpenEditAddress(true);
@@ -56,7 +51,7 @@ const ProfilePage = () => {
       setLoading(true);
       const token = JSON.parse(localStorage.getItem("user"))?.token;
       if (!token) {
-        setError("No token found. Please log in.");
+        setError("No profile data , Please Login");
         setLoading(false);
         return;
       }
@@ -89,7 +84,7 @@ const ProfilePage = () => {
     const token = JSON.parse(localStorage.getItem("user"))?.token;
 
     if (!token) {
-      setError("No token found. Please log in.");
+      setError("No profile data , Please Login");
       setLoading(false);
       return;
     }
@@ -245,11 +240,11 @@ const validateAddress = ({ houseNo, street, locality, pincode, state }) => {
 };
 
   return (
-    <Container className="mt-25" style={{ paddingBottom: "60px" }}>
+    <Container className="mt-25 " style={{ paddingBottom: "60px" }}>
       <Row className="justify-content-center">
-        <Col md={8}>
+        <Col className="max-w-80">
           <Card
-            className=" shadow-lg p-4 bg-dark border-0"
+            className=" shadow-lg px-10 bg-dark border-0"
             style={{ borderRadius: "20px", backgroundColor: "#ffffff" }}
           >
             <Card.Body>
@@ -275,9 +270,10 @@ const validateAddress = ({ houseNo, street, locality, pincode, state }) => {
                   <p className="mt-2">Loading...</p>
                 </div>
               ) : user ? (
-                <>
-                  <div className=" text-center flex justify-center mb-4">
-                    <div
+                <div>
+                  <div className=" grid md:grid-cols-2 sm:grid-cols-1">
+                  <div className=" text-center flex justify-center mb-4 ">
+                    <div className="my-auto"
                       style={{ position: "relative", display: "inline-block" }}
                     >
                       <img
@@ -289,29 +285,25 @@ const validateAddress = ({ houseNo, street, locality, pincode, state }) => {
                             : "https://cdn-icons-png.flaticon.com/256/6997/6997662.png"
                         }
                         alt="Profile"
-                        className="rounded-circle border border-2"
+                        className="rounded-circle cover h-63 w-63 sm:h-50 sm:w-50"
                         style={{
-                          width: "150px",
-                          height: "150px",
                           objectFit: "cover",
-                          borderColor: "#278783",
-                          boxShadow: "0 0 10px rgba(39, 135, 131, 0.4)",
                         }}
                       />
                       <div
-                        style={{
-                          position: "absolute",
-                          bottom: "0px",
-                          right: "0px",
-                          backgroundColor: "#000000",
-                          width: "50px",
-                          height: "50px",
-                          borderRadius: "50%",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          boxShadow: "0 0 5px rgba(0, 0, 0, 0.3)",
-                        }}
+                          className="
+                              absolute 
+                              bottom-0 
+                              right-0 
+                              bg-[#278783] 
+                              w-[60px] 
+                              h-[60px] 
+                              rounded-full 
+                              flex 
+                              items-center 
+                              justify-center 
+                              shadow-[0_0_5px_rgba(0,0,0,0.3)]
+                            "
                         onClick={() => {
                           setEditFormData(user);
                           setIsEditModeOpen(user);
@@ -319,8 +311,8 @@ const validateAddress = ({ houseNo, street, locality, pincode, state }) => {
                       >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
-                          width="22"
-                          height="22"
+                          width="26"
+                          height="26"
                           fill="white"
                           viewBox="0 0 16 16"
                         >
@@ -572,7 +564,7 @@ const validateAddress = ({ houseNo, street, locality, pincode, state }) => {
                     )}
                   </div>
 
-                  <Card
+<div>                  <Card
                     className="mb-4 bg-dark"
                     style={{ borderColor: "#FFEBD0" }}
                   >
@@ -612,14 +604,15 @@ const validateAddress = ({ houseNo, street, locality, pincode, state }) => {
                       </p>
                     </Card.Body>
                   </Card>
-
+                    </div>
+</div>
                   <div className="flex justify-between mt-4">
                     <Button
                       variant="primary"
                       onClick={() => {
                         setOpenEditAddress(true);
                       }}
-                    >
+                      >
                       Manage Addresses
                     </Button>
                     <Button
@@ -630,7 +623,7 @@ const validateAddress = ({ houseNo, street, locality, pincode, state }) => {
                       Logout
                     </Button>
                   </div>
-                </>
+                </div>
               ) : (
                 <p className="text-center">No user data available.</p>
               )}

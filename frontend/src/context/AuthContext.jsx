@@ -1,25 +1,26 @@
 import { createContext, useState, useEffect } from "react";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
+import {BeatLoader} from 'react-spinners'
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true); // Add loading state
-  const [defaultAddress , setDefaultaddress] = useState(null)
-  const  [orders , setOrders] = useState([null])
+  const [loading, setLoading] = useState(false); // Add loading state
+  const [defaultAddress, setDefaultaddress] = useState(null);
+  const [orders, setOrders] = useState([null]);
   // Load user from local storage/token on initial render
   useEffect(() => {
     const initializeAuth = async () => {
       try {
         const userData = JSON.parse(localStorage.getItem("user"));
-        
+
         if (userData?.token) {
           // Verify token is still valid
           const decoded = jwtDecode(userData.token);
-          
+
           // Check if token is expired
           if (decoded.exp * 1000 < Date.now()) {
             localStorage.removeItem("user");
@@ -27,12 +28,13 @@ export const AuthProvider = ({ children }) => {
           }
 
           // Fetch fresh user data
+          setLoading(true);
           const res = await axios.get(`${__API_URL__}/users/profile`, {
             headers: {
               Authorization: `Bearer ${userData.token}`,
             },
           });
-          
+
           setUser({
             ...res.data,
             token: userData.token,
@@ -63,7 +65,7 @@ export const AuthProvider = ({ children }) => {
 
       // Store the complete user data in state
       setUser(data);
-      
+
       // Store necessary data in localStorage
       const userData = {
         role: data.role,
@@ -134,16 +136,29 @@ export const AuthProvider = ({ children }) => {
     return !!user;
   };
 
+  if (loading) {
+    return (
+      <div className="fixed inset-0 flex items-center m-auto justify-center  z-50">
+        <div className=" animate-spin h-12 w-12 ">
+        <img src="https://cdn-icons-png.flaticon.com/128/16445/16445103.png" /> 
+        </div>
+        <div className="mx-2 font-bold">
+            Loading...
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <AuthContext.Provider 
-      value={{ 
-        user, 
-        setUser, 
-        login, 
-        register, 
-        logout, 
+    <AuthContext.Provider
+      value={{
+        user,
+        setUser,
+        login,
+        register,
+        logout,
         isAuthenticated,
-        loading ,
+        loading,
         defaultAddress,
         setDefaultaddress,
         orders,

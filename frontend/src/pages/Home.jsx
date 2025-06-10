@@ -10,39 +10,38 @@ import AuthContext from "../context/AuthContext";
 import NewsletterSubscription from "../components/homePageCompo/NewsLetterSubCompo";
 
 const Home = () => {
-  // const [news, setNews] = useState([]);
   const { user, setUser } = useContext(AuthContext);
   const [activeTab, setActiveTab] = useState("initiatives");
   const [loading,setLoading] = useState(false)  
 
-  useEffect(() => {
-    const fetchUserProfile = async () => {
-      setLoading(true);
-      const token = JSON.parse(localStorage.getItem("user"))?.token;
-      if (!token) {
-        setError("No token found. Please log in.");
-        setLoading(false);
-        return;
-      }
-      try {
-        const res = await axios.get(`${__API_URL__}/users/profile`, {
-          withCredentials: true,
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+  // useEffect(() => {
+  //   const fetchUserProfile = async () => {
+  //     setLoading(true);
+  //     const token = JSON.parse(localStorage.getItem("user"))?.token;
+  //     if (!token) {
+  //       setError("No profile data , Please Login");
+  //       setLoading(false);
+  //       return;
+  //     }
+  //     try {
+  //       const res = await axios.get(`${__API_URL__}/users/profile`, {
+  //         withCredentials: true,
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       });
 
-        setUser(res.data);
-      } catch (err) {
-        console.error("Error fetching profile:", err);
-        setError("Failed to fetch profile. Please try again.");
-      } finally {
-        setLoading(false);
-      }
-    };
+  //       setUser(res.data);
+  //     } catch (err) {
+  //       console.error("Error fetching profile:", err);
+  //       setError("Failed to fetch profile. Please try again.");
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
 
-    fetchUserProfile();
-  }, []);
+  //   fetchUserProfile();
+  // }, []);
 
   return (
     <div className="bg-gradient-to-r from-emerald-600 to-teal-500">
