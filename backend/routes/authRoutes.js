@@ -13,12 +13,13 @@ router.post("/login", loginUser);
 router.post("/logout", logoutUser);
 
 
-router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+router.get('/google', ()=> { console.log("readched /google")},passport.authenticate('google', { scope: ['profile', 'email'] }));
 
 router.get('/google/callback', passport.authenticate('google', { session: false }), (req, res) => {
+  console.log("reached here")
   const user = req.user?.toObject ? req.user.toObject() : { ...req.user };
   const token = jwt.sign( user , process.env.JWT_SECRET, { expiresIn: '7d' });
-  res.redirect(`http://localhost:5173/social-auth-success?token=${token}`);
+  res.redirect(`${process.env.FRONTEND_URL}/social-auth-success?token=${token}`);
 })
 
 
