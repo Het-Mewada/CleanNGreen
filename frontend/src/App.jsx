@@ -50,61 +50,70 @@ function MainApp() {
 
   return (
     <>
-      <div className="flex flex-col min-h-screen" style={{}}>
-        <FuturisticCursor />
-        <ClickSpark
-          sparkColor="black"
-          sparkSize={10}
-          sparkRadius={15}
-          sparkCount={8}
-          duration={400}
-        >
-          {" "}
-          {showComponents && (
-            <div
-              className="fixed top-0 left-0 w-full z-50"
-              style={{ overflowx: "hidden" }}
-            >
-              <Nav />
-            </div>
-          )}
-          {/* Spacer div to push content below fixed navbar */}
-          <div className="flex-grow">
-            <Toaster position="top-right" reverseOrder={false} />
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/home" element={<Home />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/profile" element={<ProfilePage />} />
-              <Route path="/social-auth-success" element={<OAuthSuccess />} />
-              <Route path="/about" element={<AboutUs />} />
-              <Route path="/initiatives/*" element={<Initiatives />} />
-              <Route path="/marketplace" element={<div className="mt-9"><ProductsComponent /></div>} />
-              <Route path="/feedback-admin" element={<FeedbackDashboard />} />
-              <Route path="/feedback-form" element={<FeedbackForm />} />
-              <Route element={<ProtectedRoute usersOnly={true} />} /> 
-              <Route path="/admin-dashboard" element={<AdminPanel />} />
-              <Route path="/insert-data" element={<Data />} />
-              <Route path="/blocked-users" element={<Blocked />} />
-              <Route path="/help-form" element={<NeedHelpForm/>} />
-              <Route path="/help-list" element={<HelpRequestsList/>} />
-              <Route path="/success" element={<OrderSuccess/>} />
-              <Route path="/cancel" element={<PaymentCancelled/>} />
-              <Route
-                path="*"
-                element={
-                  <h1 className="text-center text-3xl p-10">
-                    <span className="text-red-500">404</span> <br /> Page Not
-                    Found
-                  </h1>
-                }
-              />
-            </Routes>
+      <FuturisticCursor />
+      <ClickSpark
+        sparkColor="black"
+        sparkSize={10}
+        sparkRadius={15}
+        sparkCount={8}
+        duration={400}
+      >
+        {" "}
+        {showComponents && (
+          <div
+            className="fixed top-0 left-0 w-full z-50"
+            style={{ overflowx: "hidden" }}
+          >
+            <Nav />
           </div>
-          {showComponents && <Footer />}
-        </ClickSpark>
-      </div>
+        )}
+        {/* Spacer div to push content below fixed navbar */}
+        <div className="flex-grow">
+          <Toaster position="top-right" reverseOrder={false} />
+          <Routes>
+
+
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/" element={<Home />} />
+
+
+            {/* <ProtectedRoute usersOnly={true} /> */}
+            <Route path="/home" element={<Home />} />
+            <Route path="/about" element={<AboutUs />} />
+            <Route path="/initiatives/*" element={<Initiatives />} />
+            <Route
+              path="/marketplace"
+              element={
+                <div className="mt-9">
+                  <ProductsComponent />
+                </div>
+              }
+            />
+            <Route path="/feedback-form" element={<FeedbackForm />} />
+            <Route path="/help-form" element={<NeedHelpForm />} />
+            <Route path="/social-auth-success" element={<OAuthSuccess />} />
+            <Route path="/success" element={<OrderSuccess />} />
+            <Route path="/cancel" element={<PaymentCancelled />} />
+            <Route
+              path="*"
+              element={
+                <h1 className="text-center text-3xl p-10">
+                  <span className="text-red-500">404</span> <br /> Page Not
+                  Found
+                </h1>
+              }
+            />
+            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/help-list" element={<HelpRequestsList />} />
+            <Route path="/feedback-admin" element={<FeedbackDashboard />} />
+            <Route path="/insert-data" element={<Data />} />
+            <Route path="/blocked-users" element={<Blocked />} />
+            <Route path="/admin-dashboard" element={<AdminPanel />} />
+          </Routes>
+        </div>
+        {showComponents && <Footer />}
+      </ClickSpark>
     </>
   );
 }

@@ -16,6 +16,10 @@ import { insertHelp } from "../controllers/helpController.js";
 import { addAddress } from "../controllers/userController.js";
 import { updateUserAddress } from "../controllers/userController.js";
 import { deleteAddress } from "../controllers/userController.js";
+//account manage
+import { deleteAccount } from "../controllers/userController.js";
+import { fetchDeletionStatus } from "../controllers/userController.js";
+import { cancelDeletionRequest } from "../controllers/userController.js";
 const router = express.Router();
 
 router.get("/profile", protect ,  getUserProfile ); 
@@ -34,7 +38,11 @@ router.post("/cart/webhook" , express.raw({ type: 'application/json' }) , verify
 //View Orders
 router.get("/orders/view/:userId" , protect , showPrevOrders )
 
-
 //Help
 router.post("/help/submit-req" , protect , insertHelp )
+
+//Account Management
+router.get("/:id/deletion-status" , protect , fetchDeletionStatus)
+router.post("/:id/request-deletion",protect , deleteAccount);
+router.post("/:id/cancel-deletion" , protect , cancelDeletionRequest);
 export default router;

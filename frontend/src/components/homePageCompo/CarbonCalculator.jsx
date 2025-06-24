@@ -352,7 +352,7 @@
               
               {results.totalCO2 === null ? (
                 <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 text-center">
-                  <img src="https://cdn-icons-png.flaticon.com/512/992/992700.png" alt="Calculator" className="w-24 mx-auto mb-4 opacity-50" />
+                  <img src="/images/calculator-clock.png" alt="Calculator" className="w-24 mx-auto mb-4 opacity-50" />
                   <h4 className="text-lg font-medium text-gray-700 mb-2">Enter Your Details</h4>
                   <p className="text-gray-500">Fill in your consumption patterns to see your personalized carbon footprint analysis.</p>
                 </div>

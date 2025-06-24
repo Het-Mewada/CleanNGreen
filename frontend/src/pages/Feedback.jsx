@@ -80,7 +80,6 @@ const FeedbackForm = () => {
         },
       });
 
-      setResponse(response.data.message);
 
       // Reset form on success
       setFormData({
@@ -91,8 +90,7 @@ const FeedbackForm = () => {
         name: user?.name || "" 
       });
 
-      setSubmitSuccess(true);
-      setTimeout(() => setSubmitSuccess(false), 4000);
+      toast.success(response.data.message)
     } catch (error) {
       let message = "Failed to submit feedback. Please try again.";
 
@@ -139,62 +137,7 @@ const FeedbackForm = () => {
 
   return (
     <div className="min-h-screen mt-15 flex flex-col gap-4 items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-50 p-4">
-                <AnimatePresence>
-            {submitSuccess && (
-              <motion.div
-                initial={{ opacity: 0, y: -20, scale: 0.95 }}
-                animate={{
-                  opacity: 1,
-                  y: 0,
-                  scale: 1,
-                  transition: { type: "spring", damping: 10, stiffness: 100 },
-                }}
-                exit={{
-                  opacity: 0,
-                  y: -10,
-                  transition: { duration: 0.2 },
-                }}
-                className="fixed top-23 right-4 bg-green-50 border border-green-200 rounded-lg shadow-sm p-4"
-                layout // Add layout animation if parent container changes
-              >
-                <div className="flex items-start">
-                  <div className="flex-shrink-0">
-                    <motion.div
-                      initial={{ scale: 0 }}
-                      animate={{
-                        scale: 1,
-                        transition: { delay: 0.15, type: "spring" },
-                      }}
-                    >
-                      <FiCheck className="h-5 w-5 text-green-500" />
-                    </motion.div>
-                  </div>
-                  <div className="ml-3">
-                    <motion.p
-                      className="text-sm text-green-800"
-                      initial={{ y: 5, opacity: 0 }}
-                      animate={{
-                        y: 0,
-                        opacity: 1,
-                        transition: { delay: 0.25 },
-                      }}
-                    >
-                      {response}
-                    </motion.p>
-                  </div>
-                  <motion.button
-                    onClick={() => setSubmitSuccess(false)}
-                    className="ml-auto -mt-1 -mr-1 p-1 rounded-full hover:bg-green-100 transition-colors"
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.95 }}
-                    aria-label="Dismiss"
-                  >
-                    <FiX className="h-4 w-4 text-green-500" />
-                  </motion.button>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -444,10 +387,9 @@ const FeedbackForm = () => {
                 disabled={isSubmitting}
                 className={`w-full flex items-center justify-center px-6 py-3 border border-transparent rounded-lg shadow-sm text-white font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-200 ${
                   isSubmitting
-                    ? "bg-indigo-400 cursor-not-allowed"
-                    : "bg-indigo-600 hover:bg-indigo-700 hover:shadow-md"
+                    ? "bg-[#278783] cursor-not-allowed"
+                    : "bg-[#278783] hover:bg-[#278783] hover:shadow-md"
                 }`}
-                whileHover={!isSubmitting ? { scale: 1.02 } : {}}
                 whileTap={!isSubmitting ? { scale: 0.98 } : {}}
               >
                 {isSubmitting ? (

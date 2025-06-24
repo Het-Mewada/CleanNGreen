@@ -7,6 +7,7 @@ export const insertHelp = asyncHandler(async(req,res)=>{
         name:req.body.name,
         phone:req.body.phone,
         email:req.body.email,
+        preferredContact:req.body.preferredContact,
         subject:req.body.subject,
         message:req.body.message
     })

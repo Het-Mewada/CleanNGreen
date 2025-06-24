@@ -10,7 +10,7 @@
   font-style: normal;
 }
 * {
-  cursor: url('./components/universalCompos/pastel-cursor.svg') ;
+  /* cursor: url('./components/universalCompos/pastel-cursor.svg') ; */
 }
 /* Reset scrolling behavior */
 html {
@@ -51,4 +51,8 @@ body,
 .heading {
   font-family: "Oswald", sans-serif;
   font-style: normal;
+}
+
+#calculator, #newsletter, #marketplace, #news {
+  scroll-margin-top: 80px;
 }

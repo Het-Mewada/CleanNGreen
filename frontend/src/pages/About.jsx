@@ -25,7 +25,7 @@ const AboutUs = () => {
       {/* Our Story */}
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="lg:grid lg:grid-cols-2 lg:gap-16 items-center">
+          <div className=" items-center">
             <div className="mb-10 lg:mb-0">
               <h2 className="text-3xl font-bold text-gray-900 mb-6">
                 Our <span className="text-green-600">Story</span>
@@ -55,17 +55,6 @@ const AboutUs = () => {
                   <span>Community-driven environmental initiatives</span>
                 </li>
               </ul>
-            </div>
-            <div className="relative rounded-xl overflow-hidden shadow-xl">
-              <img 
-                src="https://images.unsplash.com/photo-1466611653911-95081537e5b7?q=80&w=2070&auto=format&fit=crop" 
-                alt="Team working on sustainability project" 
-                className="w-full h-auto object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-green-800 to-transparent opacity-60"></div>
-              <div className="absolute bottom-0 left-0 p-6 text-white">
-                <p className="text-sm font-medium">Our team at the 2023 GreenTech Conference</p>
-              </div>
             </div>
           </div>
         </div>
@@ -217,25 +206,25 @@ const AboutUs = () => {
                 name: "Ruchi Gondaliya",
                 role: "Founder & CEO",
                 bio: "Environmental scientist with 15 years in sustainability research",
-                img: "https://res.cloudinary.com/dxomggimq/image/upload/v1745827591/ruchi_khvlf8.jpg"
+                img: "images/admins/ruchi.jpg"
               },
               {
                 name: "Nandini Patel",
                 role: "CTO",
                 bio: "Green tech innovator building our digital platforms",
-                img: "https://res.cloudinary.com/dxomggimq/image/upload/v1745743822/Screenshot_20231009_150442_Instagram_1_jrel2v.jpg"
+                img: "images/admins/nandini.jpg"
               },
               {
                 name: "Yogesh Patel",
                 role: "Head of Education",
                 bio: "Former teacher creating our sustainability curriculum",
-                img: "https://res.cloudinary.com/dxomggimq/image/upload/v1745827916/yogesh_xgp8kw.jpg"
+                img: "images/admins/yogesh.jpg"
               },
               {
                 name: "Het Mewada",
                 role: "Community Manager",
                 bio: "Connects our members to local environmental initiatives",
-                img: "https://res.cloudinary.com/dxomggimq/image/upload/v1745743728/IMG-20240214-WA0041_1_vdtuk9.jpg"
+                img: "images/admins/het.jpg"
               }
             ].map((member, index) => (
               <div key={index} className="bg-green-800 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">

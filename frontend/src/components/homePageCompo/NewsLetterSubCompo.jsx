@@ -6,6 +6,8 @@ const NewsletterSubscription = () => {
   const { user } = useContext(AuthContext);
   const [subscriptionSuccess, setSubscriptionSuccess] = useState(false);
   const [error, setError] = useState("");
+
+
   const handleSubscribe = (e) => {
     e.preventDefault();
     const token = JSON.parse(localStorage.getItem("user"))?.token;
@@ -20,7 +22,10 @@ const NewsletterSubscription = () => {
     axios
       .post(
         `${__API_URL__}/subscribe`,
-        {  email },
+        { 
+          id : user._id, 
+          email : user.email
+        },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -31,7 +36,10 @@ const NewsletterSubscription = () => {
         setSubscriptionSuccess(true);
         setTimeout(() => setSubscriptionSuccess(false), 3000);
       })
-      .catch((err) => console.error(err));
+      .catch((err) => {
+        toast.error(err.response.data.message)
+        console.error(err.response.data.message)
+      });
   };
 
   return (

@@ -88,6 +88,7 @@ const verifyOtp = asyncHandler(async (req, res) => {
 // @route POST /api/auth/login
 const loginUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
+  
   const user = await User.findOne({ email });
 
 
@@ -120,7 +121,6 @@ const loginUser = asyncHandler(async (req, res) => {
 });
 
 // @desc Logout user
-// @route POST /api/auth/logout
 const logoutUser = asyncHandler(async (req, res) => {
   res.cookie("jwt", "", { httpOnly: true, expires: new Date(0) });
   res.json({ message: "Logged out successfully" });

@@ -3,9 +3,17 @@ import User from "../models/UserModel.js";
 import Feedback from "../models/FeedbackModel.js";
 import Subscriber from "../models/Subscriber.js";
 
+//Fetch detion Requested Users
+export const fetchDeletionRequestedUsers = asyncHandler(async(req,res)=>{
+      const users = await User.find({ deletionRequested: true })
+      .select("name email gender role deletionReason createdAt")
+      .lean();
+    res.json(users);
+})
+
 //delete User
 export const deleteUser = asyncHandler(async (req, res) => {
-  const id = req.body.userId;
+  const id = req.params.userId;
 
   if (!id) {
     res.status(400);

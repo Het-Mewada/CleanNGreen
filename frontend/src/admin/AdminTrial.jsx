@@ -7,6 +7,8 @@ import BlockedUsers from "./Blocked";
 import InsertData from "../pages/InsertData";
 import AdminFeedbackDashboard from "./User-feedbacks";
 import NewsSubs from "./LetterSubs";
+import HelpRequestList from "./NeedHelp";
+import DeletionRequests from "./DeletionReqs";
 const AdminPanel = () => {
   const [activeTab, setActiveTab] = useState("users");
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -33,17 +35,10 @@ const AdminPanel = () => {
         return <AdminFeedbackDashboard/>;
         
       case "contact":
-        return (
-          <div className="p-6">
-            <h2 className="text-2xl font-bold mb-4">
-              Contact Form Submissions
-            </h2>
-            <p className="text-gray-600">
-              View and manage form entries submitted by users who reached out
-              through the Contact Us page.
-            </p>
-          </div>
-        );
+        return  <HelpRequestList/>
+      
+      case "del-req":
+        return <DeletionRequests/>
       default:
         return (
           <div className="p-6">
@@ -227,6 +222,34 @@ const AdminPanel = () => {
                 </svg>
 
                 {sidebarOpen && <span className="ml-3">Contact Us</span>}
+              </button>
+            </li>
+                        <li>
+              <button
+                onClick={() => {
+                  setActiveTab("del-req");
+                  toggleSidebar();
+                }}
+                className={`w-full flex items-center px-5 py-4 ${
+                  activeTab === "orders" ? "bg-[#1f6d69]" : "hover:bg-[#1f6d69]"
+                } transition`}
+              >
+                <svg
+                  className="w-6 h-6 text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25H4.5a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0a2.25 2.25 0 00-2.25-2.25H4.5a2.25 2.25 0 00-2.25 2.25m19.5 0l-9.75 6.75L2.25 6.75"
+                  />
+                </svg>
+
+                {sidebarOpen && <span className="ml-3">Delete Request</span>}
               </button>
             </li>
           </ul>

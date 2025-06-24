@@ -12,7 +12,13 @@ const Login = () => {
   // const GoogleLoginButton = () => {
   const handleGoogleLogin = (e) => {
     e.preventDefault()
-    window.location.href = `https://cleanngreen.onrender.com/api/auth/google`;
+    try{
+      window.location.href = `https://cleanngreen.onrender.com/api/auth/google`;
+      // window.location.href = `http://localhost:5000/api/auth/google`;
+
+    }catch(err){
+      setError(err.message)
+    }
     
   };
 
@@ -111,7 +117,7 @@ const Login = () => {
               >
                 <span className=" flex gap-4 text-sm  font-medium text-gray-700">
                 <img
-                  src="https://www.svgrepo.com/show/475656/google-color.svg"
+                  src="/images/google.svg"
                   alt="Google"
                   className="w-5 h-5"
                 />
@@ -166,3 +172,5 @@ Continue with Google                </span>
 };
 
 export default Login;
+
+

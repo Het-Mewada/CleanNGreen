@@ -3,6 +3,7 @@ import axios from "axios";
 import FileUpload from "../components/FileUpload";
 import toast from "react-hot-toast";
 import { Trash2 } from "lucide-react";
+import DeleteAccountButton from "../components/DeleteAccountButton";
 import {
   Container,
   Card,
@@ -38,7 +39,7 @@ const ProfilePage = () => {
     status: "idle",
     message: "",
   });
-  const { user, setUser, logout , orders , setOrders  } = useContext(AuthContext);
+  const { user, setUser, logout, orders, setOrders } = useContext(AuthContext);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -63,7 +64,7 @@ const ProfilePage = () => {
           },
         });
         console.log("profile data : ", res.data.orders);
-        setOrders(res.data.orders)
+        setOrders(res.data.orders);
         setUser(res.data);
         // console.log(res.data)
         setAddresses(res.data.address);
@@ -101,10 +102,15 @@ const ProfilePage = () => {
 
       setProfilePic(data.profilePic);
       setError(null);
-      alert("Profile picture updated successfully!");
-    } catch (err) {
+      toast.success(data.message);
+      setIsEditModeOpen(false);
+    } catch (error) {
       setError("Error updating profile picture. Please try again.");
-      console.error("Error updating profile", err);
+      if (error.response && error.response.data) {
+        toast.error("Error:", error.response.data.message)
+      } else {
+        toast.error("Unknown error:", error.message)
+      }
     } finally {
       setLoading(false);
     }
@@ -157,8 +163,8 @@ const ProfilePage = () => {
   const addAddressHandler = async (e) => {
     e.preventDefault();
 
-    if(!validateAddress(addAddress)){
-      return
+    if (!validateAddress(addAddress)) {
+      return;
     }
     try {
       const token = JSON.parse(localStorage.getItem("user")).token;
@@ -180,13 +186,13 @@ const ProfilePage = () => {
       );
 
       console.log("Address added: ", res.data);
-      toast.success(res.data.message)
+      toast.success(res.data.message);
       setAddresses(res.data.addresses);
       setSelectedAddress(null);
       setAddAddress(null);
     } catch (err) {
       console.error("Error adding address:", err);
-      toast.error(err.response.data.errors[0])
+      toast.error(err.response.data.errors[0]);
     }
   };
 
@@ -217,27 +223,27 @@ const ProfilePage = () => {
       setError(err.message);
     }
   }
-  
-const validateAddress = ({ houseNo, street, locality, pincode, state }) => {
-  const errors = [];
 
-  if (!houseNo?.trim()) errors.push("House No is required");
-  if (!street?.trim()) errors.push("Street is required");
-  if (!locality?.trim()) errors.push("Locality is required");
+  const validateAddress = ({ houseNo, street, locality, pincode, state }) => {
+    const errors = [];
 
-  // Check for 6-digit pincode (India-style)
-  if (!/^\d{6}$/.test(pincode)) errors.push("Enter a valid 6-digit pincode");
+    if (!houseNo?.trim()) errors.push("House No is required");
+    if (!street?.trim()) errors.push("Street is required");
+    if (!locality?.trim()) errors.push("Locality is required");
 
-  if (!state?.trim()) errors.push("State is required");
+    // Check for 6-digit pincode (India-style)
+    if (!/^\d{6}$/.test(pincode)) errors.push("Enter a valid 6-digit pincode");
 
-  // If there are errors, show the first and stop further
-  if (errors.length > 0) {
-    toast.error(errors[0]);
-    return false; // stop further execution
-  }
+    if (!state?.trim()) errors.push("State is required");
 
-  return true; // valid
-};
+    // If there are errors, show the first and stop further
+    if (errors.length > 0) {
+      toast.error(errors[0]);
+      return false; // stop further execution
+    }
+
+    return true; // valid
+  };
 
   return (
     <Container className="mt-25 " style={{ paddingBottom: "60px" }}>
@@ -259,7 +265,7 @@ const validateAddress = ({ houseNo, street, locality, pincode, state }) => {
                   paddingBottom: "8px",
                 }}
               >
-                User Profile
+                Profile
               </h2>
 
               {error && <Alert variant="danger">{error}</Alert>}
@@ -272,279 +278,65 @@ const validateAddress = ({ houseNo, street, locality, pincode, state }) => {
               ) : user ? (
                 <div>
                   <div className=" grid md:grid-cols-2 sm:grid-cols-1">
-                  <div className=" text-center flex justify-center mb-4 ">
-                    <div className="my-auto"
-                      style={{ position: "relative", display: "inline-block" }}
-                    >
-                      <img
-                        src={
-                          profilePic
-                            ? profilePic
-                            : user.gender === "male"
-                            ? "https://w7.pngwing.com/pngs/490/157/png-transparent-male-avatar-boy-face-man-user-flat-classy-users-icon.png"
-                            : "https://cdn-icons-png.flaticon.com/256/6997/6997662.png"
-                        }
-                        alt="Profile"
-                        className="rounded-circle cover h-63 w-63 sm:h-50 sm:w-50"
-                        style={{
-                          objectFit: "cover",
-                        }}
-                      />
+                    <div className=" text-center flex justify-center mb-4 ">
                       <div
+                        className="my-auto"
+                        style={{
+                          position: "relative",
+                          display: "inline-block",
+                        }}
+                      >
+                        <img
+                          src={
+                            profilePic
+                              ? profilePic
+                              : user.gender === "male"
+                              ? "/images/male-avatar.svg"
+                              : "https://cdn-icons-png.flaticon.com/256/6997/6997662.png"
+                          }
+                          alt="Profile"
+                          className="rounded-full fit h-40 w-40 sm:h-63 sm:w-63"
+                          style={{
+                            objectFit: "cover",
+                          }}
+                        />
+                        <div
                           className="
                               absolute 
                               bottom-0 
                               right-0 
                               bg-[#278783] 
-                              w-[60px] 
-                              h-[60px] 
+                              w-[50px] 
+                              h-[50px] 
                               rounded-full 
                               flex 
                               items-center 
                               justify-center 
                               shadow-[0_0_5px_rgba(0,0,0,0.3)]
+                              sm:h-[60px]
+                              sm:w-[60px]
                             "
-                        onClick={() => {
-                          setEditFormData(user);
-                          setIsEditModeOpen(user);
-                        }}
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="26"
-                          height="26"
-                          fill="white"
-                          viewBox="0 0 16 16"
+                          onClick={() => {
+                            setEditFormData(user);
+                            setIsEditModeOpen(user);
+                          }}
                         >
-                          <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z" />
-                        </svg>
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="26"
+                            height="26"
+                            fill="white"
+                            viewBox="0 0 16 16"
+                          >
+                            <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z" />
+                          </svg>
+                        </div>
                       </div>
-                    </div>
-                    {isEditModeOpen && (
-                      <div className="fixed  inset-0 flex  items-center justify-center z-50 backdrop-blur-sm bg-slate-900/20">
-                        <div className="bg-slate-50 max-h-150 max-w-150 overflow-scroll rounded-xl shadow-lg p-6 w-full  relative animate-fade-in-down">
-                          {/* Close button (only shown when not in loading state) */}
-                          {editStatus.status !== "loading" && (
-                            <button
-                              onClick={() => {
-                                setIsEditModeOpen(null);
-                                setEditStatus({ status: "idle", message: "" });
-                              }}
-                              className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-2xl transition-colors"
-                            >
-                              &times;
-                            </button>
-                          )}
-
-                          {/* Loading State */}
-                          {editStatus.status === "loading" && (
-                            <div className="text-center space-y-4">
-                              <div className="mx-auto w-16 h-16 rounded-full bg-teal-100 flex items-center justify-center mb-2 animate-spin">
-                                <svg
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  className="h-8 w-8 text-teal-400"
-                                  fill="none"
-                                  viewBox="0 0 24 24"
-                                  stroke="currentColor"
-                                >
-                                  <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                                  />
-                                </svg>
-                              </div>
-                              <p className="text-teal-600 font-medium">
-                                {editStatus.message}
-                              </p>
-                            </div>
-                          )}
-
-                          {/* Initial Form State */}
-                          {editStatus.status === "idle" && (
-                            <div className="text-center space-y-4  ">
-                              <div className="mx-auto w-16 h-16 rounded-full bg-teal-100 flex items-center justify-center mb-2">
-                                <svg
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  className="h-8 w-8 text-teal-400"
-                                  fill="none"
-                                  viewBox="0 0 24 24"
-                                  stroke="currentColor"
-                                >
-                                  <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                                  />
-                                </svg>
-                              </div>
-
-                              <h2 className="text-2xl font-medium text-slate-800">
-                                Edit Profile
-                              </h2>
-
-                              <div className="space-y-3 text-left">
-                                <div>
-                                  <label className="block text-sm font-medium text-slate-600 mb-1">
-                                    Email
-                                  </label>
-                                  <input
-                                    type="email"
-                                    value={user.email}
-                                    disabled
-                                    className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-transparent"
-                                  />
-                                </div>
-                                <div>
-                                  <label className="block text-sm font-medium text-slate-600 mb-1">
-                                    Name
-                                  </label>
-                                  <input
-                                    type="text"
-                                    value={editFormData.name}
-                                    onChange={(e) =>
-                                      setEditFormData({
-                                        ...editFormData,
-                                        name: e.target.value,
-                                      })
-                                    }
-                                    className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-transparent"
-                                  />
-                                </div>
-                                <div>
-                                  <label className="block text-sm font-medium text-slate-600 mb-1">
-                                    Gender
-                                  </label>
-                                  <select
-                                    value={editFormData.gender}
-                                    onChange={(e) =>
-                                      setEditFormData({
-                                        ...editFormData,
-                                        gender: e.target.value,
-                                      })
-                                    }
-                                    className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-transparent"
-                                  >
-                                    <option value="male">Male</option>
-                                    <option value="female">Female</option>
-                                  </select>
-                                </div>
-                                <h4
-                                  className="mb-3"
-                                  style={{
-                                    color: "#278783",
-                                    fontWeight: "bold",
-                                  }}
-                                >
-                                  Update Profile Picture
-                                </h4>
-                                <FileUpload
-                                  onUploadSuccess={handleProfilePicUpdate}
-                                />
-                                {profilePic && (
-                                  <div>
-                                    <button
-                                      className="bg-red-500 w-100 hover:bg-red-800 text-white px-4 py-2 rounded-lg text-sm font-medium shadow"
-                                      onClick={() => {
-                                        handleProfilePicUpdate(null);
-                                        setIsEditModeOpen(null);
-                                      }}
-                                    >
-                                      Remove Profile Image
-                                    </button>
-                                  </div>
-                                )}
-                              </div>
-
-                              <div className="flex gap-2 justify-center">
-                                <button
-                                  onClick={() => setIsEditModeOpen(null)}
-                                  className="px-5 w-50 py-2 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-100 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2"
-                                >
-                                  Cancel
-                                </button>
-                                <button
-                                  onClick={async () => {
-                                    console.log(
-                                      "Form at submit time : ",
-                                      editFormData
-                                    );
-                                    const success = await updateUser(
-                                      editFormData
-                                    );
-                                    if (success) {
-                                      setTimeout(() => {
-                                        setIsEditModeOpen(null);
-                                        setEditStatus({
-                                          status: "idle",
-                                          message: "",
-                                        });
-                                      }, 1500);
-                                    }
-                                  }}
-                                  className="px-5 py-2 rounded-lg bg-teal-400 text-white hover:bg-teal-500 transition-colors focus:outline-none focus:ring-2 focus:ring-teal-400 focus:ring-offset-2"
-                                >
-                                  Save Changes
-                                </button>
-                              </div>
-                            </div>
-                          )}
-
-                          {/* Success State */}
-                          {editStatus.status === "success" && (
-                            <div className="text-center space-y-4">
-                              <div className="mx-auto w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mb-2">
-                                <svg
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  className="h-8 w-8 text-green-400"
-                                  fill="none"
-                                  viewBox="0 0 24 24"
-                                  stroke="currentColor"
-                                >
-                                  <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M5 13l4 4L19 7"
-                                  />
-                                </svg>
-                              </div>
-                              <h2 className="text-2xl font-medium text-slate-800">
-                                Success!
-                              </h2>
-                              <p className="text-green-600 font-medium">
-                                {editStatus.message}
-                              </p>
-                            </div>
-                          )}
-
-                          {/* Error State */}
-                          {editStatus.status === "error" && (
-                            <div className="text-center space-y-4">
-                              <div className="mx-auto w-16 h-16 rounded-full bg-red-100 flex items-center justify-center mb-2">
-                                <svg
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  className="h-8 w-8 text-red-400"
-                                  fill="none"
-                                  viewBox="0 0 24 24"
-                                  stroke="currentColor"
-                                >
-                                  <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M6 18L18 6M6 6l12 12"
-                                  />
-                                </svg>
-                              </div>
-                              <h2 className="text-2xl font-medium text-slate-800">
-                                Error
-                              </h2>
-                              <p className="text-red-600 font-medium">
-                                {editStatus.message}
-                              </p>
+                      {isEditModeOpen && (
+                        <div className="fixed  inset-0 flex  items-center justify-center z-50 backdrop-blur-sm bg-slate-900/20">
+                          <div className="bg-slate-50 max-h-150 max-w-150 overflow-scroll rounded-xl shadow-lg p-6 w-full  relative animate-fade-in-down">
+                            {/* Close button (only shown when not in loading state) */}
+                            {editStatus.status !== "loading" && (
                               <button
                                 onClick={() => {
                                   setIsEditModeOpen(null);
@@ -553,66 +345,293 @@ const validateAddress = ({ houseNo, street, locality, pincode, state }) => {
                                     message: "",
                                   });
                                 }}
-                                className="px-5 py-2 rounded-lg bg-red-400 text-white hover:bg-red-500 transition-colors focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2"
+                                className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-2xl transition-colors"
                               >
-                                Close
+                                &times;
                               </button>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    )}
-                  </div>
+                            )}
 
-<div>                  <Card
-                    className="mb-4 bg-dark"
-                    style={{ borderColor: "#FFEBD0" }}
-                  >
-                    <Card.Body className="text-white">
-                      <h4
-                        className="mb-3"
-                        style={{ color: "#e8b98f", fontWeight: "bold" }}
-                      >
-                        User Details
-                        {console.log(user)}
-                      </h4>
-                      <p>
-                        <strong className="text-[#278783]">Name:</strong>{" "}
-                        {user.name || "N/A"}
-                      </p>
-                      <p>
-                        <strong className="text-[#278783]">Email:</strong>{" "}
-                        {user.email || "N/A"}
-                      </p>
-                      <p>
-                        <strong className="text-[#278783]">Gender:</strong>{" "}
-                        {user.gender || "N/A"}
-                      </p>
-                      <p>
-                        <strong className="text-[#278783]">Role:</strong>{" "}
-                        {user.role || "N/A"}
-                      </p>
-                      <p>
-                        <strong className="text-[#278783]">Joined On:</strong>{" "}
-                        {new Date(user.createdAt).toDateString()}
-                      </p>
-                      <p>
-                        <strong className="text-[#278783]">
-                          Last Updated:
-                        </strong>{" "}
-                        {new Date(user.updatedAt).toDateString()}
-                      </p>
-                    </Card.Body>
-                  </Card>
+                            {/* Loading State */}
+                            {editStatus.status === "loading" && (
+                              <div className="text-center space-y-4">
+                                <div className="mx-auto w-16 h-16 rounded-full bg-teal-100 flex items-center justify-center mb-2 animate-spin">
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="h-8 w-8 text-teal-400"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth={2}
+                                      d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                                    />
+                                  </svg>
+                                </div>
+                                <p className="text-teal-600 font-medium">
+                                  {editStatus.message}
+                                </p>
+                              </div>
+                            )}
+
+                            {/* Initial Form State */}
+                            {editStatus.status === "idle" && (
+                              <div className="text-center space-y-4  ">
+                                <div className="mx-auto w-16 h-16 rounded-full bg-teal-100 flex items-center justify-center mb-2">
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="h-8 w-8 text-teal-400"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth={2}
+                                      d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                                    />
+                                  </svg>
+                                </div>
+
+                                <h2 className="text-2xl font-medium text-slate-800">
+                                  Edit Profile
+                                </h2>
+
+                                <div className="space-y-3 text-left">
+                                  <div>
+                                    <label className="block text-sm font-medium text-slate-600 mb-1">
+                                      Email
+                                    </label>
+                                    <input
+                                      type="email"
+                                      value={user.email}
+                                      disabled
+                                      className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-transparent"
+                                    />
+                                  </div>
+                                  <div>
+                                    <label className="block text-sm font-medium text-slate-600 mb-1">
+                                      Name
+                                    </label>
+                                    <input
+                                      type="text"
+                                      value={editFormData.name}
+                                      onChange={(e) =>
+                                        setEditFormData({
+                                          ...editFormData,
+                                          name: e.target.value,
+                                        })
+                                      }
+                                      className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-transparent"
+                                    />
+                                  </div>
+                                  <div>
+                                    <label className="block text-sm font-medium text-slate-600 mb-1">
+                                      Gender
+                                    </label>
+                                    <select
+                                      value={editFormData.gender}
+                                      onChange={(e) =>
+                                        setEditFormData({
+                                          ...editFormData,
+                                          gender: e.target.value,
+                                        })
+                                      }
+                                      className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-transparent"
+                                    >
+                                      <option value="male">Male</option>
+                                      <option value="female">Female</option>
+                                    </select>
+                                  </div>
+                                  <h4
+                                    className="mb-3"
+                                    style={{
+                                      color: "#278783",
+                                      fontWeight: "bold",
+                                    }}
+                                  >
+                                    Update Profile Picture
+                                  </h4>
+                                  <FileUpload
+                                    onUploadSuccess={handleProfilePicUpdate}
+                                  />
+                                  {profilePic && (
+                                    <div>
+                                      <button
+                                        className="bg-red-500 w-100 hover:bg-red-800 text-white px-4 py-2 rounded-lg text-sm font-medium shadow"
+                                        onClick={() => {
+                                          handleProfilePicUpdate(null);
+                                          setIsEditModeOpen(null);
+                                        }}
+                                      >
+                                        Remove Profile Image
+                                      </button>
+                                    </div>
+                                  )}
+                                </div>
+
+                                <div className="flex gap-2 justify-center">
+                                  <button
+                                    onClick={() => setIsEditModeOpen(null)}
+                                    className="px-5 w-50 py-2 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-100 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2"
+                                  >
+                                    Cancel
+                                  </button>
+                                  <button
+                                    onClick={async () => {
+                                      console.log(
+                                        "Form at submit time : ",
+                                        editFormData
+                                      );
+                                      const success = await updateUser(
+                                        editFormData
+                                      );
+                                      if (success) {
+                                        setTimeout(() => {
+                                          setIsEditModeOpen(null);
+                                          setEditStatus({
+                                            status: "idle",
+                                            message: "",
+                                          });
+                                        }, 1500);
+                                      }
+                                    }}
+                                    className="px-5 py-2 rounded-lg bg-teal-400 text-white hover:bg-teal-500 transition-colors focus:outline-none focus:ring-2 focus:ring-teal-400 focus:ring-offset-2"
+                                  >
+                                    Save Changes
+                                  </button>
+                                </div>
+                              </div>
+                            )}
+
+                            {/* Success State */}
+                            {editStatus.status === "success" && (
+                              <div className="text-center space-y-4">
+                                <div className="mx-auto w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mb-2">
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="h-8 w-8 text-green-400"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth={2}
+                                      d="M5 13l4 4L19 7"
+                                    />
+                                  </svg>
+                                </div>
+                                <h2 className="text-2xl font-medium text-slate-800">
+                                  Success!
+                                </h2>
+                                <p className="text-green-600 font-medium">
+                                  {editStatus.message}
+                                </p>
+                              </div>
+                            )}
+
+                            {/* Error State */}
+                            {editStatus.status === "error" && (
+                              <div className="text-center space-y-4">
+                                <div className="mx-auto w-16 h-16 rounded-full bg-red-100 flex items-center justify-center mb-2">
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="h-8 w-8 text-red-400"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth={2}
+                                      d="M6 18L18 6M6 6l12 12"
+                                    />
+                                  </svg>
+                                </div>
+                                <h2 className="text-2xl font-medium text-slate-800">
+                                  Error
+                                </h2>
+                                <p className="text-red-600 font-medium">
+                                  {editStatus.message}
+                                </p>
+                                <button
+                                  onClick={() => {
+                                    setIsEditModeOpen(null);
+                                    setEditStatus({
+                                      status: "idle",
+                                      message: "",
+                                    });
+                                  }}
+                                  className="px-5 py-2 rounded-lg bg-red-400 text-white hover:bg-red-500 transition-colors focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2"
+                                >
+                                  Close
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      )}
                     </div>
-</div>
-                  <div className="flex justify-between mt-4">
+
+                    <div>
+                      {" "}
+                      <Card
+                        className="mb-4 bg-dark"
+                        style={{ borderColor: "#FFEBD0" }}
+                      >
+                        <Card.Body className="text-white">
+                          <h4
+                            className="mb-3"
+                            style={{ color: "#e8b98f", fontWeight: "bold" }}
+                          >
+                            Details :{console.log(user)}
+                          </h4>
+                          <p>
+                            <strong className="text-[#278783]">Name:</strong>{" "}
+                            {user.name || "N/A"}
+                          </p>
+                          <p>
+                            <strong className="text-[#278783]">Email:</strong>{" "}
+                            {user.email || "N/A"}
+                          </p>
+                          <p>
+                            <strong className="text-[#278783]">Gender:</strong>{" "}
+                            {user.gender || "N/A"}
+                          </p>
+                          <p>
+                            <strong className="text-[#278783]">Role:</strong>{" "}
+                            {user.role || "N/A"}
+                          </p>
+                          <p>
+                            <strong className="text-[#278783]">
+                              Joined On:
+                            </strong>{" "}
+                            {new Date(user.createdAt).toDateString()}
+                          </p>
+                          <p>
+                            <strong className="text-[#278783]">
+                              Last Updated:
+                            </strong>{" "}
+                            {new Date(user.updatedAt).toDateString()}
+                          </p>
+                        </Card.Body>
+                        <DeleteAccountButton />
+                      </Card>
+                    </div>
+                  </div>
+                  <div className="flex justify-between ">
                     <Button
                       variant="primary"
                       onClick={() => {
                         setOpenEditAddress(true);
                       }}
-                      >
+                    >
                       Manage Addresses
                     </Button>
                     <Button
@@ -726,10 +745,10 @@ const validateAddress = ({ houseNo, street, locality, pincode, state }) => {
                       onSubmit={async (e) => {
                         e.preventDefault();
 
-                        if(!validateAddress(selectedAddress)){
-                          return
+                        if (!validateAddress(selectedAddress)) {
+                          return;
                         }
-    
+
                         const token = JSON.parse(
                           localStorage.getItem("user")
                         ).token;
@@ -786,7 +805,6 @@ const validateAddress = ({ houseNo, street, locality, pincode, state }) => {
                               })
                             }
                             className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all"
-                            
                           />
                         </div>
 
@@ -804,7 +822,6 @@ const validateAddress = ({ houseNo, street, locality, pincode, state }) => {
                               })
                             }
                             className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all"
-                            
                           />
                         </div>
                       </div>
@@ -823,7 +840,6 @@ const validateAddress = ({ houseNo, street, locality, pincode, state }) => {
                             })
                           }
                           className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all"
-                          
                         />
                       </div>
 
@@ -842,7 +858,6 @@ const validateAddress = ({ houseNo, street, locality, pincode, state }) => {
                               })
                             }
                             className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all"
-                            
                           />
                         </div>
 
@@ -966,7 +981,6 @@ const validateAddress = ({ houseNo, street, locality, pincode, state }) => {
                           houseNo: e.target.value,
                         })
                       }
-                      
                     />
                     <input
                       type="text"
@@ -1011,7 +1025,7 @@ const validateAddress = ({ houseNo, street, locality, pincode, state }) => {
                         setAddAddress({ ...addAddress, state: e.target.value })
                       }
                     >
-                      <option value="" selected={addAddress === null} >
+                      <option value="" selected={addAddress === null}>
                         Select State
                       </option>
                       <option value="Andhra Pradesh">Andhra Pradesh</option>

@@ -6,6 +6,8 @@ const NewsSubs = () => {
   const [subscribers, setSubscribers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const subscribersPerPage = 5;
 
   useEffect(() => {
     const fetchSubscribers = async () => {
@@ -56,6 +58,26 @@ const NewsSubs = () => {
     sub.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  // Get current subscribers
+  const indexOfLastSubscriber = currentPage * subscribersPerPage;
+  const indexOfFirstSubscriber = indexOfLastSubscriber - subscribersPerPage;
+  const currentSubscribers = filteredSubscribers.slice(
+    indexOfFirstSubscriber,
+    indexOfLastSubscriber
+  );
+
+  // Change page
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  // Format date as dd/mm/yyyy
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 p-4 sm:p-6">
       <div className="max-w-7xl mx-auto">
@@ -90,7 +112,10 @@ const NewsSubs = () => {
                 placeholder="Search subscribers..."
                 className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                onChange={(e) => {
+                  setSearchTerm(e.target.value);
+                  setCurrentPage(1); // Reset to first page when searching
+                }}
               />
             </div>
           </div>
@@ -138,12 +163,11 @@ const NewsSubs = () => {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {filteredSubscribers.map((subscriber) => (
+                  {currentSubscribers.map((subscriber) => (
                     <tr
                       key={subscriber._id}
                       className=" text-center hover:bg-gray-50"
                     >
-                      {/* <div className="flex items-center "> */}
                       <td>
                         <div className="flex-shrink-0 text-center m-auto h-10 w-10 flex items-center justify-center rounded-full bg-green-100 text-green-600">
                           <svg
@@ -166,10 +190,9 @@ const NewsSubs = () => {
                             {subscriber._id}
                           </div>
                         </div>
-                        {/* </div> */}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {new Date(subscriber.subscribedAt).toLocaleDateString()}
+                        {formatDate(subscriber.subscribedAt)}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                         <button
@@ -186,18 +209,45 @@ const NewsSubs = () => {
             </div>
           )}
 
-          {/* Pagination would go here */}
+          {/* Pagination */}
           {filteredSubscribers.length > 0 && (
-            <div className="px-6 py-3 bg-gray-50 border-t border-gray-200 flex items-center justify-between">
+            <div className="px-6 py-3 bg-gray-50 border-t border-gray-200 flex flex-col sm:flex-row items-center justify-between gap-4">
               <div className="text-sm text-gray-500">
-                Showing <span className="font-medium">1</span> to{" "}
+                Showing <span className="font-medium">{indexOfFirstSubscriber + 1}</span> to{" "}
                 <span className="font-medium">
-                  {filteredSubscribers.length}
+                  {Math.min(indexOfLastSubscriber, filteredSubscribers.length)}
                 </span>{" "}
-                of <span className="font-medium">{subscribers.length}</span>{" "}
-                subscribers
+                of <span className="font-medium">{filteredSubscribers.length}</span>{" "}
+                {filteredSubscribers.length === 1 ? 'subscriber' : 'subscribers'}
               </div>
-              {/* Pagination buttons would go here */}
+              
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => paginate(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  className={`px-3 py-1 rounded-lg border ${currentPage === 1 ? 'text-gray-400 bg-gray-100 cursor-not-allowed' : 'text-gray-700 bg-white hover:bg-gray-50'}`}
+                >
+                  Previous
+                </button>
+                
+                {Array.from({ length: Math.ceil(filteredSubscribers.length / subscribersPerPage) }).map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => paginate(index + 1)}
+                    className={`px-3 py-1 rounded-lg ${currentPage === index + 1 ? 'bg-green-500 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'}`}
+                  >
+                    {index + 1}
+                  </button>
+                ))}
+                
+                <button
+                  onClick={() => paginate(currentPage + 1)}
+                  disabled={currentPage === Math.ceil(filteredSubscribers.length / subscribersPerPage)}
+                  className={`px-3 py-1 rounded-lg border ${currentPage === Math.ceil(filteredSubscribers.length / subscribersPerPage) ? 'text-gray-400 bg-gray-100 cursor-not-allowed' : 'text-gray-700 bg-white hover:bg-gray-50'}`}
+                >
+                  Next
+                </button>
+              </div>
             </div>
           )}
         </div>

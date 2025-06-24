@@ -1,7 +1,7 @@
 import User from "../models/UserModel.js";
 import Feedback from "../models/FeedbackModel.js";
 import asyncHandler from "express-async-handler";
-
+import { sendAccountDeletionEmail } from "../utils/otpService.js";
 const getUserData = asyncHandler(async (req, res) => {
   const page = Number(req.query.page) || 1;
   const limit = Number(req.query.limit) || 10;
@@ -39,7 +39,7 @@ const getUserProfile = asyncHandler(async (req, res) => {
     res.status(404);
     throw new Error("User not found");
   }
-  console.log("Fetched User Data : " , user)
+  console.log("Fetched User Data : ", user);
   res.json({
     _id: user._id,
     name: user.name,
@@ -92,22 +92,39 @@ const updateUser = asyncHandler(async (req, res) => {
 });
 
 export const updateProfilePic = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.user._id);
+  try {
+    const user = await User.findById(req.user._id);
 
-  if (!user) {
-    res.status(404);
-    throw new Error("User not found");
+    if (!user) {
+      res.status(404);
+      throw new Error("User not found");
+    }
+
+    if (!req.body.profilePic) {
+      user.profilePic = null;
+          res.json({
+      message: "Profile picture removed",
+      profilePic: user.profilePic,
+    });
+    } else {
+      user.profilePic = req.body.profilePic;
+    }
+
+    await user.save();
+
+    res.json({
+      message: "Profile picture updated",
+      profilePic: user.profilePic,
+    });
+  } catch (error) {
+    console.error("Profile pic update error:", error.message);
+    res.status(500).json({
+      message: "Failed to update profile picture",
+      error: error.message,
+    });
   }
-
-  if (!req.body.profilePic) {
-    user.profilePic = null;
-  }
-
-  user.profilePic = req.body.profilePic; // Update profile picture URL
-  await user.save();
-
-  res.json({ message: "Profile picture updated", profilePic: user.profilePic });
 });
+
 
 const sendFeedback = asyncHandler(async (req, res) => {
   console.log(req.body);
@@ -165,38 +182,37 @@ const addAddress = asyncHandler(async (req, res) => {
   const userId = req.body.userId;
   const address = req.body.addAddress;
 
-  console.log("address : " , address)
+  console.log("address : ", address);
   if (!userId || !address) {
     res.status(400).json({ message: "Incomplete Request Data" });
   }
-try {
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      res.status(404).json({ message: "User Not Found" });
+    }
 
-  const user = await User.findById(userId);
-  if (!user) {
-    res.status(404).json({ message: "User Not Found" });
-  }
-  
-  user.address.push(address);
-  
-  await user.save();
-  res.status(200).json({
-    message: "Address added successfully",
-    addresses: user.address, // return updated list
-  });
-} catch (err) {
-if (err.name === 'ValidationError') {
-  const errors = Object.values(err.errors).map((e) => e.message);
-  console.log("extracted error messages ", errors);
-  return res.status(400).json({ errors }); // now an array of messages
-}
-    res.status(500).json({ message: 'Server Error' });
+    user.address.push(address);
+
+    await user.save();
+    res.status(200).json({
+      message: "Address added successfully",
+      addresses: user.address, // return updated list
+    });
+  } catch (err) {
+    if (err.name === "ValidationError") {
+      const errors = Object.values(err.errors).map((e) => e.message);
+      console.log("extracted error messages ", errors);
+      return res.status(400).json({ errors }); // now an array of messages
+    }
+    res.status(500).json({ message: "Server Error" });
   }
 });
 
 const updateUserAddress = asyncHandler(async (req, res) => {
   const userId = req.user._id; // assuming you're using JWT middleware to get user from token
   const address = req.body;
-  console.log(address)
+  console.log(address);
   if (!userId || !address || !address._id) {
     return res.status(400).json({ message: "Missing user ID or address ID" });
   }
@@ -215,28 +231,27 @@ const updateUserAddress = asyncHandler(async (req, res) => {
       .json({ message: "Address not found in user's address list" });
   }
 
+  try {
+    // Replace existing address with new one
+    user.address[index] = {
+      ...user.address[index],
+      ...address,
+    };
 
-try{  // Replace existing address with new one
-  user.address[index] = {
-    ...user.address[index],
-    ...address,
-  };
+    await user.save();
 
-  await user.save();
-
-  res.status(200).json({
-    message: "Address updated successfully",
-    address: user.address[index],
-  });}catch(err){
-      if (err.name === 'ValidationError') {
-  const errors = Object.values(err.errors).map((e) => e.message);
-  console.log("extracted error messages ", errors);
-  return res.status(400).json({ errors }); // now an array of messages
-}
-
+    res.status(200).json({
+      message: "Address updated successfully",
+      address: user.address[index],
+    });
+  } catch (err) {
+    if (err.name === "ValidationError") {
+      const errors = Object.values(err.errors).map((e) => e.message);
+      console.log("extracted error messages ", errors);
+      return res.status(400).json({ errors }); // now an array of messages
+    }
   }
 });
-
 
 // DELETE /api/users/profile/delete-address?userId=...&addressID=...
 
@@ -270,6 +285,48 @@ const deleteAddress = asyncHandler(async (req, res) => {
   }
 });
 
+const fetchDeletionStatus = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.params.id);
+  res.json({ requested: user?.deletionRequested || false });
+});
+
+const deleteAccount = asyncHandler(async (req, res) => {
+  const reason = req.body;
+  try {
+    const user = await User.findByIdAndUpdate(
+      req.params.id,
+      {
+        deletionRequested: true,
+        deletionReason: reason,
+      },
+      { new: true }
+    );
+    await sendAccountDeletionEmail(user.email,user.name)
+
+    res.status(200).json({ message: "Deletion request submitted" });
+  } catch (err) {
+    console.error("Error deleting account:", err);
+    res.status(400).json({ message: "Account Deletion Request failed" });
+  }
+});
+
+const cancelDeletionRequest = asyncHandler(async (req, res) => {
+
+  try{
+    const user = await User.findByIdAndUpdate(
+    req.params.id,
+    { deletionRequested: false ,
+      reason:null
+     },
+    { new: true }
+  );
+  res.json({ message: "Deletion request canceled" });
+}catch(err){
+  console.log("Request Detiontion Error : " , err)
+  res.json({message : "Account Deletion Request Cancelation Failed"})
+
+}
+});
 
 export {
   getUserData,
@@ -278,5 +335,8 @@ export {
   sendFeedback,
   addAddress,
   updateUserAddress,
-  deleteAddress
+  deleteAddress,
+  fetchDeletionStatus,
+  deleteAccount,
+  cancelDeletionRequest
 };

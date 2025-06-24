@@ -15,7 +15,7 @@ export default function OAuthSuccess() {
     if (token) {
       try {
         
-        const decoded = jwtDecode(token); // this gives { id, name, email, ... }
+        const decoded = jwtDecode(token); 
 
         const userData = {
           _id: decoded._id,

@@ -289,7 +289,7 @@ export default function ProductsComponent({
 
   <div className="flex items-center space-x-4 col-span-6 w-full">
     <img
-      src={product.product.imageUrl || "https://via.placeholder.com/50"}
+      src={product.product.imageUrl || "/images/placeholder.png"}
       alt={product.product.name}
       className="w-12 h-12 object-cover rounded"
     />
@@ -581,7 +581,7 @@ export default function ProductsComponent({
                           >
                             <div className="flex-shrink-0">
                               <img
-                                src={item.product?.imageUrl || "/placeholder-product.jpg"}
+                                src={item.product?.imageUrl || "/images/placeholder.jpg"}
                                 alt={item.product?.name}
                                 className="w-16 h-16 object-contain bg-white border border-gray-200 rounded"
                                 onError={(e) => {

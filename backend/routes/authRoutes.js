@@ -2,8 +2,6 @@ import express from "express";
 import passport from "passport";
 import  jwt from "jsonwebtoken";
 import { registerUser, loginUser, logoutUser } from "../controllers/authController.js";
-import { admin } from "../middlewares/adminMiddleware.js";
-import { protect } from "../middlewares/authMiddleware.js";
 import { verifyOtp } from "../controllers/authController.js";
 
 const router = express.Router();
@@ -15,8 +13,13 @@ router.post("/logout", logoutUser);
 
 router.get('/google',passport.authenticate('google', { scope: ['profile', 'email'] }));
 
+<<<<<<< HEAD
 router.get('/google/callback' ,  passport.authenticate('google', { session: false }), (req, res) => {
   console.log("reached here")
+=======
+router.get('/google/callback',  passport.authenticate('google', { session: false }), (req, res) => {
+  console.log("reached here ")
+>>>>>>> f9faeb7 (almost done)
   const user = req.user?.toObject ? req.user.toObject() : { ...req.user };
   const token = jwt.sign( user , process.env.JWT_SECRET, { expiresIn: '7d' });
   res.redirect(`${process.env.FRONTEND_URL}/social-auth-success?token=${token}`);

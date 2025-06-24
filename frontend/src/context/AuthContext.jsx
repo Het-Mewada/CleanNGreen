@@ -11,6 +11,7 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(false); // Add loading state
   const [defaultAddress, setDefaultaddress] = useState(null);
   const [orders, setOrders] = useState([null]);
+    const [showDeletionForm, setShowDeletionForm] = useState(false);
   // Load user from local storage/token on initial render
   useEffect(() => {
     const initializeAuth = async () => {
@@ -140,7 +141,7 @@ export const AuthProvider = ({ children }) => {
     return (
       <div className="fixed inset-0 flex items-center m-auto justify-center  z-50">
         <div className=" animate-spin h-12 w-12 ">
-        <img src="https://cdn-icons-png.flaticon.com/128/16445/16445103.png" /> 
+        <img src="/images/main-logo.png" /> 
         </div>
         <div className="mx-2 font-bold">
             Loading...
@@ -163,6 +164,8 @@ export const AuthProvider = ({ children }) => {
         setDefaultaddress,
         orders,
         setOrders,
+        showDeletionForm,
+        setShowDeletionForm
       }}
     >
       {!loading && children}

@@ -21,7 +21,7 @@ const NewsSection = ({ apiKey, newsSource = 'newsapi', limit = 3 }) => {
             id: article.url,
             title: article.title,
             summary: article.description || "No description available",
-            image: article.urlToImage || 'https://img.freepik.com/free-vector/gradient-breaking-news-background_23-2151142406.jpg',
+            image: article.urlToImage || '/images/news-placeholder.png',
             date: article.publishedAt,
             source: article.source?.name || "Unknown Source",
             url: article.url
@@ -34,7 +34,7 @@ const NewsSection = ({ apiKey, newsSource = 'newsapi', limit = 3 }) => {
             id: article.url,
             title: article.title,
             summary: article.description || "No description available",
-            image: article.image || 'https://img.freepik.com/free-vector/gradient-breaking-news-background_23-2151142406.jpg',
+            image: article.image || '/images/news-placeholder.png',
             date: article.publishedAt,
             source: article.source?.name || "Unknown Source",
             url: article.url
@@ -53,7 +53,7 @@ const NewsSection = ({ apiKey, newsSource = 'newsapi', limit = 3 }) => {
             id: '1',
             title: 'The Importance of Renewable Energy',
             summary: 'How solar and wind power are transforming our energy infrastructure worldwide.',
-            image: 'https://img.freepik.com/free-vector/gradient-breaking-news-background_23-2151142406.jpg',
+            image: '/images/news-placeholder.png',
             date: new Date().toISOString(),
             source: 'Green Energy News',
             url: '#'
@@ -62,7 +62,7 @@ const NewsSection = ({ apiKey, newsSource = 'newsapi', limit = 3 }) => {
             id: '2',
             title: 'Urban Farming Initiatives Grow',
             summary: 'Cities around the world are adopting urban farming to improve food security.',
-            image: 'https://img.freepik.com/free-vector/gradient-breaking-news-background_23-2151142406.jpg',
+            image: '/images/news-placeholder.png',
             date: new Date().toISOString(),
             source: 'Sustainable Cities',
             url: '#'
@@ -140,7 +140,7 @@ const NewsSection = ({ apiKey, newsSource = 'newsapi', limit = 3 }) => {
                     alt={item.title}
                     className="w-full h-48 object-cover rounded-lg shadow-md"
                     onError={(e) => {
-                      e.target.src = 'https://img.freepik.com/free-vector/gradient-breaking-news-background_23-2151142406.jpg';
+                      e.target.src = '/images/news-placeholder.png';
                     }}
                   />
                 </div>

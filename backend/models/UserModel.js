@@ -38,42 +38,50 @@ const userSchema = new mongoose.Schema(
       type: [CartItemSchema],
       default: [],
     },
-    orders : {
+    orders: {
       type: [],
       default: [],
-    } ,
+    },
+    deletionRequested: {
+      type: Boolean,
+      default: false,
+    },
+    deletionReason: {
+      type:{},
+      default: null
+    },
     profilePic: { type: String, default: "" },
     isBlocked: { type: Boolean, enum: [true, false], default: false },
-    
-  address: [
-    {
-      houseNo: {
-        type: String,
-        required: true,
-        trim: true
+
+    address: [
+      {
+        houseNo: {
+          type: String,
+          required: true,
+          trim: true,
+        },
+        street: {
+          type: String,
+          required: true,
+          trim: true,
+        },
+        locality: {
+          type: String,
+          required: true,
+          trim: true,
+        },
+        pincode: {
+          type: String,
+          required: true,
+          match: [/^\d{6}$/, "Enter Valid 6-digit pincode"],
+        },
+        state: {
+          type: String,
+          required: true,
+          trim: true,
+        },
       },
-      street: {
-        type: String,
-        required: true,
-        trim: true
-      },
-      locality: {
-        type: String,
-        required: true,
-        trim: true
-      },
-      pincode: {
-        type: String,
-        required: true,
-        match: [/^\d{6}$/, 'Enter Valid 6-digit pincode']
-      },
-      state: {
-        type: String,
-        required: true,
-        trim: true
-      },
-    }
-  ],
+    ],
   },
   { timestamps: true }
 );
@@ -82,7 +90,7 @@ const userSchema = new mongoose.Schema(
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
   const salt = await bcrypt.genSalt(10);
-  this.password = bcrypt.hash(this.password, salt);
+  this.password = await bcrypt.hash(this.password, salt);
   next();
 });
 

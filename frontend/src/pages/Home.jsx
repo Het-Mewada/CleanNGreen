@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext , useRef } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import NewsSection from "../components/homePageCompo/NewsSection";
@@ -12,41 +12,15 @@ import NewsletterSubscription from "../components/homePageCompo/NewsLetterSubCom
 const Home = () => {
   const { user, setUser } = useContext(AuthContext);
   const [activeTab, setActiveTab] = useState("initiatives");
-  const [loading,setLoading] = useState(false)  
+  const [loading, setLoading] = useState(false);
 
-  // useEffect(() => {
-  //   const fetchUserProfile = async () => {
-  //     setLoading(true);
-  //     const token = JSON.parse(localStorage.getItem("user"))?.token;
-  //     if (!token) {
-  //       setError("No profile data , Please Login");
-  //       setLoading(false);
-  //       return;
-  //     }
-  //     try {
-  //       const res = await axios.get(`${__API_URL__}/users/profile`, {
-  //         withCredentials: true,
-  //         headers: {
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       });
-
-  //       setUser(res.data);
-  //     } catch (err) {
-  //       console.error("Error fetching profile:", err);
-  //       setError("Failed to fetch profile. Please try again.");
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-
-  //   fetchUserProfile();
-  // }, []);
+    const heroSectionRef = useRef(null);
+  const audioRef = useRef(null);
 
   return (
     <div className="bg-gradient-to-r from-emerald-600 to-teal-500">
       {/* Hero Section */}
-      <HeroComponent />
+      <HeroComponent sectionRef={heroSectionRef} audioRef={audioRef} />
 
       {/* Stats */}
       <StatsComponent />
@@ -193,20 +167,28 @@ const Home = () => {
       </section>
 
       {/* News Section */}
-      {/* <NewsSection
+      {/* <section id="news">
+      <NewsSection
         apiKey="c0f02ed3fec0abc91611b7a89aa44d48"
         newsSource="gnews"
         limit={10} 
-      /> */}
+      />
+      </section> */}
 
       {/* Eco Products Marketplace */}
-      <ProductsComponent limit={3} homePageComponent={true} />
+      <section id="marketplace">
+        <ProductsComponent limit={3} homePageComponent={true} />
+      </section>
 
       {/* Interactive Carbon Calculator */}
-      <CarbonFootprintCalculator />
+      <section id="calculator">
+        <CarbonFootprintCalculator />
+      </section>
 
       {/* Newsletter Subscription */}
-      <NewsletterSubscription />
+      <section id="newsLetter">
+        <NewsletterSubscription />
+      </section>
     </div>
   );
 };

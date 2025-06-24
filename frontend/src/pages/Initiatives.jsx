@@ -18,13 +18,14 @@ export default function Initiatives() {
 <div className="relative h-screen w-full">
   {/* Hero Image */}
   <div className="absolute inset-0">
-    <img
-      src="https://media.istockphoto.com/id/1269880004/photo/solar-panel-on-dramatic-sunset-sky-background-alternative-energy-concept.jpg?s=612x612&w=0&k=20&c=2t_ToOdv0wclVQokZTPWJi-QKoeS25KEs4FV_Bq46Cw="
-      alt="Solar array in a sunny field"
-      className="w-full h-full object-cover"
-    />
+<img
+  src="https://wallpapers.com/images/hd/solar-panel-1920-x-1080-background-o1bfvhmd5ua6jwzg.jpg"
+  alt="Solar array in a sunny field"
+  loading="eager"
+  className="absolute w-full h-full object-cover"
+/>
     {/* Image overlay for better text readability */}
-    <div className="absolute inset-0 bg-black/30"></div>
+<div className="absolute inset-0 bg-gradient-to-b from-black/20 to-transparent"></div>
   </div>
 
   {/* Header Section - Centered */}
@@ -298,7 +299,7 @@ export default function Initiatives() {
     <div className="relative h-screen w-full">
       <div className="absolute inset-0">
         <img
-          src="https://images.unsplash.com/photo-1584473457406-6240486418e9?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
+          src="/images/reduce-waste.avif"
           alt="Overflowing landfill with bulldozer"
           className="w-full h-full object-cover"
         />
@@ -306,7 +307,7 @@ export default function Initiatives() {
       </div>
   
       <header className="relative z-10 h-full flex flex-col items-center justify-center text-center space-y-4 px-4">
-        <h1 className="text-5xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-teal-400 leading-tight">
+        <h1 className="text-white">
           Waste Less, <span className="bg-amber-600 px-2 rounded-4 text-amber-100">Live More</span>
         </h1>
         <p className="text-xl text-white font-medium max-w-3xl">
@@ -543,7 +544,7 @@ export default function Initiatives() {
     <div className="relative h-screen w-full">
       <div className="absolute inset-0">
         <img
-          src="https://images.unsplash.com/photo-1448375240586-882707db888b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
+          src="/images/trees.avif"
           alt="Lush green forest canopy"
           className="w-full h-full object-cover"
         />

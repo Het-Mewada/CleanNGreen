@@ -84,7 +84,7 @@ const AdminDashboard = () => {
   };
   useEffect(() => {
     fetchUsers();
-  }, [page, search, role]);
+  }, [page, search, role , user]);
 
   const highlightText = (text, highlight) => {
     if (!highlight) return text;
@@ -315,7 +315,7 @@ const AdminDashboard = () => {
           {error && (
             <div className="text-red-600 font-semibold text-center mt-4 flex items-center justify-center gap-2">
               <img
-                src="https://cdn-icons-png.flaticon.com/128/16538/16538250.png"
+                src="/images/no-user-found.png"
                 alt="error"
                 className="w-6 h-6"
               />

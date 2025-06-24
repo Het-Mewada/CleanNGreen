@@ -23,7 +23,7 @@ export default function NAV() {
                 style={{ fontFamily: "Orbitron", color: "#FFEBD0" }}
               >
                 <img
-                  src="https://cdn-icons-png.flaticon.com/128/16445/16445103.png"
+                  src="/images/main-logo.png"
                   alt="Eco Icon"
                   style={{
                     width: "40px",
@@ -187,8 +187,8 @@ export default function NAV() {
                   <img
                     src={`${
                       user.gender === "female"
-                        ? "https://cdn-icons-png.flaticon.com/128/6997/6997662.png"
-                        : "https://cdn-icons-png.flaticon.com/128/1999/1999625.png"
+                        ? "/images/female-avatar.png"
+                        : "/images/male-avatar.svg"
                     }`}
                     alt=""
                     style={{

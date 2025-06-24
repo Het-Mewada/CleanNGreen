@@ -12,14 +12,17 @@ import { getFeedbacks } from "../controllers/adminController.js";
 import { editFeedback } from "../controllers/adminController.js";
 import { getSubscribers } from "../controllers/adminController.js";
 import { fetchHelpList } from "../controllers/helpController.js";
+import { fetchDeletionRequestedUsers } from "../controllers/adminController.js";
 const router = express.Router();
 
 //Manage Users
 router.get("/", protect , admin , getUserData);
-router.delete("/delete" , protect , admin , deleteUser);
+router.delete("/delete/:userId" , protect , admin , deleteUser);
 router.post("/block" , protect , admin , blockUser);
 router.post("/update-user" , protect , admin , updateUser);
 router.get("/blocked-users" , protect ,admin , blockedUsers);
+
+router.get("/deletion-requests",protect,admin,fetchDeletionRequestedUsers)
 
 //Manage home page stats
 router.put('/stats', protect , admin ,  editStats);

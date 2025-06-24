@@ -114,7 +114,7 @@ const Footer = () => {
             <ul className="space-y-2">
               <li>
                 <a
-                  href="#"
+                  href="/"
                   className="text-gray-400 hover:text-green-400 transition-colors"
                   style={{
                     textDecoration: "none",
@@ -125,7 +125,7 @@ const Footer = () => {
               </li>
               <li>
                 <a
-                  href="#"
+                  href="/about"
                   className="text-gray-400 hover:text-green-400 transition-colors"
                   style={{
                     textDecoration: "none",
@@ -136,7 +136,7 @@ const Footer = () => {
               </li>
               <li>
                 <a
-                  href="#"
+                  href="/help"
                   className="text-gray-400 hover:text-green-400 transition-colors"
                   style={{
                     textDecoration: "none",
@@ -147,7 +147,7 @@ const Footer = () => {
               </li>
               <li>
                 <a
-                  href="#"
+                  href="/feedback-form"
                   className="text-gray-400 hover:text-green-400 transition-colors"
                   style={{
                     textDecoration: "none",
@@ -163,10 +163,20 @@ const Footer = () => {
           <div className="space-y-4">
             <h3 className="text-lg font-semibold text-white">Resources</h3>
             <ul className="space-y-2">
-
               <li>
                 <a
-                  href="#"
+                  href="/#news"
+                  className="text-gray-400 hover:text-green-400 transition-colors"
+                  style={{
+                    textDecoration: "none",
+                  }}
+                >
+                  News
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/#calculator"
                   className="text-gray-400 hover:text-green-400 transition-colors"
                   style={{
                     textDecoration: "none",
@@ -177,7 +187,7 @@ const Footer = () => {
               </li>
               <li>
                 <a
-                  href="#"
+                  href="/#marketplace"
                   className="text-gray-400 hover:text-green-400 transition-colors"
                   style={{
                     textDecoration: "none",
