@@ -4,7 +4,7 @@ import axios from "axios";
 import AuthContext from "../context/AuthContext";
 import toast from "react-hot-toast";
 
-export default function DeleteAccountButton({ userId }) {
+export default function DeleteAccountButton () {
   const [deletionRequested, setDeletionRequested] = useState(false);
   const { user, showDeletionForm, setShowDeletionForm } = useContext(AuthContext);
   const token = JSON.parse(localStorage.getItem('user'))?.token;
@@ -27,7 +27,7 @@ export default function DeleteAccountButton({ userId }) {
     };
 
     fetchDeletionStatus();
-  }, [userId]);
+  }, [user._id]);
 
   const handleButtonClick = async () => {
     try {
@@ -69,7 +69,7 @@ export default function DeleteAccountButton({ userId }) {
       {showDeletionForm && (
         <div className="mt-4">
           <AccountDeletionForm 
-            userId={userId} 
+            userId={user._id} 
             onSuccess={() => {
               setDeletionRequested(true);
               setShowDeletionForm(false);

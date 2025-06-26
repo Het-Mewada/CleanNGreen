@@ -2,7 +2,8 @@ import asyncHandler from "express-async-handler";
 import User from "../models/UserModel.js";
 import Feedback from "../models/FeedbackModel.js";
 import Subscriber from "../models/Subscriber.js";
-
+import AdminLog from "../models/AdminLogs.js";
+import logAdminAction from "../utils/logAdminAction.js";
 //Fetch detion Requested Users
 export const fetchDeletionRequestedUsers = asyncHandler(async(req,res)=>{
       const users = await User.find({ deletionRequested: true })
@@ -14,25 +15,49 @@ export const fetchDeletionRequestedUsers = asyncHandler(async(req,res)=>{
 //delete User
 export const deleteUser = asyncHandler(async (req, res) => {
   const id = req.params.userId;
+    const adminUsername = req.user.name;
 
+console.log("got here but not deleted")
   if (!id) {
     res.status(400);
     throw new Error("User ID is required");
   }
 
+  const user = await User.findById(id);
+  if (!user) {
+    res.status(404);
+    throw new Error("User not found");
+  }
+console.log("user email : " , user.email)
+  // Delete related subscriber first
+const result = await Subscriber.deleteOne({ email:user.email });
+
+if (result.deletedCount === 0) {
+  console.log("No subscriber found with that email.");
+} else {
+  console.log("Subscriber deleted successfully.");
+}
+  // Then delete the user
   const deletedUser = await User.findByIdAndDelete(id);
+
+    await logAdminAction({
+      action: `Deleted user ${deletedUser.name} (${deletedUser.email})`,
+      performedBy: adminUsername,
+    });
 
   if (!deletedUser) {
     res.status(400);
-    throw new Error("Error Deleting User");
+    throw new Error("Error deleting user");
   }
 
-  res.status(200).json({ message: "User deleted successfully" });
+  res.status(200).json({ message: "User and subscriber deleted successfully" });
 });
+
 
 //block User
 export const blockUser = asyncHandler(async (req, res) => {
   const { userId, userRole } = req.body.data;
+  const adminUsername = req.user.name; 
 
 
   if (!userId) {
@@ -61,34 +86,69 @@ export const blockUser = asyncHandler(async (req, res) => {
       user: blockedUser,
     });
 
+        await logAdminAction({
+      action: `${blockedUser.isBlocked ? "Blocked" : "Unblocked "} user ${blockedUser.name} (${blockedUser.email})`,
+      performedBy: adminUsername,
+    });
+
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Error Blocking User" });
   }
 });
 
-//update User
-export const updateUser = asyncHandler(async (req, res) => {
-  const user = req.body.data;
 
-  if (!user || !user._id) {
+export const updateUser = asyncHandler(async (req, res) => {
+  const updatedData = req.body.data;
+  const adminUsername = req.user.name;
+
+  if (!updatedData || !updatedData._id) {
     return res.status(400).json({ message: "Invalid User" });
   }
 
   try {
-    const editUser = await User.findById(user._id);
-    editUser.name = user.name;
-    editUser.email = user.email;
-    editUser.role = user.role;
+    const user = await User.findById(updatedData._id);
 
-    await editUser.save();
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
 
-    res.status(200).json({ message: "User Info Editted Successfully" });
+    let changeLog = [];
+
+    // Compare and log name changes
+    if (user.name !== updatedData.name) {
+      changeLog.push(`name changed from "${user.name}" to "${updatedData.name}"`);
+    }
+
+    // Compare and log email changes
+    if (user.email !== updatedData.email) {
+      changeLog.push(`email changed from "${user.email}" to "${updatedData.email}"`);
+    }
+
+    // Compare and log role changes
+    if (user.role !== updatedData.role) {
+      changeLog.push(`role changed from "${user.role}" to "${updatedData.role}"`);
+    }
+
+    // Apply changes
+    user.name = updatedData.name;
+    user.email = updatedData.email;
+    user.role = updatedData.role;
+
+    await user.save();
+
+    // If any changes were made, log them
+    if (changeLog.length > 0) {
+      await logAdminAction({
+        action: `Edited user ${user.name} (${user.email}): ${changeLog.join(" & ")}`,
+        performedBy: adminUsername,
+      });
+    }
+
+    res.status(200).json({ message: "User Info Edited Successfully" });
   } catch (error) {
     console.error("Update user error:", error);
-    res
-      .status(500)
-      .json({ message: "Something went wrong while updating the user" });
+    res.status(500).json({ message: "Something went wrong while updating the user" });
   }
 });
 
@@ -112,20 +172,20 @@ export const getFeedbacks = asyncHandler(async(req,res) => {
 export const editFeedback = asyncHandler(async(req,res)=> {
   const {id} = req.params;
   const {reviewed} = req.body;
-  console.log(reviewed)
+  const adminUsername = req.user.username; 
 
   try {
     const updated = await Feedback.findByIdAndUpdate(
       id,
       { isReviewed : reviewed },
-      { new: true } // return the updated document
+      { new: true } 
     );
 
     if (!updated) {
       return res.status(404).json({ message: "Feedback not found" });
     }
     console.log(updated)
-    // res.status(200).json(updated);
+    res.status(200).json(updated);
   } catch (error) {
     console.error("Error updating feedback:", error);
     res.status(500).json({ message: "Server error while updating feedback" });
@@ -137,3 +197,13 @@ export const getSubscribers = asyncHandler(async(req,res) => {
   res.status(200).json(subscribers)
 })
 
+
+export const getLogs = asyncHandler(async(req,res)=>{
+    try {
+    const logs = await AdminLog.find().sort({ timestamp: -1 });
+    console.log("reached here");
+    res.status(200).json(logs);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch logs" });
+  }
+})

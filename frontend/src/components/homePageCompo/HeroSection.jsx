@@ -4,12 +4,12 @@ import { forwardRef } from "react";
  const HeroComponent = forwardRef(({ audioRef, sectionRef }, _) => {
   return (
     <section ref={sectionRef} className="relative h-screen flex items-center justify-center overflow-hidden">
-    {/* <section  className="relative h-screen"> */}
       <video
         autoPlay
         loop
         muted
         playsInline
+        preload="auto"
         className="absolute w-full h-full object-cover z-0"
       >
         <source src="/videos/home-page-BgVideo.mp4" type="video/mp4" />
@@ -29,7 +29,7 @@ import { forwardRef } from "react";
           greener planet for future generations.
         </p>
         <div className="flex gap-4 justify-center">
-          {/* <Link
+          <Link
               to="/get-involved"
               className="  px-6 py-3 text-red-200 bg-green-500 hover:bg-green-600 rounded-lg text-lg font-semibold transition-colors"
               style={{
@@ -38,7 +38,7 @@ import { forwardRef } from "react";
               }}
             >
               Get Involved
-            </Link> */}
+            </Link>
           <Link
             to="/help-form"
             className="px-6 py-3 bg-gray-100 hover:bg-gray-300 rounded-lg text-lg font-semibold transition-colors"

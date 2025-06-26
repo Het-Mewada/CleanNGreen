@@ -9,6 +9,7 @@ import AdminFeedbackDashboard from "./User-feedbacks";
 import NewsSubs from "./LetterSubs";
 import HelpRequestList from "./NeedHelp";
 import DeletionRequests from "./DeletionReqs";
+import AdminLogs from "./AdminLogs";
 const AdminPanel = () => {
   const [activeTab, setActiveTab] = useState("users");
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -28,17 +29,21 @@ const AdminPanel = () => {
       case "insert":
         return <InsertData />;
 
-      case "subscribers": 
-        return <NewsSubs/>
-       
+      case "subscribers":
+        return <NewsSubs />;
+
       case "feedbacks":
-        return <AdminFeedbackDashboard/>;
-        
+        return <AdminFeedbackDashboard />;
+
       case "contact":
-        return  <HelpRequestList/>
-      
+        return <HelpRequestList />;
+
       case "del-req":
-        return <DeletionRequests/>
+        return <DeletionRequests />;
+
+      case "logs":
+        return <AdminLogs />;
+
       default:
         return (
           <div className="p-6">
@@ -224,7 +229,7 @@ const AdminPanel = () => {
                 {sidebarOpen && <span className="ml-3">Contact Us</span>}
               </button>
             </li>
-                        <li>
+            <li>
               <button
                 onClick={() => {
                   setActiveTab("del-req");
@@ -235,7 +240,35 @@ const AdminPanel = () => {
                 } transition`}
               >
                 <svg
-                  className="w-6 h-6 text-white"
+                  className="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3m-4 0h14"
+                  />
+                </svg>
+
+                {sidebarOpen && <span className="ml-3">Delete Request</span>}
+              </button>
+            </li>
+            <li>
+              <button
+                onClick={() => {
+                  setActiveTab("logs");
+                  toggleSidebar();
+                }}
+                className={`w-full flex items-center px-5 py-4 ${
+                  activeTab === "orders" ? "bg-[#1f6d69]" : "hover:bg-[#1f6d69]"
+                } transition`}
+              >
+                <svg
+                  className="w-6 h-6"
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="1.5"
@@ -245,11 +278,11 @@ const AdminPanel = () => {
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25H4.5a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0a2.25 2.25 0 00-2.25-2.25H4.5a2.25 2.25 0 00-2.25 2.25m19.5 0l-9.75 6.75L2.25 6.75"
+                    d="M15.75 3v2.25M8.25 3v2.25M4.5 7.5h15M6 21h12a1.5 1.5 0 001.5-1.5V7.5a1.5 1.5 0 00-1.5-1.5H6A1.5 1.5 0 004.5 7.5v12A1.5 1.5 0 006 21zm3-6h6m-6-3h6"
                   />
                 </svg>
 
-                {sidebarOpen && <span className="ml-3">Delete Request</span>}
+                {sidebarOpen && <span className="ml-3">Activities (Logs)</span>}
               </button>
             </li>
           </ul>

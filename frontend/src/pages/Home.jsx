@@ -16,7 +16,17 @@ const Home = () => {
 
     const heroSectionRef = useRef(null);
   const audioRef = useRef(null);
-
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (hash) {
+      const el = document.querySelector(hash);
+      if (el) {
+        setTimeout(() => {
+          el.scrollIntoView({ behavior: 'smooth' });
+        }, 100); // slight delay to wait for rendering
+      }
+    }
+  }, []);
   return (
     <div className="bg-gradient-to-r from-emerald-600 to-teal-500">
       {/* Hero Section */}
@@ -167,13 +177,13 @@ const Home = () => {
       </section>
 
       {/* News Section */}
-      {/* <section id="news">
+      <section id="news">
       <NewsSection
         apiKey="c0f02ed3fec0abc91611b7a89aa44d48"
         newsSource="gnews"
         limit={10} 
       />
-      </section> */}
+      </section>
 
       {/* Eco Products Marketplace */}
       <section id="marketplace">

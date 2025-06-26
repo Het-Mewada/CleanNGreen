@@ -33,7 +33,7 @@ const Register = () => {
           }
         }
         // First step - submit initial registration (to trigger OTP)
-        await register(name, email, password, gender, role, navigate, false);
+        await register(name, email, password, gender, role, false);
         setRegistrationData({ name, email, password, gender, role });
         setShowOtpField(true);
         setOtpSentTime(Date.now());
@@ -46,7 +46,6 @@ const Register = () => {
           registrationData.password,
           registrationData.gender,
           registrationData.role,
-          navigate,
           true,
           otp
         );

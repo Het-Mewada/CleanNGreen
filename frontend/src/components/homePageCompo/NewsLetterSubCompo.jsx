@@ -1,4 +1,4 @@
-import React, { useState , useEffect , useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import AuthContext from "../../context/AuthContext";
@@ -6,7 +6,6 @@ const NewsletterSubscription = () => {
   const { user } = useContext(AuthContext);
   const [subscriptionSuccess, setSubscriptionSuccess] = useState(false);
   const [error, setError] = useState("");
-
 
   const handleSubscribe = (e) => {
     e.preventDefault();
@@ -18,13 +17,12 @@ const NewsletterSubscription = () => {
       });
       return;
     }
-    const email = user.email
     axios
       .post(
         `${__API_URL__}/subscribe`,
-        { 
-          id : user._id, 
-          email : user.email
+        {
+          id: user._id,
+          email: user.email,
         },
         {
           headers: {
@@ -37,8 +35,8 @@ const NewsletterSubscription = () => {
         setTimeout(() => setSubscriptionSuccess(false), 3000);
       })
       .catch((err) => {
-        toast.error(err.response.data.message)
-        console.error(err.response.data.message)
+        toast.error(err.response.data.message);
+        console.error(err);
       });
   };
 
@@ -92,7 +90,7 @@ const NewsletterSubscription = () => {
                   placeholder={user?.email}
                   disabled={true}
                   required
-                  className="flex-grow px-5 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all duration-200"
+                  className="w-full px-3 py-3 rounded-lg border border-gray-300 "
                 />
                 <button
                   type="submit"

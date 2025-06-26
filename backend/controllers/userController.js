@@ -301,7 +301,7 @@ const deleteAccount = asyncHandler(async (req, res) => {
       },
       { new: true }
     );
-    await sendAccountDeletionEmail(user.email,user.name)
+    await sendAccountDeletionEmail(user.email,user.name , "delete")
 
     res.status(200).json({ message: "Deletion request submitted" });
   } catch (err) {
@@ -320,6 +320,7 @@ const cancelDeletionRequest = asyncHandler(async (req, res) => {
      },
     { new: true }
   );
+  sendAccountDeletionEmail(user.email , user.name , "cancel")
   res.json({ message: "Deletion request canceled" });
 }catch(err){
   console.log("Request Detiontion Error : " , err)

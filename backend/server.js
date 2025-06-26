@@ -58,7 +58,8 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users",userRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/upload", uploadRoutes);
-app.use('/api/feedback',feedbackRoutes)
+app.use('/api/feedback',feedbackRoutes);
+
 // ✅ Static folder for uploaded files
 app.use("/uploads", express.static("uploads"));
 

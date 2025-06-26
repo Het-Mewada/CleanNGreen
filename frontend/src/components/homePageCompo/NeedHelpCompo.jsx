@@ -40,7 +40,7 @@ const NeedHelpForm = () => {
     }
     setIsSubmitting(true);
     try {
-      console.log("FormData" , formData)
+      console.log("FormData", formData);
       // Replace with your actual API endpoint
       await axios.post(`${__API_URL__}/users/help/submit-req`, formData, {
         headers: {
@@ -48,6 +48,7 @@ const NeedHelpForm = () => {
         },
       });
       setSubmitSuccess(true);
+      toast.success("Requset Sent sucessfully")
       setFormData({
         name: user.name,
         email: user.email,
@@ -65,43 +66,7 @@ const NeedHelpForm = () => {
   };
   return (
     <>
-      {submitSuccess ? (
-        <div
-          style={{
-            maxWidth: "30%",
-          }}
-          className="mx-auto mt-33 mb-24 p-8 bg-white/30 backdrop-blur-md border border-gray-200 rounded-2xl shadow-xl text-center"
-        >
-          <div className="flex justify-center">
-            <svg
-              className="h-16 w-16 text-green-600 animate-bounce"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M5 13l4 4L19 7"
-              />
-            </svg>
-          </div>
-          <h2 className="mt-4 text-2xl font-bold text-green-700">
-            Request Submitted!
-          </h2>
-          <p className="mt-2 text-gray-700">
-            Our team will contact you shortly based on your selected contact
-            method.
-          </p>
-          <button
-            onClick={() => setSubmitSuccess(false)}
-            className="mt-6 px-6 py-2 bg-green-600 text-white rounded-full shadow hover:bg-green-700 transition"
-          >
-            Submit Another Request
-          </button>
-        </div>
-      ) : (
+
         <div
           style={{
             maxWidth: "80%",
@@ -241,7 +206,6 @@ const NeedHelpForm = () => {
             </button>
           </form>
         </div>
-      )}
     </>
   );
 };

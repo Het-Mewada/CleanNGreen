@@ -114,7 +114,7 @@ const NewsSection = ({ apiKey, newsSource = 'newsapi', limit = 3 }) => {
 </div>  )}
 
   return (
-    <section className="max-w-6xl mx-auto py-8 px-4">
+    <section className="max-w-full mx-auto py-8 px-4">
       <h2 className="text-3xl font-bold mb-6 pb-4 border-b-3 border-black text-gray-800">Latest Green News</h2>
       
       {loading ? (

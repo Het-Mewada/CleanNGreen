@@ -112,9 +112,8 @@ const AdminDashboard = () => {
 
     try {
       const response = await axios.delete(
-        `${__API_URL__}/admin/delete`,
+        `${__API_URL__}/admin/delete/${user._id}`,
         {
-          data: { userId: user._id },
           withCredentials: true,
           headers: { Authorization: `Bearer ${token}` },
         }

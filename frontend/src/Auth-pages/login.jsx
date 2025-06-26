@@ -1,10 +1,12 @@
 import { useState, useContext } from "react";
 import AuthContext from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import {BeatLoader} from 'react-spinners'
 
 const Login = () => {
   const { login } = useContext(AuthContext);
   const [email, setEmail] = useState("");
+  const [isLoading,setIsLoading] = useState(false)
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null); // State for error handling
   const navigate = useNavigate();
@@ -14,7 +16,7 @@ const Login = () => {
     e.preventDefault()
     try{
       window.location.href = `https://cleanngreen.onrender.com/api/auth/google`;
-      // window.location.href = `http://localhost:5000/api/auth/google`;
+      // window.location.href = `http://localhost:5000/api/auth/google`;   // for local testing
 
     }catch(err){
       setError(err.message)
@@ -38,10 +40,14 @@ const Login = () => {
     }
 
     try {
-      await login(email, password, navigate);
+      setIsLoading(true)
+      await login(email, password);
+      setIsLoading(false)
     } catch (err) {
       console.error("Login error:", err.message); // Logs the exact error
       setError(err.message); // Directly set the extracted error message
+    }finally{
+      setIsLoading(false)
     }
   };
   return (
@@ -98,7 +104,8 @@ const Login = () => {
               </div>
               <div className="d-grid gap-2 mb-3">
                 <button type="submit" className="btn btn-dark py-2 fw-semibold">
-                  Sign in
+                  {!isLoading ? "Sign in" : <BeatLoader color="#fff" size={12} speedMultiplier={1.2} />
+}
                 </button>
               </div>
               <div className="d-flex align-items-center justify-content-center mb-2">

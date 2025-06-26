@@ -102,7 +102,7 @@ const loginUser = asyncHandler(async (req, res) => {
   }
 
   if(user.googleId){
-    throw new Error("This email is already linked to a Google account. Please log in using the 'Continue with Google' option.");
+    throw new Error("Email linked to a Google account. Please use 'Continue with Google' to log in.");
   }
 
   if (user && (await user.matchPassword(password))) {

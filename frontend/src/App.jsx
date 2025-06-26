@@ -20,7 +20,7 @@ import ClickSpark from "./components/universalCompos/ClickSparkComponent";
 import FuturisticCursor from "./components/universalCompos/CursorComponent";
 import Initiatives from "./pages/Initiatives";
 import AboutUs from "./pages/About";
-import AdminPanel from "./admin/AdminTrial";
+import AdminPanel from "./admin/AdminPanel";
 import FeedbackForm from "./pages/Feedback";
 import FeedbackDashboard from "./admin/User-feedbacks";
 import ProductsComponent from "./components/homePageCompo/EcoProducts";
@@ -30,12 +30,14 @@ import NeedHelpForm from "./components/homePageCompo/NeedHelpCompo";
 import HelpRequestsList from "./admin/NeedHelp";
 import OrderSuccess from "./pages/OrdSuccess";
 import PaymentCancelled from "./pages/OrdCancled";
+import GetInvolved from "./pages/GetInvolved";
+import AdminLogs from "./admin/AdminLogs";
 function App() {
   return (
-    <Router>
+    <>
       <ScrollToTop />
       <MainApp />
-    </Router>
+    </>
   );
 }
 function MainApp() {
@@ -71,28 +73,20 @@ function MainApp() {
         <div className="flex-grow">
           <Toaster position="top-right" reverseOrder={false} />
           <Routes>
-
-
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/" element={<Home />} />
-
 
             {/* <ProtectedRoute usersOnly={true} /> */}
             <Route path="/home" element={<Home />} />
             <Route path="/about" element={<AboutUs />} />
             <Route path="/initiatives/*" element={<Initiatives />} />
-            <Route
-              path="/marketplace"
-              element={
-                <div className="mt-9">
-                  <ProductsComponent />
-                </div>
-              }
+            <Route path="/marketplace" element={ <ProductsComponent />}
             />
             <Route path="/feedback-form" element={<FeedbackForm />} />
             <Route path="/help-form" element={<NeedHelpForm />} />
             <Route path="/social-auth-success" element={<OAuthSuccess />} />
+            <Route path="/get-involved" element={<GetInvolved />} />
             <Route path="/success" element={<OrderSuccess />} />
             <Route path="/cancel" element={<PaymentCancelled />} />
             <Route

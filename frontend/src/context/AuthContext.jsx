@@ -2,10 +2,11 @@ import { createContext, useState, useEffect } from "react";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import {BeatLoader} from 'react-spinners'
-
+import { useNavigate } from "react-router-dom";
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
+  const navigate = useNavigate()
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false); // Add loading state
@@ -53,7 +54,7 @@ export const AuthProvider = ({ children }) => {
     initializeAuth();
   }, []);
 
-  const login = async (email, password, navigate) => {
+  const login = async (email, password) => {
     try {
       const { data } = await axios.post(`${__API_URL__}/auth/login`, {
         email,
@@ -97,7 +98,6 @@ export const AuthProvider = ({ children }) => {
     password,
     gender,
     role,
-    navigate,
     isOtpVerification = false,
     otp = null
   ) => {

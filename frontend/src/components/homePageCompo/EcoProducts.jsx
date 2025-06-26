@@ -367,7 +367,7 @@ export default function ProductsComponent({
   );
 
   return (
-    <section className="relative py-16 bg-gradient-to-br from-emerald-50 to-teal-50">
+    <section className="relative py-16 mt-6 bg-gradient-to-br from-emerald-50 to-teal-50">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <span className="inline-block px-3 py-1 text-xs font-semibold text-teal-800 bg-teal-100 rounded-full mb-4">

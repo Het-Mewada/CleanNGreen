@@ -13,6 +13,7 @@ import { editFeedback } from "../controllers/adminController.js";
 import { getSubscribers } from "../controllers/adminController.js";
 import { fetchHelpList } from "../controllers/helpController.js";
 import { fetchDeletionRequestedUsers } from "../controllers/adminController.js";
+import { getLogs } from "../controllers/adminController.js";
 const router = express.Router();
 
 //Manage Users
@@ -32,6 +33,8 @@ router.post('/products/add' , protect , admin , addProducts )
 router.get('/feedbacks',protect,admin,getFeedbacks);
 router.patch('/feedback/:id' , protect , admin , editFeedback)
 router.get('/subscribers', protect , admin , getSubscribers)
-router.get('/helplist' , protect , admin , fetchHelpList )
+router.get('/helplist' , protect , admin , fetchHelpList );
+
+router.get('/logs',protect,admin,getLogs)
 
 export default router ;
