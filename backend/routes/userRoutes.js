@@ -20,6 +20,7 @@ import { deleteAddress } from "../controllers/userController.js";
 import { deleteAccount } from "../controllers/userController.js";
 import { fetchDeletionStatus } from "../controllers/userController.js";
 import { cancelDeletionRequest } from "../controllers/userController.js";
+import { getWeather } from "../controllers/userController.js";
 const router = express.Router();
 
 router.get("/profile", protect ,  getUserProfile ); 
@@ -45,4 +46,7 @@ router.post("/help/submit-req" , protect , insertHelp )
 router.get("/:id/deletion-status" , protect , fetchDeletionStatus)
 router.post("/:id/request-deletion",protect , deleteAccount);
 router.post("/:id/cancel-deletion" , protect , cancelDeletionRequest);
+
+
+router.get("/weather" , protect , getWeather)
 export default router;

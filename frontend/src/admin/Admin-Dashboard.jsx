@@ -146,7 +146,7 @@ const AdminDashboard = () => {
       window.location.href = "/login";
       return;
     }
-    setBlockStatus({ status: "loading", message: "Blocking User..." });
+    setBlockStatus({ status: "loading", message: "Loading..." });
 
     try {
       const response = await axios.post(

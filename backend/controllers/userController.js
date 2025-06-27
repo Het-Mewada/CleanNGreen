@@ -2,6 +2,7 @@ import User from "../models/UserModel.js";
 import Feedback from "../models/FeedbackModel.js";
 import asyncHandler from "express-async-handler";
 import { sendAccountDeletionEmail } from "../utils/otpService.js";
+import axios from 'axios';
 const getUserData = asyncHandler(async (req, res) => {
   const page = Number(req.query.page) || 1;
   const limit = Number(req.query.limit) || 10;
@@ -102,10 +103,10 @@ export const updateProfilePic = asyncHandler(async (req, res) => {
 
     if (!req.body.profilePic) {
       user.profilePic = null;
-          res.json({
-      message: "Profile picture removed",
-      profilePic: user.profilePic,
-    });
+      res.json({
+        message: "Profile picture removed",
+        profilePic: user.profilePic,
+      });
     } else {
       user.profilePic = req.body.profilePic;
     }
@@ -124,7 +125,6 @@ export const updateProfilePic = asyncHandler(async (req, res) => {
     });
   }
 });
-
 
 const sendFeedback = asyncHandler(async (req, res) => {
   console.log(req.body);
@@ -301,7 +301,7 @@ const deleteAccount = asyncHandler(async (req, res) => {
       },
       { new: true }
     );
-    await sendAccountDeletionEmail(user.email,user.name , "delete")
+    await sendAccountDeletionEmail(user.email, user.name, "delete");
 
     res.status(200).json({ message: "Deletion request submitted" });
   } catch (err) {
@@ -311,22 +311,46 @@ const deleteAccount = asyncHandler(async (req, res) => {
 });
 
 const cancelDeletionRequest = asyncHandler(async (req, res) => {
-
-  try{
+  try {
     const user = await User.findByIdAndUpdate(
-    req.params.id,
-    { deletionRequested: false ,
-      reason:null
-     },
-    { new: true }
-  );
-  sendAccountDeletionEmail(user.email , user.name , "cancel")
-  res.json({ message: "Deletion request canceled" });
-}catch(err){
-  console.log("Request Detiontion Error : " , err)
-  res.json({message : "Account Deletion Request Cancelation Failed"})
+      req.params.id,
+      { deletionRequested: false, reason: null },
+      { new: true }
+    );
+    sendAccountDeletionEmail(user.email, user.name, "cancel");
+    res.json({ message: "Deletion request canceled" });
+  } catch (err) {
+    console.log("Request Detiontion Error : ", err);
+    res.json({ message: "Account Deletion Request Cancelation Failed" });
+  }
+});
 
-}
+const getWeather = asyncHandler(async (req, res) => {
+  const { city, lat, lon } = req.query;
+  const apiKey = process.env.OPENWEATHER_API_KEY;
+
+  let url = "";
+
+  if (city) {
+    url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${apiKey}`;
+  } else if (lat && lon) {
+    url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${apiKey}`;
+  } else {
+    return res
+      .status(400)
+      .json({ error: "City or coordinates (lat/lon) are required." });
+  }
+
+  try {
+    const response = await axios.get(url);
+    res.json(response.data);
+  } catch (error) {
+    console.error("Weather API error:", error.message);
+    if(error.status === 404){
+      res.status(error.response.status).json({error:error.response.data.message})
+    }
+    res.status(500).json({ error: "Failed to fetch weather data" });
+  }
 });
 
 export {
@@ -335,9 +359,10 @@ export {
   updateUser,
   sendFeedback,
   addAddress,
+  getWeather,
   updateUserAddress,
   deleteAddress,
   fetchDeletionStatus,
   deleteAccount,
-  cancelDeletionRequest
+  cancelDeletionRequest,
 };

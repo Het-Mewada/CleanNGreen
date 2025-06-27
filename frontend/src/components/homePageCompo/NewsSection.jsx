@@ -115,7 +115,7 @@ const NewsSection = ({ apiKey, newsSource = 'newsapi', limit = 3 }) => {
 
   return (
     <section className="max-w-full mx-auto py-8 px-4">
-      <h2 className="text-3xl font-bold mb-6 pb-4 border-b-3 border-black text-gray-800">Latest Green News</h2>
+      <h2 className="text-3xl font-bold mb-6 pb-4 border-b-3 border-black text-center text-white">Latest Green News</h2>
       
       {loading ? (
         <div className="flex flex-col items-center justify-center py-12">
@@ -124,7 +124,7 @@ const NewsSection = ({ apiKey, newsSource = 'newsapi', limit = 3 }) => {
         </div>
       ) : (
         <>
-          <div className="space-y-8 bg-green-50 p-6 rounded-lg">
+          <div className="space-y-8 bg-[#b1e0e0] p-6 rounded-lg">
             {news.map((item, index) => (
               <article 
                 key={item.id} 

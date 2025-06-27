@@ -120,11 +120,19 @@ const AdminLogs = () => {
         <div className="sm:hidden">
           {logs.map((log, index) => (
             <div key={log._id} className="p-4 border-b border-gray-200 last:border-b-0">
-              <div className="flex justify-between items-start">
-                <div className="flex-1">
+              <div className="flex flex-col justify-between w-[100%] items-start">
+                <div className="flex w-full justify-between">
                   <p className="font-medium text-gray-900 capitalize">
                     {log.performedBy}
                   </p>
+                                  <div className="text-xs text-gray-500 text-right">
+                  {new Date(log.timestamp).toLocaleString("en-IN", {
+                    dateStyle: "medium",
+                    timeStyle: "short",
+                  })}
+                </div>
+
+                </div>
                   <span
                     className={`mt-1 inline-block text-xs leading-5 font-semibold rounded-full ${
                       log.action.toLowerCase().includes("deleted")
@@ -141,13 +149,6 @@ const AdminLogs = () => {
                   >
                     {log.action}
                   </span>
-                </div>
-                <div className="text-xs text-gray-500 text-right">
-                  {new Date(log.timestamp).toLocaleString("en-IN", {
-                    dateStyle: "medium",
-                    timeStyle: "short",
-                  })}
-                </div>
               </div>
             </div>
           ))}

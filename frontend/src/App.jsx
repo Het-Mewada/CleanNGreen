@@ -32,6 +32,7 @@ import OrderSuccess from "./pages/OrdSuccess";
 import PaymentCancelled from "./pages/OrdCancled";
 import GetInvolved from "./pages/GetInvolved";
 import AdminLogs from "./admin/AdminLogs";
+import Weather from "./components/homePageCompo/Weather";
 function App() {
   return (
     <>
@@ -89,6 +90,8 @@ function MainApp() {
             <Route path="/get-involved" element={<GetInvolved />} />
             <Route path="/success" element={<OrderSuccess />} />
             <Route path="/cancel" element={<PaymentCancelled />} />
+            <Route path="/weather" element={<Weather />} />
+
             <Route
               path="*"
               element={

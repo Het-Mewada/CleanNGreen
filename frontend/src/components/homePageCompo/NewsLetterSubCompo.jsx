@@ -30,9 +30,8 @@ const NewsletterSubscription = () => {
           },
         }
       )
-      .then(() => {
-        setSubscriptionSuccess(true);
-        setTimeout(() => setSubscriptionSuccess(false), 3000);
+      .then((res) => {
+        toast.success("News Letter Subscribed Successfully")
       })
       .catch((err) => {
         toast.error(err.response.data.message);
@@ -99,30 +98,6 @@ const NewsletterSubscription = () => {
                   Subscribe
                 </button>
               </div>
-
-              {subscriptionSuccess && (
-                <div className="mt-4 p-3 bg-green-50 text-green-700 rounded-lg flex items-center justify-center space-x-2 animate-fade-in">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-5 w-5"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                  <span>Thank you for subscribing!</span>
-                </div>
-              )}
-              {error && (
-                <div className="mt-4 p-3 bg-red-50 text-red-700 rounded-lg flex items-center justify-center space-x-2 animate-fade-in">
-                  <span>{error}</span>
-                </div>
-              )}
-
               <p className="text-xs text-gray-500 mt-4">
                 We respect your privacy. Unsubscribe at any time. No spam, ever.
               </p>

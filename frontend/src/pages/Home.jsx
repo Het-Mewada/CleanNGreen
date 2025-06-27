@@ -8,12 +8,9 @@ import HeroComponent from "../components/homePageCompo/HeroSection";
 import StatsComponent from "../components/homePageCompo/Stats";
 import AuthContext from "../context/AuthContext";
 import NewsletterSubscription from "../components/homePageCompo/NewsLetterSubCompo";
-
+import Weather from "../components/homePageCompo/Weather";
 const Home = () => {
-  const { user, setUser } = useContext(AuthContext);
   const [activeTab, setActiveTab] = useState("initiatives");
-  const [loading, setLoading] = useState(false);
-
     const heroSectionRef = useRef(null);
   const audioRef = useRef(null);
   useEffect(() => {
@@ -136,19 +133,19 @@ const Home = () => {
             <div className="grid md:grid-cols-2 gap-8">
               <div className="bg-blue-100 p-6 rounded-xl shadow hover:shadow-lg transition">
                 <h3 className="text-xl font-semibold text-blue-800 mb-2">
-                  Smart Grid Solutions
+                  ⚡ <div className="mt-3">Smart Grid Solutions</div>
                 </h3>
                 <p className="text-gray-700">
-                  AI-powered energy distribution for maximum efficiency.
-                </p>
+
+AI-powered energy distribution for maximum efficiency. Discover how intelligent grids optimize energy flow, minimize waste, and pave the way for a cleaner, smarter future.                </p>
               </div>
               <div className="bg-blue-100 p-6 rounded-xl shadow hover:shadow-lg transition">
                 <h3 className="text-xl font-semibold text-blue-800 mb-2">
-                  Water Purification
+                  💧
+ <div className="mt-3">Water Purification</div>
                 </h3>
                 <p className="text-gray-700">
-                  Low-energy water cleaning systems for developing areas.
-                </p>
+Low-energy water cleaning systems for developing areas. Learn how innovative filtration technologies provide safe, affordable water while conserving power and supporting healthier communities.                </p>
               </div>
             </div>
           )}
@@ -175,7 +172,7 @@ const Home = () => {
           )}
         </div>
       </section>
-
+<Weather/>
       {/* News Section */}
       <section id="news">
       <NewsSection
