@@ -42,7 +42,7 @@ export default function DeletionRequests() {
         );
       } else {
         const res = await axios.post(
-          `${__API_URL__}/users/${id}/cancel-deletion?requested=true`, {},
+          `${__API_URL__}/users/${id}/cancel-deletion`, {},
           {
             headers: {
               Authorization: `Bearer ${token}`,

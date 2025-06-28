@@ -311,14 +311,14 @@ const deleteAccount = asyncHandler(async (req, res) => {
 });
 
 const cancelDeletionRequest = asyncHandler(async (req, res) => {
-  const isRequested = req.query.requested === "true";
+  const userCanceled = req.query.user_requested === "true";
   try {
     const user = await User.findByIdAndUpdate(
       req.params.id,
       { deletionRequested: false, reason: null },
       { new: true }
     );
-    if(isRequested){
+    if(userCanceled){
       await sendAccountDeletionEmail(user.email, user.name, "cancel");
     }
     res.json({ message: "Deletion request canceled" });

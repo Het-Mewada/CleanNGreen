@@ -35,7 +35,7 @@ export default function DeleteAccountButton () {
         setShowDeletionForm(true);
       } else {
         await axios.post(
-          `${__API_URL__}/users/${user._id}/cancel-deletion`,
+          `${__API_URL__}/users/${user._id}/cancel-deletion?user_requested=true`,
           {},
           {
             headers: {
