@@ -1,9 +1,13 @@
 import asyncHandler from "express-async-handler";
+
+import logAdminAction from "../utils/logAdminAction.js";
+
 import User from "../models/UserModel.js";
+import Help from "../models/Help.js";
 import Feedback from "../models/FeedbackModel.js";
 import Subscriber from "../models/Subscriber.js";
 import AdminLog from "../models/AdminLogs.js";
-import logAdminAction from "../utils/logAdminAction.js";
+
 //Fetch detion Requested Users
 export const fetchDeletionRequestedUsers = asyncHandler(async(req,res)=>{
       const users = await User.find({ deletionRequested: true })
@@ -16,7 +20,7 @@ export const fetchDeletionRequestedUsers = asyncHandler(async(req,res)=>{
 export const deleteUser = asyncHandler(async (req, res) => {
   const id = req.params.userId;
     const adminUsername = req.user.name;
-
+    const isRequested = req.query.requested === "true";
 console.log("got here but not deleted")
   if (!id) {
     res.status(400);
@@ -29,28 +33,31 @@ console.log("got here but not deleted")
     throw new Error("User not found");
   }
 console.log("user email : " , user.email)
-  // Delete related subscriber first
-const result = await Subscriber.deleteOne({ email:user.email });
+  // Delete related first
+await Subscriber.deleteOne({ email:user.email });
+await Feedback.deleteOne({email:user.email});
+await Help.deleteMany({email:user.email});
 
-if (result.deletedCount === 0) {
-  console.log("No subscriber found with that email.");
-} else {
-  console.log("Subscriber deleted successfully.");
-}
   // Then delete the user
   const deletedUser = await User.findByIdAndDelete(id);
-
-    await logAdminAction({
-      action: `Deleted user ${deletedUser.name} (${deletedUser.email})`,
-      performedBy: adminUsername,
-    });
+if(isRequested){
+  await logAdminAction({
+    action: `Deleted user ${deletedUser.name} (${deletedUser.email}) on User Request`,
+    performedBy: adminUsername,
+  });
+}else{
+  await logAdminAction({
+    action: `Deleted user ${deletedUser.name} (${deletedUser.email}) forcefully`,
+    performedBy: adminUsername,
+  });
+}
 
   if (!deletedUser) {
     res.status(400);
     throw new Error("Error deleting user");
   }
 
-  res.status(200).json({ message: "User and subscriber deleted successfully" });
+  res.status(200).json({ message: "User deleted successfully" });
 });
 
 

@@ -94,7 +94,7 @@ console.log(cartProducts)
       userId: userId,
     },
   });
-
+console.log(session.url)
   res.json({ url: session.url });
 });
 
@@ -136,7 +136,7 @@ export const verifyPayment = asyncHandler(async(req,res)=>{
       }
     }
 
-    res.json({ received: true });
+    res.status(200).json({ received: true });
 })
 
 

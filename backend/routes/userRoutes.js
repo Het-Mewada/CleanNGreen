@@ -35,7 +35,6 @@ router.get("/cart/view" , protect , showCartItems )
 router.post("/cart/add", protect , addItem );
 router.delete("/cart/remove" , protect , deleteItem);
 router.post("/cart/checkout" , protect , proceedCheckout )
-router.post("/cart/webhook" , express.raw({ type: 'application/json' }) , verifyPayment  )
 //View Orders
 router.get("/orders/view/:userId" , protect , showPrevOrders )
 
@@ -47,6 +46,5 @@ router.get("/:id/deletion-status" , protect , fetchDeletionStatus)
 router.post("/:id/request-deletion",protect , deleteAccount);
 router.post("/:id/cancel-deletion" , protect , cancelDeletionRequest);
 
-
-router.get("/weather" , protect , getWeather)
+router.get("/weather"  , getWeather)
 export default router;

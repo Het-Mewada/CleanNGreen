@@ -311,13 +311,16 @@ const deleteAccount = asyncHandler(async (req, res) => {
 });
 
 const cancelDeletionRequest = asyncHandler(async (req, res) => {
+  const isRequested = req.query.requested === "true";
   try {
     const user = await User.findByIdAndUpdate(
       req.params.id,
       { deletionRequested: false, reason: null },
       { new: true }
     );
-    sendAccountDeletionEmail(user.email, user.name, "cancel");
+    if(isRequested){
+      await sendAccountDeletionEmail(user.email, user.name, "cancel");
+    }
     res.json({ message: "Deletion request canceled" });
   } catch (err) {
     console.log("Request Detiontion Error : ", err);
@@ -330,7 +333,6 @@ const getWeather = asyncHandler(async (req, res) => {
   const apiKey = process.env.OPENWEATHER_API_KEY;
 
   let url = "";
-
   if (city) {
     url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${apiKey}`;
   } else if (lat && lon) {

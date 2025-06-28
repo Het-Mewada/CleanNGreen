@@ -2,7 +2,7 @@
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import AuthContext from "../context/AuthContext";
-
+import toast from "react-hot-toast";
 export default function DeletionRequests() {
   const [requestedUsers, setRequestedUsers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -31,13 +31,30 @@ export default function DeletionRequests() {
 
   const handleAction = async (id, action) => {
     try {
-      const res = await axios.put(
-        `/api/admin/deletion-requests/${id}/${action}`
-      );
-      setRequestedUsers(requestedUsers.filter((u) => u._id !== id));
-      toast.success(res.message);
-    } catch (err) {
-      console.error(err);
+      if (action === "approve") {
+        const res = await axios.delete(
+          `${__API_URL__}/admin/delete/${id}?requested=true`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+      } else {
+        const res = await axios.post(
+          `${__API_URL__}/users/${id}/cancel-deletion?requested=true`, {},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setRequestedUsers(requestedUsers.filter((u) => u._id !== id));
+        toast.success(res.data.message);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error(error.response.data.message);
     }
   };
 

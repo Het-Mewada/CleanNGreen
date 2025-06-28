@@ -1,9 +1,8 @@
 import { Link } from "react-router-dom";
 import Heading from "./HeadingComponent";
-import { forwardRef } from "react";
- const HeroComponent = forwardRef(({ audioRef, sectionRef }, _) => {
+ const HeroComponent = () => {
   return (
-    <section ref={sectionRef} className="relative h-screen flex items-center justify-center overflow-hidden">
+    <section className="relative h-screen flex items-center justify-center overflow-hidden">
       <video
         autoPlay
         loop
@@ -14,12 +13,9 @@ import { forwardRef } from "react";
       >
         <source src="/videos/home-page-BgVideo.mp4" type="video/mp4" />
       </video>
-
-      <audio ref={audioRef} autoPlay loop>
-        <source src="/audios/nature-sound.mp3" type="audio/mp3" />
-      </audio>
+      
       {/* Content (centered with semi-transparent overlay) */}
-      <div className="absolute inset-0  bg-opacity-40 z-10"></div>
+      <div className="absolute inset-0  bg-opacity-100 z-10"></div>
 
       <div className="relative z-20 text-center px-4 text-white">
         {/* Heading Here */}
@@ -53,5 +49,5 @@ import { forwardRef } from "react";
       </div>
     </section>
   );
-});
+};
 export default HeroComponent

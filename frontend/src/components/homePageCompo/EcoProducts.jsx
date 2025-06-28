@@ -165,31 +165,6 @@ export default function ProductsComponent({
     }
   };
 
-  const validateUserProfile = (user) => {
-    if (!user) return false;
-
-    const requiredFields = ["name", "email", "gender", "cart", "address"];
-    for (const field of requiredFields) {
-      if (
-        !user[field] ||
-        (Array.isArray(user[field]) && user[field].length === 0)
-      ) {
-        handleStateUpdate({
-          invalidProfileErr: `${field} is missing or empty. Please fill it before proceeding.`,
-        });
-        return false;
-      }
-    }
-
-    const address = user.address[0];
-    const addressFields = ["houseNo", "street", "locality", "pincode", "state"];
-    for (const field of addressFields) {
-      if (!address[field]) return false;
-    }
-
-    return true;
-  };
-
   const ProductCard = ({ product }) => (
     <div className="group relative bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100">
       <div className="relative h-64 overflow-hidden">
@@ -342,7 +317,6 @@ export default function ProductsComponent({
   const AddressItem = ({ address }) => (
     <div
       onClick={() => {
-        localStorage.setItem("defaultAddress", JSON.stringify(address));
         handleStateUpdate({ selectedAddress: address, selectAddress: false });
         handleCheckout();
       }}

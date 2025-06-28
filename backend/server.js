@@ -36,7 +36,7 @@ app.use(
   })
 );
 
-app.use("/api/cart/webhook", express.raw({ type: 'application/json' }) , verifyPayment  )
+app.post("/api/cart/webhook", express.raw({ type: 'application/json' }) , verifyPayment  )
 
 app.use(express.json());
 app.use(cookieParser());

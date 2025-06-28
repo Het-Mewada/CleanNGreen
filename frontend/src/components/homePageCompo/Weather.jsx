@@ -29,6 +29,7 @@ const Weather = () => {
       userDecisionTimeout: 5000,
     });
   const token = JSON.parse(localStorage.getItem("user"))?.token;
+  console.log("token without login : " , token)
   const fetchWeather = async (lat, lon, cityName) => {
     setLoading(true);
     setError("");
