@@ -8,7 +8,6 @@ import ScrollToTop from "./components/universalCompos/ScrollToTop";
 import Register from "./Auth-pages/register";
 import Login from "./Auth-pages/login";
 import Home from "./pages/Home";
-import ProtectedRoute from "./protected/protectedRoute";
 import Nav from "./components/NavBar";
 import OAuthSuccess from "./Auth-pages/SuccessOAuth";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -31,8 +30,8 @@ import HelpRequestsList from "./admin/NeedHelp";
 import OrderSuccess from "./pages/OrdSuccess";
 import PaymentCancelled from "./pages/OrdCancled";
 import GetInvolved from "./pages/GetInvolved";
-import AdminLogs from "./admin/AdminLogs";
 import Weather from "./components/homePageCompo/Weather";
+import ResetPassword from "./components/ResetPass";
 function App() {
   return (
     <>
@@ -46,7 +45,6 @@ function MainApp() {
   const hideNavRoutes = [
     "/login",
     "/register",
-    "/admin-trial",
     "/admin-dashboard",
   ];
   const showComponents = !hideNavRoutes.includes(location.pathname);
@@ -70,7 +68,6 @@ function MainApp() {
             <Nav />
           </div>
         )}
-        {/* Spacer div to push content below fixed navbar */}
         <div className="flex-grow">
           <Toaster position="top-right" reverseOrder={false} />
           <Routes>
@@ -78,12 +75,10 @@ function MainApp() {
             <Route path="/register" element={<Register />} />
             <Route path="/" element={<Home />} />
 
-            {/* <ProtectedRoute usersOnly={true} /> */}
             <Route path="/home" element={<Home />} />
             <Route path="/about" element={<AboutUs />} />
             <Route path="/initiatives/*" element={<Initiatives />} />
-            <Route path="/marketplace" element={ <ProductsComponent />}
-            />
+            <Route path="/marketplace" element={ <ProductsComponent />}/>
             <Route path="/feedback-form" element={<FeedbackForm />} />
             <Route path="/help-form" element={<NeedHelpForm />} />
             <Route path="/social-auth-success" element={<OAuthSuccess />} />
@@ -91,7 +86,7 @@ function MainApp() {
             <Route path="/success" element={<OrderSuccess />} />
             <Route path="/cancel" element={<PaymentCancelled />} />
             <Route path="/weather" element={<Weather />} />
-
+            <Route path="/reset-password" element={<ResetPassword />} />
             <Route
               path="*"
               element={
@@ -102,10 +97,6 @@ function MainApp() {
               }
             />
             <Route path="/profile" element={<ProfilePage />} />
-            <Route path="/help-list" element={<HelpRequestsList />} />
-            <Route path="/feedback-admin" element={<FeedbackDashboard />} />
-            <Route path="/insert-data" element={<Data />} />
-            <Route path="/blocked-users" element={<Blocked />} />
             <Route path="/admin-dashboard" element={<AdminPanel />} />
           </Routes>
         </div>

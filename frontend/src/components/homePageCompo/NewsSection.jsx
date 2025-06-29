@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-
+import filterDuplicates from '../FilterNews';
 const NewsSection = ({ apiKey, newsSource = 'newsapi', limit = 3 }) => {
   const [news, setNews] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -40,8 +40,8 @@ const NewsSection = ({ apiKey, newsSource = 'newsapi', limit = 3 }) => {
             url: article.url
           }));
         }
-
-        setNews(newsData);
+        
+        setNews(filterDuplicates(newsData));
         setLoading(false);
       } catch (err) {
         console.error("Error fetching news:", err);

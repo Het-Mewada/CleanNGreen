@@ -33,23 +33,21 @@ const NewsSubs = () => {
     const token = JSON.parse(localStorage.getItem("user"))?.token;
 
     try {
-      await axios.patch(
-        `${__API_URL__}/admin/subscribers/${id}`,
-        { isActive: false },
+      const res = await axios.get(
+        `${__API_URL__}/admin/subscribers?id=${id}&unsubscribe=true`,
         {
           headers: { Authorization: `Bearer ${token}` },
           withCredentials: true,
+          params: {
+            isActive: false,
+          },
         }
       );
 
-      setSubscribers(
-        subscribers.map((sub) =>
-          sub._id === id ? { ...sub, isActive: false } : sub
-        )
-      );
+      setSubscribers(res.data);
       toast.success("Unsubscribed successfully");
     } catch (err) {
-      console.error("Error unsubscribing:", err.message);
+      console.error("Error unsubscribing:", err);
       toast.error("Failed to unsubscribe");
     }
   };
@@ -72,8 +70,8 @@ const NewsSubs = () => {
   // Format date as dd/mm/yyyy
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    const day = date.getDate().toString().padStart(2, '0');
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, "0");
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
     const year = date.getFullYear();
     return `${day}/${month}/${year}`;
   };
@@ -140,7 +138,7 @@ const NewsSubs = () => {
                       scope="col"
                       className="px-6 py-3  text-xs font-medium text-gray-500 uppercase tracking-wider"
                     >
-                      Icon 
+                      Icon
                     </th>
                     <th
                       scope="col"
@@ -213,37 +211,66 @@ const NewsSubs = () => {
           {filteredSubscribers.length > 0 && (
             <div className="px-6 py-3 bg-gray-50 border-t border-gray-200 flex flex-col sm:flex-row items-center justify-between gap-4">
               <div className="text-sm text-gray-500">
-                Showing <span className="font-medium">{indexOfFirstSubscriber + 1}</span> to{" "}
+                Showing{" "}
+                <span className="font-medium">
+                  {indexOfFirstSubscriber + 1}
+                </span>{" "}
+                to{" "}
                 <span className="font-medium">
                   {Math.min(indexOfLastSubscriber, filteredSubscribers.length)}
                 </span>{" "}
-                of <span className="font-medium">{filteredSubscribers.length}</span>{" "}
-                {filteredSubscribers.length === 1 ? 'subscriber' : 'subscribers'}
+                of{" "}
+                <span className="font-medium">
+                  {filteredSubscribers.length}
+                </span>{" "}
+                {filteredSubscribers.length === 1
+                  ? "subscriber"
+                  : "subscribers"}
               </div>
-              
+
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => paginate(currentPage - 1)}
                   disabled={currentPage === 1}
-                  className={`px-3 py-1 rounded-lg border ${currentPage === 1 ? 'text-gray-400 bg-gray-100 cursor-not-allowed' : 'text-gray-700 bg-white hover:bg-gray-50'}`}
+                  className={`px-3 py-1 rounded-lg border ${
+                    currentPage === 1
+                      ? "text-gray-400 bg-gray-100 cursor-not-allowed"
+                      : "text-gray-700 bg-white hover:bg-gray-50"
+                  }`}
                 >
                   Previous
                 </button>
-                
-                {Array.from({ length: Math.ceil(filteredSubscribers.length / subscribersPerPage) }).map((_, index) => (
+
+                {Array.from({
+                  length: Math.ceil(
+                    filteredSubscribers.length / subscribersPerPage
+                  ),
+                }).map((_, index) => (
                   <button
                     key={index}
                     onClick={() => paginate(index + 1)}
-                    className={`px-3 py-1 rounded-lg ${currentPage === index + 1 ? 'bg-green-500 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'}`}
+                    className={`px-3 py-1 rounded-lg ${
+                      currentPage === index + 1
+                        ? "bg-green-500 text-white"
+                        : "bg-white text-gray-700 hover:bg-gray-50"
+                    }`}
                   >
                     {index + 1}
                   </button>
                 ))}
-                
+
                 <button
                   onClick={() => paginate(currentPage + 1)}
-                  disabled={currentPage === Math.ceil(filteredSubscribers.length / subscribersPerPage)}
-                  className={`px-3 py-1 rounded-lg border ${currentPage === Math.ceil(filteredSubscribers.length / subscribersPerPage) ? 'text-gray-400 bg-gray-100 cursor-not-allowed' : 'text-gray-700 bg-white hover:bg-gray-50'}`}
+                  disabled={
+                    currentPage ===
+                    Math.ceil(filteredSubscribers.length / subscribersPerPage)
+                  }
+                  className={`px-3 py-1 rounded-lg border ${
+                    currentPage ===
+                    Math.ceil(filteredSubscribers.length / subscribersPerPage)
+                      ? "text-gray-400 bg-gray-100 cursor-not-allowed"
+                      : "text-gray-700 bg-white hover:bg-gray-50"
+                  }`}
                 >
                   Next
                 </button>

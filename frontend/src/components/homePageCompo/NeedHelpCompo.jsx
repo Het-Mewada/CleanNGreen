@@ -82,7 +82,7 @@ const NeedHelpForm = () => {
           </p>
 
           <form onSubmit={handleSubmit} className="">
-            <div className="flex gap-5">
+            <div className="flex flex-col sm:flex-row gap-5">
               <div className="flex flex-col gap-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>

@@ -1,27 +1,26 @@
 import { useState, useContext } from "react";
 import AuthContext from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import {BeatLoader} from 'react-spinners'
-
+import { BeatLoader } from "react-spinners";
+import ForgotPasswordPage from "../components/ForgotPassword";
 const Login = () => {
   const { login } = useContext(AuthContext);
   const [email, setEmail] = useState("");
-  const [isLoading,setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null); // State for error handling
+  const [isForgotPasswordOpen, setIsForgotPasswordOpen] = useState(false);
   const navigate = useNavigate();
 
   // const GoogleLoginButton = () => {
   const handleGoogleLogin = (e) => {
-    e.preventDefault()
-    try{
+    e.preventDefault();
+    try {
       window.location.href = `https://cleanngreen.onrender.com/api/auth/google`;
       // window.location.href = `http://localhost:5000/api/auth/google`;   // for local testing
-
-    }catch(err){
-      setError(err.message)
+    } catch (err) {
+      setError(err.message);
     }
-    
   };
 
   const handleSubmit = async (e) => {
@@ -40,14 +39,14 @@ const Login = () => {
     }
 
     try {
-      setIsLoading(true)
+      setIsLoading(true);
       await login(email, password);
-      setIsLoading(false)
+      setIsLoading(false);
     } catch (err) {
       console.error("Login error:", err.message); // Logs the exact error
       setError(err.message); // Directly set the extracted error message
-    }finally{
-      setIsLoading(false)
+    } finally {
+      setIsLoading(false);
     }
   };
   return (
@@ -94,18 +93,20 @@ const Login = () => {
                   onChange={(e) => setPassword(e.target.value)}
                 />
                 <div className="text-end mt-2">
-                  <a
-                    href="#forgot-password"
-                    className="text-decoration-none small"
-                  >
-                    Forgot password?
+                  <a 
+                    onClick={()=>setIsForgotPasswordOpen(true)}
+                    className="text-decoration-none small">
+                      Forgot password?
                   </a>
                 </div>
               </div>
               <div className="d-grid gap-2 mb-3">
                 <button type="submit" className="btn btn-dark py-2 fw-semibold">
-                  {!isLoading ? "Sign in" : <BeatLoader color="#fff" size={12} speedMultiplier={1.2} />
-}
+                  {!isLoading ? (
+                    "Sign in"
+                  ) : (
+                    <BeatLoader color="#fff" size={12} speedMultiplier={1.2} />
+                  )}
                 </button>
               </div>
               <div className="d-flex align-items-center justify-content-center mb-2">
@@ -118,17 +119,18 @@ const Login = () => {
                 onClick={handleGoogleLogin}
                 className="flex justify-around  px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-100 transition-all duration-200"
                 style={{
-                  width:'100%',
-                  textAlign:'center',
+                  width: "100%",
+                  textAlign: "center",
                 }}
               >
                 <span className=" flex gap-4 text-sm  font-medium text-gray-700">
-                <img
-                  src="/images/google.svg"
-                  alt="Google"
-                  className="w-5 h-5"
-                />
-Continue with Google                </span>
+                  <img
+                    src="/images/google.svg"
+                    alt="Google"
+                    className="w-5 h-5"
+                  />
+                  Continue with Google{" "}
+                </span>
               </button>
               <div className="text-center mt-4">
                 <p className="text-muted">
@@ -144,6 +146,11 @@ Continue with Google                </span>
             </form>
           </div>
         </div>
+        {isForgotPasswordOpen && (
+          <>
+            <ForgotPasswordPage />
+          </>
+        )}
 
         {/* Right side - Image (hidden on mobile) */}
         <div className="col-md-6 d-none d-md-block bg-primary p-0">
@@ -179,5 +186,3 @@ Continue with Google                </span>
 };
 
 export default Login;
-
-

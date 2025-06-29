@@ -463,3 +463,13 @@ export const subscribeNewsletter = async (email, userName) => {
   }
 };
 
+
+export const resetPassEmail = async (to, link) => {
+  await transporter.sendMail({
+    from: '"EcoSphere"',
+    to,
+    subject: 'Reset Your Password',
+    html: `<p>Click <a href="${link}">here</a> to reset your password. This link expires in 10 minutes.</p>`,
+  });
+  console.log("Email sent")
+};

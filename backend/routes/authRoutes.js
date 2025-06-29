@@ -3,8 +3,12 @@ import passport from "passport";
 import  jwt from "jsonwebtoken";
 import { registerUser, loginUser, logoutUser } from "../controllers/authController.js";
 import { verifyOtp } from "../controllers/authController.js";
-
+import { forgotPassword } from "../controllers/authController.js";
+import { resetPassword } from "../controllers/authController.js";
 const router = express.Router();
+
+router.post("/forgot-password" , forgotPassword)
+router.post("/reset-password" , resetPassword)
 router.post("/register", registerUser);
 router.post("/verify-otp", verifyOtp)
 router.post("/login", loginUser);

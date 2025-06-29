@@ -200,6 +200,13 @@ export const editFeedback = asyncHandler(async(req,res)=> {
 })
 
 export const getSubscribers = asyncHandler(async(req,res) => {
+  const unsubscribed = req.query.unsubscribe === "true";
+  console.log("User Id " , req.query.id)
+  // const user = await User.findById(req.query.id)
+  if(unsubscribed){
+    // console.log(user)
+    await Subscriber.deleteOne({_id:req.query.id})
+  }
   const subscribers = await Subscriber.find({})
   res.status(200).json(subscribers)
 })

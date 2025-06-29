@@ -47,12 +47,13 @@ const userSchema = new mongoose.Schema(
       default: false,
     },
     deletionReason: {
-      type:{},
-      default: null
+      type: {},
+      default: null,
     },
     profilePic: { type: String, default: "" },
     isBlocked: { type: Boolean, enum: [true, false], default: false },
-
+    resetToken: String,
+    resetTokenExpires: Date,
     address: [
       {
         houseNo: {
