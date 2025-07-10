@@ -1,4 +1,5 @@
 # .github/workflows/deploy-staging.yml
+
 on:
   push:
     branches:
@@ -7,12 +8,27 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Install dependencies
-        run: npm install
-      - name: Run tests
-        run: npm test
-      - name: Build frontend
-        run: cd ../frontend && npm install && npm run build
 
+    steps:
+      - name: ⬇️ Checkout code
+        uses: actions/checkout@v2
+
+      - name: 📦 Install backend dependencies
+        working-directory: ./backend
+        run: npm install
+
+      - name: Install frontend dependencies
+        working-directory: ./frontend
+        run: npm install
+
+      - name: 🧪 Run backend tests
+        working-directory: ./backend
+        run: npm test
+
+      - name: 🧪 Run frontend tests
+        working-directory: ./frontend
+        run: npm test
+
+      - name: ⚙️ Build frontend
+        working-directory: ./frontend
+        run: npm run build
