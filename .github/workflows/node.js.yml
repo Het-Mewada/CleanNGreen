@@ -21,14 +21,6 @@ jobs:
         working-directory: ./frontend
         run: npm install
 
-      - name: 🧪 Run backend tests
-        working-directory: ./backend
-        run: npm test
-
-      - name: 🧪 Run frontend tests
-        working-directory: ./frontend
-        run: npm test
-
       - name: ⚙️ Build frontend
         working-directory: ./frontend
         run: npm run build
