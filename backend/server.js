@@ -23,10 +23,6 @@ import newsRoutes from "./routes/newsRoutes.js"
 // Import passport config (important!)
 import "./config/passport.js";
 
-const allowedOrigins = [
-  // "http://localhost:5173",
-  "https://eco-sphere-official.netlify.app/",
-];
 
 dotenv.config();
 const app = express();
@@ -37,17 +33,8 @@ connectDB();
 // ✅ Middleware
 app.use(
   cors({
-    origin: function (origin, callback) {
-      // allow non-browser requests (Postman, server-to-server)
-      if (!origin) return callback(null, true);
-
-      if (allowedOrigins.includes(origin)) {
-        return callback(null, true);
-      }
-
-      return callback(new Error("Not allowed by CORS"));
-    },
-    credentials: true,
+    origin: true, // ✅ reflect request origin
+    credentials: true, // ✅ allow cookies, auth headers
   })
 );
 
