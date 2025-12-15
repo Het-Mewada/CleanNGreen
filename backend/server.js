@@ -24,7 +24,7 @@ import newsRoutes from "./routes/newsRoutes.js"
 import "./config/passport.js";
 
 const allowedOrigins = [
-  "http://localhost:5173",
+  // "http://localhost:5173",
   "https://eco-sphere-official.netlify.app/",
 ];
 

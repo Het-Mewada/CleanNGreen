@@ -8,9 +8,6 @@ const NewsSection = ({ source = "gnews", limit = 3 }) => {
 
   const newsRefs = useRef([]);
 
-  // -----------------------------
-  // Fetch news from backend
-  // -----------------------------
   useEffect(() => {
     const fetchNews = async () => {
       try {
