@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useContext, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
 import NewsSection from "../components/homePageCompo/NewsSection";
 import CarbonFootprintCalculator from "../components/homePageCompo/CarbonCalculator";
 import ProductsComponent from "../components/homePageCompo/EcoProducts";
@@ -10,8 +9,7 @@ import NewsletterSubscription from "../components/homePageCompo/NewsLetterSubCom
 import Weather from "../components/homePageCompo/Weather";
 const Home = () => {
   const [activeTab, setActiveTab] = useState("initiatives");
-  const heroSectionRef = useRef(null);
-  const audioRef = useRef(null);
+
   useEffect(() => {
     const hash = window.location.hash;
     if (hash) {

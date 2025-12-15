@@ -19,8 +19,14 @@ import subscriberRouter from './routes/subscriberRouter.js'
 import feedbackRoutes from './routes/feedbackRoutes.js'
 import { verifyPayment } from "./controllers/cartController.js";
 
+import newsRoutes from "./routes/newsRoutes.js"
 // Import passport config (important!)
 import "./config/passport.js";
+
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://eco-sphere-official.netlify.app/",
+];
 
 dotenv.config();
 const app = express();
@@ -31,7 +37,16 @@ connectDB();
 // ✅ Middleware
 app.use(
   cors({
-    origin: true,
+    origin: function (origin, callback) {
+      // allow non-browser requests (Postman, server-to-server)
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      return callback(new Error("Not allowed by CORS"));
+    },
     credentials: true,
   })
 );
@@ -44,7 +59,7 @@ app.use(cookieParser());
 // ✅ Session must come BEFORE passport
 app.use(
   session({
-    secret: "keyboard cat", // ✅ replace with env variable in production
+    secret: "keyboard key", // ✅ replace with env variable in production
     resave: false,
     saveUninitialized: true,
   })
@@ -59,6 +74,7 @@ app.use("/api/users",userRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/upload", uploadRoutes);
 app.use('/api/feedback',feedbackRoutes);
+app.use("/api/news", newsRoutes);
 
 // ✅ Static folder for uploaded files
 app.use("/uploads", express.static("uploads"));

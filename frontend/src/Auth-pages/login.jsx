@@ -1,6 +1,5 @@
 import { useState, useContext } from "react";
 import AuthContext from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
 import { BeatLoader } from "react-spinners";
 import ForgotPasswordPage from "../components/ForgotPassword";
 const Login = () => {
@@ -10,14 +9,13 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null); // State for error handling
   const [isForgotPasswordOpen, setIsForgotPasswordOpen] = useState(false);
-  const navigate = useNavigate();
 
   // const GoogleLoginButton = () => {
   const handleGoogleLogin = (e) => {
     e.preventDefault();
     try {
-      window.location.href = `https://cleanngreen.onrender.com/api/auth/google`;
-      // window.location.href = `http://localhost:5000/api/auth/google`;   // for local testing
+      // window.location.href = `https://cleanngreen.onrender.com/api/auth/google`;
+      window.location.href = `http://localhost:5000/api/auth/google`;   // for local testing
     } catch (err) {
       setError(err.message);
     }
