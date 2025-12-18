@@ -7,7 +7,6 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 export const addItem = asyncHandler(async (req, res) => {
   const { userId, productId, quantity } = req.body;
-  console.log(userId , "AND " , productId , "AND " , quantity)
   try {
     const user = await User.findById(userId);
     const product = await Product.findById(productId);
@@ -51,7 +50,6 @@ export const deleteItem = asyncHandler(async (req, res) => {
     }
 
     await user.save();
-    console.log(user.cart)
     res.status(200).json({ message: 'Item removed from cart', cart: user.cart });
   } catch (error) {
     console.error(error);
@@ -62,17 +60,18 @@ export const deleteItem = asyncHandler(async (req, res) => {
 
 export const showCartItems = asyncHandler(async(req,res)=>{
   const userId = req.query.userId;
-console.log("User ID : " , userId)
   const user = await User.findById(userId)
-     .populate("cart.product");
-  console.log("Display cart item : " , user.cart)
+    .select("cart")
+    .populate({
+      path: "cart.product",
+      select: "name price imageUrl",
+    })
+    .lean();
   res.status(200).json(user.cart)
 })
 
-
 export const proceedCheckout = asyncHandler(async (req, res) => {
   const { cartProducts , userId } = req.body;
-console.log(cartProducts)
   const line_items = cartProducts.map(item => ({
     price_data: {
       currency: 'inr',
@@ -94,7 +93,6 @@ console.log(cartProducts)
       userId: userId,
     },
   });
-console.log(session.url)
   res.json({ url: session.url });
 });
 
@@ -102,16 +100,13 @@ console.log(session.url)
 export const verifyPayment = asyncHandler(async(req,res)=>{
   const sig = req.headers['stripe-signature'];
   let event;
-  console.log("request Body " , req.body)
   try {
     event = stripe.webhooks.constructEvent(
       req.body,
       sig,
       process.env.STRIPE_WEBHOOK_SECRET
     );
-    console.log(event.type)
     } catch (err) {
-      console.log("Error in catch block of verify : " , err)
       return res.status(400).send(`Webhook Error: ${err.message}`);
     }
 
@@ -119,10 +114,8 @@ export const verifyPayment = asyncHandler(async(req,res)=>{
     if (event.type === 'checkout.session.completed') {
       const session = event.data.object;
       const userId = session.metadata.userId;
-      console.log("payment completed")
       // Example: Clear cart, mark premium
       const user = await User.findById(userId);
-      console.log("this is the user  " , user)
       if (user) {
             const newOrder = {
       items: [...user.cart],       // Copy of the cart
@@ -132,7 +125,6 @@ export const verifyPayment = asyncHandler(async(req,res)=>{
         user.orders.push(newOrder)
         user.cart = [];
         await user.save();
-        console.log("use saved Successfully")
       }
     }
 

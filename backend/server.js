@@ -33,8 +33,11 @@ connectDB();
 // ✅ Middleware
 app.use(
   cors({
-    origin: true, // ✅ reflect request origin
-    credentials: true, // ✅ allow cookies, auth headers
+    origin: [
+      // "http://localhost:5173",
+      "https://eco-sphere-official.netlify.app",
+    ],
+    credentials: true,
   })
 );
 
@@ -44,16 +47,16 @@ app.use(express.json());
 app.use(cookieParser());
 
 // ✅ Session must come BEFORE passport
-app.use(
-  session({
-    secret: "keyboard key", // ✅ replace with env variable in production
-    resave: false,
-    saveUninitialized: true,
-  })
-);
+// app.use(
+//   session({
+//     secret: "keyboard key", // ✅ replace with env variable in production
+//     resave: false,
+//     saveUninitialized: true,
+//   })
+// );
 
 app.use(passport.initialize());
-app.use(passport.session());
+// app.use(passport.session());
 
 // ✅ Routes
 app.use("/api/auth", authRoutes);

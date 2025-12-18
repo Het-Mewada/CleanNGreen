@@ -123,7 +123,7 @@ const logoutUser = asyncHandler(async (req, res) => {
 });
 
 const forgotPassword = asyncHandler(async (req, res) => {
-  const email = req.body.email;
+try{  const email = req.body.email;
   const user = await User.findOne({ email });
   if (!user) return res.status(404).json({ error: "Email not found" });
 
@@ -135,7 +135,9 @@ const forgotPassword = asyncHandler(async (req, res) => {
   const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${token}`;
 
   await resetPassEmail(user.email, resetLink);
-  res.json({ message: "Reset link sent to your email" });
+  res.json({ message: "Reset link sent to your email" });}catch(error){
+    console.log("Error sending reset pass mail : " , error.message)
+  }
 });
 
 const resetPassword = asyncHandler(async(req,res)=>{
