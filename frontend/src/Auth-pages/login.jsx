@@ -14,8 +14,8 @@ const Login = () => {
   const handleGoogleLogin = (e) => {
     e.preventDefault();
     try {
-      // window.location.href = `https://cleanngreen.onrender.com/api/auth/google`;
-      window.location.href = `http://localhost:5000/api/auth/google`;   // for local testing
+      window.location.href = `https://cleanngreen.onrender.com/api/auth/google`;
+      // window.location.href = `http://localhost:5000/api/auth/google`;   // for local testing
     } catch (err) {
       setError(err.message);
     }
@@ -91,10 +91,11 @@ const Login = () => {
                   onChange={(e) => setPassword(e.target.value)}
                 />
                 <div className="text-end mt-2">
-                  <a 
-                    onClick={()=>setIsForgotPasswordOpen(true)}
-                    className="text-decoration-none small">
-                      Forgot password?
+                  <a
+                    onClick={() => setIsForgotPasswordOpen(true)}
+                    className="text-decoration-none small"
+                  >
+                    Forgot password?
                   </a>
                 </div>
               </div>

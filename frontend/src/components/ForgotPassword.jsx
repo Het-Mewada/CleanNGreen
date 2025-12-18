@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
+
 const ForgotPasswordPage = () => {
   const [email, setEmail] = useState("");
   const [modalOpen, setModalOpen] = useState(true);
@@ -19,7 +20,6 @@ const ForgotPasswordPage = () => {
       setModalOpen(false);
       setEmail("");
     } catch (err) {
-      console.error("Forgot password error:", err);
       toast.error(
         err.response?.data?.error || "Failed to send reset link. Try again."
       );
@@ -28,43 +28,47 @@ const ForgotPasswordPage = () => {
     }
   };
 
+  if (!modalOpen) return null;
+
   return (
-    // <div className="absolute min-h-screen flex items-center justify-center bg-gray-100">
-<>
-      {/* Modal */}
-      {modalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center z-30">
-          <div className="bg-white rounded-lg shadow-lg w-96 p-6 relative">
-            <button
-              className="absolute top-2 right-3 text-gray-400 hover:text-red-500 text-xl"
-              onClick={() => setModalOpen(false)}
-            >
-              &times;
-            </button>
-            <h2 className="text-xl font-semibold mb-4 text-center">Reset Password</h2>
+    <div
+      className="fixed inset-0 z-30 flex items-center justify-center bg-black/30 backdrop-blur-sm"
+      onClick={() => setModalOpen(false)} // click outside = close
+    >
+      <div
+        className="bg-white rounded-lg shadow-lg w-96 p-6 relative"
+        onClick={(e) => e.stopPropagation()} // prevent close on inside click
+      >
+        <button
+          className="absolute top-2 right-3 text-gray-400 hover:text-red-500 text-xl"
+          onClick={() => setModalOpen(false)}
+        >
+          &times;
+        </button>
 
-            <input
-              type="email"
-              placeholder="Enter your email"
-              className="w-full px-4 py-2 border rounded focus:outline-none focus:ring focus:border-blue-300 mb-4"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
+        <h2 className="text-xl font-semibold mb-4 text-center">
+          Reset Password
+        </h2>
 
-            <button
-              onClick={handleForgot}
-              disabled={loading}
-              className={`w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition ${
-                loading ? "opacity-60 cursor-not-allowed" : ""
-              }`}
-            >
-              {loading ? "Sending..." : "Send Reset Link"}
-            </button>
-          </div>
-        </div>
-      )}
-      </>
-    // </div>
+        <input
+          type="email"
+          placeholder="Enter your email"
+          className="w-full px-4 py-2 border rounded focus:outline-none focus:ring focus:border-blue-300 mb-4"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+
+        <button
+          onClick={handleForgot}
+          disabled={loading}
+          className={`w-full bg-blue-600 text-white py-2 rounded transition ${
+            loading ? "opacity-60 cursor-not-allowed" : "hover:bg-blue-700"
+          }`}
+        >
+          {loading ? "Sending..." : "Send Reset Link"}
+        </button>
+      </div>
+    </div>
   );
 };
 

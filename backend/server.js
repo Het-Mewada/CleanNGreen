@@ -1,32 +1,23 @@
 import dotenv from "dotenv";
 import cors from "cors";
-import session from "express-session";
 import passport from "passport";
 import cookieParser from "cookie-parser";
-
 import express from "express";
 import connectDB from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import uploadRoutes from "./routes/uploadRoutes.js";
-
-import statsRouter from './routes/statsRouter.js'
-import productRouter from './routes/productRouter.js'
-import subscriberRouter from './routes/subscriberRouter.js'
-
-
-import feedbackRoutes from './routes/feedbackRoutes.js'
+import productRouter from "./routes/productRouter.js";
+import subscriberRouter from "./routes/subscriberRouter.js";
+import feedbackRoutes from "./routes/feedbackRoutes.js";
 import { verifyPayment } from "./controllers/cartController.js";
-
-import newsRoutes from "./routes/newsRoutes.js"
-// Import passport config (important!)
+import newsRoutes from "./routes/newsRoutes.js";
 import "./config/passport.js";
-
 
 dotenv.config();
 const app = express();
-app.set("trust proxy", 1)
+app.set("trust proxy", 1);
 // ✅ Connect to MongoDB
 connectDB();
 
@@ -34,46 +25,36 @@ connectDB();
 app.use(
   cors({
     origin: [
-      // "http://localhost:5173",
+      "http://localhost:5173",
       "https://eco-sphere-official.netlify.app",
     ],
     credentials: true,
   })
 );
 
-app.post("/api/cart/webhook", express.raw({ type: 'application/json' }) , verifyPayment  )
+app.post(
+  "/api/cart/webhook",
+  express.raw({ type: "application/json" }),
+  verifyPayment
+);
 
 app.use(express.json());
 app.use(cookieParser());
-
-// ✅ Session must come BEFORE passport
-// app.use(
-//   session({
-//     secret: "keyboard key", // ✅ replace with env variable in production
-//     resave: false,
-//     saveUninitialized: true,
-//   })
-// );
-
 app.use(passport.initialize());
-// app.use(passport.session());
 
 // ✅ Routes
 app.use("/api/auth", authRoutes);
-app.use("/api/users",userRoutes);
+app.use("/api/users", userRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/upload", uploadRoutes);
-app.use('/api/feedback',feedbackRoutes);
+app.use("/api/feedback", feedbackRoutes);
 app.use("/api/news", newsRoutes);
 
 // ✅ Static folder for uploaded files
 app.use("/uploads", express.static("uploads"));
 
-
-// insert data
-app.use('/api/stats', statsRouter);
-app.use('/api/products', productRouter);
-app.use('/api/subscribe', subscriberRouter);
+app.use("/api/products", productRouter);
+app.use("/api/subscribe", subscriberRouter);
 
 // ✅ Test route
 app.get("/api", (req, res) => {

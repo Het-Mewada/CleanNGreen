@@ -58,7 +58,6 @@ const Home = () => {
           >
             Technologies
           </button>
-
         </div>
 
         {/* Tab Content */}

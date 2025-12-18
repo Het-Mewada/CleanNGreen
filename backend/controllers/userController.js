@@ -2,7 +2,8 @@ import User from "../models/UserModel.js";
 import Feedback from "../models/FeedbackModel.js";
 import asyncHandler from "express-async-handler";
 import { sendAccountDeletionEmail } from "../utils/otpService.js";
-import axios from 'axios';
+import axios from "axios";
+
 const getUserData = asyncHandler(async (req, res) => {
   const page = Number(req.query.page) || 1;
   const limit = Number(req.query.limit) || 10;
@@ -23,7 +24,9 @@ const getUserData = asyncHandler(async (req, res) => {
   const users = await User.find(query)
     .limit(limit)
     .skip(limit * (page - 1))
-    .select("-password");
+    .select(
+      "-password -cart -orders -gender -profilePic -address -resetToken -resetTokenExpires -__v"
+    );
 
   res.json({
     users,
@@ -318,7 +321,7 @@ const cancelDeletionRequest = asyncHandler(async (req, res) => {
       { deletionRequested: false, reason: null },
       { new: true }
     );
-    if(userCanceled){
+    if (userCanceled) {
       await sendAccountDeletionEmail(user.email, user.name, "cancel");
     }
     res.json({ message: "Deletion request canceled" });
@@ -348,8 +351,10 @@ const getWeather = asyncHandler(async (req, res) => {
     res.json(response.data);
   } catch (error) {
     console.error("Weather API error:", error.message);
-    if(error.status === 404){
-      res.status(error.response.status).json({error:error.response.data.message})
+    if (error.status === 404) {
+      res
+        .status(error.response.status)
+        .json({ error: error.response.data.message });
     }
     res.status(500).json({ error: "Failed to fetch weather data" });
   }

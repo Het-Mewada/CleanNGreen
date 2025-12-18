@@ -4,7 +4,6 @@ import { FiUserX } from "react-icons/fi";
 // components
 import AdminDashboard from "./Admin-Dashboard";
 import BlockedUsers from "./Blocked";
-import InsertData from "../pages/InsertData";
 import AdminFeedbackDashboard from "./User-feedbacks";
 import NewsSubs from "./LetterSubs";
 import HelpRequestList from "./NeedHelp";
@@ -25,9 +24,6 @@ const AdminPanel = () => {
 
       case "blocked":
         return <BlockedUsers />;
-
-      case "insert":
-        return <InsertData />;
 
       case "subscribers":
         return <NewsSubs />;
@@ -115,34 +111,6 @@ const AdminPanel = () => {
                 <FiUserX className=" text-xl mr-1" />
 
                 {sidebarOpen && <span className="ml-3">Blocked Users</span>}
-              </button>
-            </li>
-            <li>
-              <button
-                onClick={() => {
-                  setActiveTab("insert");
-                  toggleSidebar();
-                }}
-                className={`w-full flex items-center px-5 py-4 ${
-                  activeTab === "orders" ? "bg-[#1f6d69]" : "hover:bg-[#1f6d69]"
-                } transition`}
-              >
-                <svg
-                  className="w-6 h-6"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <path d="M4 4h16v16H4z" fill="none" stroke="currentColor" />
-                  <path d="M12 8v8" stroke="currentColor" />
-                  <path d="M8 12h8" stroke="currentColor" />
-                </svg>
-
-                {sidebarOpen && <span className="ml-3">Insert Data</span>}
               </button>
             </li>
             <li>

@@ -13,7 +13,6 @@ import OAuthSuccess from "./Auth-pages/SuccessOAuth";
 import "bootstrap/dist/css/bootstrap.min.css";
 import ProfilePage from "./pages/ProfilePage";
 import Blocked from "./admin/Blocked";
-import Data from "./pages/InsertData";
 import Footer from "./components/Footer";
 import ClickSpark from "./components/universalCompos/ClickSparkComponent";
 import FuturisticCursor from "./components/universalCompos/CursorComponent";
@@ -42,11 +41,7 @@ function App() {
 }
 function MainApp() {
   const location = useLocation();
-  const hideNavRoutes = [
-    "/login",
-    "/register",
-    "/admin-dashboard",
-  ];
+  const hideNavRoutes = ["/login", "/register", "/admin-dashboard"];
   const showComponents = !hideNavRoutes.includes(location.pathname);
 
   return (
@@ -78,7 +73,7 @@ function MainApp() {
             <Route path="/home" element={<Home />} />
             <Route path="/about" element={<AboutUs />} />
             <Route path="/initiatives/*" element={<Initiatives />} />
-            <Route path="/marketplace" element={ <ProductsComponent />}/>
+            <Route path="/marketplace" element={<ProductsComponent />} />
             <Route path="/feedback-form" element={<FeedbackForm />} />
             <Route path="/help-form" element={<NeedHelpForm />} />
             <Route path="/social-auth-success" element={<OAuthSuccess />} />
