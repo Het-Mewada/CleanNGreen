@@ -85,10 +85,14 @@ function MainApp() {
             <Route
               path="*"
               element={
-                <h1 className="text-center text-3xl p-10">
-                  <span className="text-red-500">404</span> <br /> Page Not
-                  Found
-                </h1>
+                <div className="h-screen flex items-center justify-center">
+                  <h1 className="text-center text-3xl">
+                    <span className="text-red-500 text-6xl font-bold block">
+                      404
+                    </span>
+                    Page Not Found
+                  </h1>
+                </div>
               }
             />
             <Route path="/profile" element={<ProfilePage />} />

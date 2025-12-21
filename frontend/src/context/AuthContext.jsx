@@ -8,7 +8,6 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
-  const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false); // Add loading state
   const [defaultAddress, setDefaultaddress] = useState(null);
   const [orders, setOrders] = useState([null]);

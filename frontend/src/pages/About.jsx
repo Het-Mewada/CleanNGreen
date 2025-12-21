@@ -1,6 +1,11 @@
-import { FaLeaf, FaRecycle, FaSolarPanel, FaHandsHelping } from 'react-icons/fa';
-import { GiEarthAmerica } from 'react-icons/gi';
-import { MdEco } from 'react-icons/md';
+import {
+  FaLeaf,
+  FaRecycle,
+  FaSolarPanel,
+  FaHandsHelping,
+} from "react-icons/fa";
+import { GiEarthAmerica } from "react-icons/gi";
+import { MdEco } from "react-icons/md";
 
 const AboutUs = () => {
   return (
@@ -16,7 +21,8 @@ const AboutUs = () => {
               About <span className="text-green-300">Eco-Sphere</span>
             </h1>
             <p className="text-xl md:text-2xl text-green-100 max-w-3xl mx-auto">
-              Empowering sustainable living through innovation, education, and community action
+              Empowering sustainable living through innovation, education, and
+              community action
             </p>
           </div>
         </div>
@@ -31,11 +37,16 @@ const AboutUs = () => {
                 Our <span className="text-green-600">Story</span>
               </h2>
               <p className="text-lg text-gray-600 mb-6">
-                Eco-Sphere was born in 2020 from a simple idea: sustainability should be accessible, practical, and rewarding for everyone. 
-                Our founders, a group of environmental scientists and tech enthusiasts, saw the gap between climate awareness and actionable solutions.
+                Eco-Sphere was born in 2020 from a simple idea: sustainability
+                should be accessible, practical, and rewarding for everyone. Our
+                founders, a group of environmental scientists and tech
+                enthusiasts, saw the gap between climate awareness and
+                actionable solutions.
               </p>
               <p className="text-lg text-gray-600 mb-6">
-                What started as a small blog about eco-friendly living has grown into a comprehensive platform helping thousands reduce their environmental impact through:
+                What started as a small blog about eco-friendly living has grown
+                into a comprehensive platform helping thousands reduce their
+                environmental impact through:
               </p>
               <ul className="space-y-3 text-gray-600">
                 <li className="flex items-start">
@@ -68,7 +79,8 @@ const AboutUs = () => {
               Our <span className="text-green-600">Purpose</span>
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Driving meaningful change through education, innovation, and collective action
+              Driving meaningful change through education, innovation, and
+              collective action
             </p>
           </div>
 
@@ -81,7 +93,10 @@ const AboutUs = () => {
                 <h3 className="text-xl font-bold text-gray-900">Mission</h3>
               </div>
               <p className="text-gray-600">
-                To empower individuals and communities with the knowledge, tools, and inspiration to reduce their environmental impact. We believe small, consistent actions create monumental change when multiplied across communities.
+                To empower individuals and communities with the knowledge,
+                tools, and inspiration to reduce their environmental impact. We
+                believe small, consistent actions create monumental change when
+                multiplied across communities.
               </p>
             </div>
 
@@ -93,7 +108,9 @@ const AboutUs = () => {
                 <h3 className="text-xl font-bold text-gray-900">Vision</h3>
               </div>
               <p className="text-gray-600">
-                A world where sustainable living is the norm, not the exception. Where every person understands their connection to nature and takes responsibility for preserving it for future generations.
+                A world where sustainable living is the norm, not the exception.
+                Where every person understands their connection to nature and
+                takes responsibility for preserving it for future generations.
               </p>
             </div>
           </div>
@@ -118,10 +135,14 @@ const AboutUs = () => {
                 <div className="bg-green-100 p-2 rounded-full mr-3">
                   <FaLeaf className="text-green-600" />
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900">Sustainability First</h3>
+                <h3 className="text-lg font-semibold text-gray-900">
+                  Sustainability First
+                </h3>
               </div>
               <p className="text-gray-600">
-                Every decision we make is evaluated through an environmental lens. We practice what we preach in our operations and partnerships.
+                Every decision we make is evaluated through an environmental
+                lens. We practice what we preach in our operations and
+                partnerships.
               </p>
             </div>
 
@@ -130,10 +151,13 @@ const AboutUs = () => {
                 <div className="bg-green-100 p-2 rounded-full mr-3">
                   <FaHandsHelping className="text-green-600" />
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900">Community Power</h3>
+                <h3 className="text-lg font-semibold text-gray-900">
+                  Community Power
+                </h3>
               </div>
               <p className="text-gray-600">
-                Real change happens together. We foster supportive communities where members learn from and inspire each other.
+                Real change happens together. We foster supportive communities
+                where members learn from and inspire each other.
               </p>
             </div>
 
@@ -142,10 +166,13 @@ const AboutUs = () => {
                 <div className="bg-green-100 p-2 rounded-full mr-3">
                   <FaSolarPanel className="text-green-600" />
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900">Innovative Solutions</h3>
+                <h3 className="text-lg font-semibold text-gray-900">
+                  Innovative Solutions
+                </h3>
               </div>
               <p className="text-gray-600">
-                We combine cutting-edge technology with timeless ecological wisdom to create practical solutions for modern living.
+                We combine cutting-edge technology with timeless ecological
+                wisdom to create practical solutions for modern living.
               </p>
             </div>
 
@@ -154,10 +181,13 @@ const AboutUs = () => {
                 <div className="bg-green-100 p-2 rounded-full mr-3">
                   <FaRecycle className="text-green-600" />
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900">Circular Thinking</h3>
+                <h3 className="text-lg font-semibold text-gray-900">
+                  Circular Thinking
+                </h3>
               </div>
               <p className="text-gray-600">
-                We promote systems where waste is designed out and materials keep their value through reuse and regeneration.
+                We promote systems where waste is designed out and materials
+                keep their value through reuse and regeneration.
               </p>
             </div>
 
@@ -166,10 +196,13 @@ const AboutUs = () => {
                 <div className="bg-green-100 p-2 rounded-full mr-3">
                   <GiEarthAmerica className="text-green-600" />
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900">Scientific Integrity</h3>
+                <h3 className="text-lg font-semibold text-gray-900">
+                  Scientific Integrity
+                </h3>
               </div>
               <p className="text-gray-600">
-                Our content is rigorously researched and reviewed by environmental experts to ensure accuracy and reliability.
+                Our content is rigorously researched and reviewed by
+                environmental experts to ensure accuracy and reliability.
               </p>
             </div>
 
@@ -178,10 +211,13 @@ const AboutUs = () => {
                 <div className="bg-green-100 p-2 rounded-full mr-3">
                   <MdEco className="text-green-600" />
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900">Joyful Activism</h3>
+                <h3 className="text-lg font-semibold text-gray-900">
+                  Joyful Activism
+                </h3>
               </div>
               <p className="text-gray-600">
-                Sustainability should be fulfilling, not frustrating. We focus on positive, rewarding approaches to eco-living.
+                Sustainability should be fulfilling, not frustrating. We focus
+                on positive, rewarding approaches to eco-living.
               </p>
             </div>
           </div>
@@ -189,18 +225,19 @@ const AboutUs = () => {
       </section>
 
       {/* Team Section */}
-      <section className="py-16 bg-green-700 text-white">
+      {/* <section className="py-16 bg-green-700 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold mb-4">
               Meet Our <span className="text-green-300">Team</span>
             </h2>
             <p className="text-xl text-green-100 max-w-3xl mx-auto">
-              Passionate individuals dedicated to making sustainability accessible
+              Passionate individuals dedicated to making sustainability
+              accessible
             </p>
-          </div>
+          </div> */}
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+      {/* <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
               {
                 name: "Ruchi Gondaliya",
@@ -242,11 +279,9 @@ const AboutUs = () => {
                 </div>
               </div>
             ))}
-          </div>
-
-
-        </div>
-      </section>
+          </div> */}
+      {/* </div>
+      </section> */}
 
       {/* Impact Stats */}
       <section className="py-16 bg-white">
@@ -264,18 +299,22 @@ const AboutUs = () => {
             {[
               { number: "4,230+", label: "Active Community Members" },
               { number: "2,865 tons", label: "CO₂ Reduced Annually" },
-            //   { number: "120+", label: "Sustainability Guides Published" },
-              { number: "36", label: "Local Cleanup Initiatives Supported" }
+              //   { number: "120+", label: "Sustainability Guides Published" },
+              { number: "36", label: "Local Cleanup Initiatives Supported" },
             ].map((stat, index) => (
-              <div key={index} className=" stretch-1 m-2 bg-green-50 p-8 rounded-xl">
-                <p className="text-4xl font-bold text-green-600 mb-2">{stat.number}</p>
+              <div
+                key={index}
+                className=" stretch-1 m-2 bg-green-50 p-8 rounded-xl"
+              >
+                <p className="text-4xl font-bold text-green-600 mb-2">
+                  {stat.number}
+                </p>
                 <p className="text-gray-600">{stat.label}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
-
     </div>
   );
 };

@@ -15,7 +15,6 @@ const Register = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [registrationData, setRegistrationData] = useState(null);
   const [OtpSentTime, setOtpSentTime] = useState(null);
-  const [adminpassword, setAdminpassword] = useState(null);
 
   const navigate = useNavigate();
 
@@ -38,7 +37,6 @@ const Register = () => {
         setShowOtpField(true);
         setOtpSentTime(Date.now());
       } else {
-        console.log("OTP :", otp);
         // Second step - submit with OTP
         await register(
           registrationData.name,
@@ -51,7 +49,6 @@ const Register = () => {
         );
       }
     } catch (error) {
-      console.log("error here : ", error);
       setError(error.message);
     } finally {
       setIsSubmitting(false);
