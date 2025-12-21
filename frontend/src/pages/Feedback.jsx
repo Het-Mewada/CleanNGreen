@@ -3,7 +3,7 @@ import { FiSend, FiStar, FiX, FiCheck } from "react-icons/fi";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
 import AuthContext from "../context/AuthContext";
-import toast from 'react-hot-toast'
+import toast from "react-hot-toast";
 const FeedbackForm = () => {
   const { user } = useContext(AuthContext);
   const [isMobile, setIsMobile] = useState(false);
@@ -19,7 +19,7 @@ const FeedbackForm = () => {
     hover: 0,
     comment: "",
     email: user?.email || "",
-    name:user?.name || "",
+    name: user?.name || "",
   });
 
   const ratingLabels = ["Very Poor", "Poor", "Average", "Good", "Excellent"];
@@ -62,7 +62,6 @@ const FeedbackForm = () => {
     if (!validate()) return;
 
     setIsSubmitting(true);
-    console.log(formData)
 
     try {
       const payload = {
@@ -80,17 +79,16 @@ const FeedbackForm = () => {
         },
       });
 
-
       // Reset form on success
       setFormData({
         rating: 0,
         hover: 0,
         comment: "",
         email: user?.email || "",
-        name: user?.name || "" 
+        name: user?.name || "",
       });
 
-      toast.success(response.data.message)
+      toast.success(response.data.message);
     } catch (error) {
       let message = "Failed to submit feedback. Please try again.";
 
@@ -129,7 +127,7 @@ const FeedbackForm = () => {
         submit: message,
       });
 
-      toast.error(errors.submit)
+      toast.error(errors.submit);
     } finally {
       setIsSubmitting(false);
     }
@@ -137,8 +135,6 @@ const FeedbackForm = () => {
 
   return (
     <div className="min-h-screen mt-15 flex flex-col gap-4 items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-50 p-4">
-
-
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -197,8 +193,6 @@ const FeedbackForm = () => {
 
         {/* Right Side - Form */}
         <div className={`p-8 ${isMobile ? "" : "w-2/3"}`}>
-
-
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-3">

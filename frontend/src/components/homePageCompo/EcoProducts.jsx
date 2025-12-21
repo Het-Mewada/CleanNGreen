@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Badge from "@mui/material/Badge";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import { X, ShoppingCart, Package, Trash2 } from 'lucide-react';
+import { X, ShoppingCart, Package, Trash2 } from "lucide-react";
 import AuthContext from "../../context/AuthContext";
 import toast from "react-hot-toast";
 
@@ -58,7 +58,6 @@ export default function ProductsComponent({
             headers: { Authorization: `Bearer ${token}` },
           }
         );
-        // console.log("order dat : " , orders.data)
         setOrderHistory(orders.data);
       } catch (err) {
         console.error("Error fetching data:", err);
@@ -256,54 +255,54 @@ export default function ProductsComponent({
   );
 
   const CartItem = ({ product }) => (
-<div>
-  {/* Image + Product Info */}
-  <div className="flex flex-col">
-
-  <div>
-
-  <div className="flex items-center space-x-4 col-span-6 w-full">
-    <img
-      src={product.product.imageUrl || "/images/placeholder.png"}
-      alt={product.product.name}
-      className="w-12 h-12 object-cover rounded"
-    />
     <div>
-      <h4 className="font-medium text-sm md:text-base">{product.product.name}</h4>
-      {product.description && (
-        <p className="text-gray-500 text-xs md:text-sm">{product.description}</p>
-      )}
+      {/* Image + Product Info */}
+      <div className="flex flex-col">
+        <div>
+          <div className="flex items-center space-x-4 col-span-6 w-full">
+            <img
+              src={product.product.imageUrl || "/images/placeholder.png"}
+              alt={product.product.name}
+              className="w-12 h-12 object-cover rounded"
+            />
+            <div>
+              <h4 className="font-medium text-sm md:text-base">
+                {product.product.name}
+              </h4>
+              {product.description && (
+                <p className="text-gray-500 text-xs md:text-sm">
+                  {product.description}
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
+        <div className="flex mt-3 sm:flex sm:mt-3">
+          {/* Price */}
+          <div className="col-span-2 text-center w-full text-sm md:text-base">
+            Rate : ₹{product.priceAtTime.toFixed(2)}
+          </div>
+
+          {/* Quantity */}
+          <div className="col-span-2 text-center w-full text-sm md:text-base">
+            Quantity : {product.quantity}
+          </div>
+
+          {/* Total */}
+          <div className="col-span-2 text-center w-full font-medium text-sm md:text-base">
+            Total : ₹{(product.priceAtTime * product.quantity).toFixed(2)}
+          </div>
+
+          {/* Remove Icon */}
+          <div
+            className="mt-2 md:mt-0 text-red-500 hover:text-red-700 cursor-pointer"
+            onClick={() => removeProductFromCart(product.product._id)}
+          >
+            <Trash2 className="w-5 h-5 mx-auto" />
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
-  </div>
-<div className="flex mt-3 sm:flex sm:mt-3">
-
-  {/* Price */}
-  <div className="col-span-2 text-center w-full text-sm md:text-base">
-    Rate : ₹{product.priceAtTime.toFixed(2)}
-  </div>
-
-  {/* Quantity */}
-  <div className="col-span-2 text-center w-full text-sm md:text-base">
-    Quantity : {product.quantity}
-  </div>
-
-  {/* Total */}
-  <div className="col-span-2 text-center w-full font-medium text-sm md:text-base">
-   Total : ₹{(product.priceAtTime * product.quantity).toFixed(2)}
-  </div>
-
-  {/* Remove Icon */}
-  <div
-    className="mt-2 md:mt-0 text-red-500 hover:text-red-700 cursor-pointer"
-    onClick={() => removeProductFromCart(product.product._id)}
-  >
-    <Trash2 className="w-5 h-5 mx-auto" />
-  </div>
-</div>
-</div>
-
-  </div>
   );
   const addAddress = () => {
     navigate("/profile", {
@@ -395,203 +394,233 @@ export default function ProductsComponent({
           </div>
         )}
 
-       {state.isCartOpen && (
-  <div className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div className="bg-white  rounded-lg shadow-xl w-full min-h-130 max-h-130 max-w-4xl  flex flex-col overflow-hidden border border-gray-200">
-      {/* Header */}
-      <div className="bg-gray-900 text-white">
-        <div className="flex items-center justify-between p-4 border-b border-gray-700">
-          <h1 className="text-xl font-bold">My Account</h1>
-          <button
-            onClick={() => handleStateUpdate({ isCartOpen: false })}
-            className="p-1 rounded-md hover:bg-gray-700 transition-colors"
-            aria-label="Close"
-          >
-            <X size={20} />
-          </button>
-        </div>
-        
-        {/* Tabs */}
-        <div className="flex">
-          <button
-            onClick={() => handleStateUpdate({ activeOption: "cart" })}
-            className={`flex-1 py-3 px-4 font-medium text-sm sm:text-base transition-colors relative ${
-              state.activeOption === "cart"
-                ? "bg-white text-gray-900 font-semibold"
-                : "text-gray-300 hover:text-white hover:bg-gray-800"
-            }`}
-          >
-            <div className="flex items-center justify-center gap-2">
-              <ShoppingCart size={18} />
-              <span>Cart</span>
-              {user?.cart?.length > 0 && (
-                <span className={`absolute -top-1 -right-1 rounded-full w-5 h-5 flex items-center justify-center text-xs ${
-                  state.activeOption === "cart" 
-                    ? "bg-amber-500 text-white" 
-                    : "bg-gray-700 text-white"
-                }`}>
-                  {user.cart.length}
-                </span>
-              )}
-            </div>
-          </button>
-          
-          <button
-            onClick={() => handleStateUpdate({ activeOption: "orders" })}
-            className={`flex-1 py-3 px-4 font-medium text-sm sm:text-base transition-colors ${
-              state.activeOption === "orders"
-                ? "bg-white text-gray-900 font-semibold"
-                : "text-gray-300 hover:text-white hover:bg-gray-800"
-            }`}
-          >
-            <div className="flex items-center justify-center gap-2">
-              <Package size={18} />
-              <span>Orders</span>
-            </div>
-          </button>
-        </div>
-      </div>
-
-      {/* Content Area */}
-      <div className="flex-1 overflow-auto">
-        {state.activeOption === "cart" ? (
-          <div className="h-full flex flex-col">
-            {/* Cart Content */}
-            {state.loading ? (
-              <div className="flex-1 flex flex-col items-center justify-center p-8">
-                <div className="animate-spin rounded-full h-12 w-12 border-4 border-gray-300 border-t-gray-900 mb-4"></div>
-                <p className="text-gray-600">Loading your cart...</p>
-              </div>
-            ) : state.error ? (
-              <div className="flex-1 flex items-center justify-center p-6">
-                <div className="text-center bg-red-50 p-4 rounded-lg max-w-md">
-                  <AlertCircle className="mx-auto text-red-500 mb-2" size={24} />
-                  <p className="text-red-600">{state.error}</p>
-                </div>
-              </div>
-            ) : state.cartProducts.length === 0 ? (
-              <div className="flex-1 flex flex-col items-center justify-center p-8 text-center">
-                <ShoppingCart className="text-gray-300 mb-4" size={48} />
-                <h3 className="text-lg font-medium text-gray-700 mb-1">Your cart is empty</h3>
-                <p className="text-gray-500 text-sm">Start shopping to add items</p>
-              </div>
-            ) : (
-              <>
-                {/* Cart Items */}
-                <div className="divide-y divide-gray-200">
-                  {state.cartProducts.map((product, index) => (
-                    <div key={index} className="p-4 hover:bg-gray-50 transition-colors">
-                      <CartItem product={product} />
-                    </div>
-                  ))}
+        {state.isCartOpen && (
+          <div className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div className="bg-white  rounded-lg shadow-xl w-full min-h-130 max-h-130 max-w-4xl  flex flex-col overflow-hidden border border-gray-200">
+              {/* Header */}
+              <div className="bg-gray-900 text-white">
+                <div className="flex items-center justify-between p-4 border-b border-gray-700">
+                  <h1 className="text-xl font-bold">My Account</h1>
+                  <button
+                    onClick={() => handleStateUpdate({ isCartOpen: false })}
+                    className="p-1 rounded-md hover:bg-gray-700 transition-colors"
+                    aria-label="Close"
+                  >
+                    <X size={20} />
+                  </button>
                 </div>
 
-                {/* Cart Footer */}
-                <div className="border-t border-gray-200 p-4 bg-gray-50 sticky bottom-0">
-                  <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-                    <div className="text-lg font-bold text-gray-900">
-                      Total: <span className="text-emerald-600">₹{calculateTotal()}</span>
+                {/* Tabs */}
+                <div className="flex">
+                  <button
+                    onClick={() => handleStateUpdate({ activeOption: "cart" })}
+                    className={`flex-1 py-3 px-4 font-medium text-sm sm:text-base transition-colors relative ${
+                      state.activeOption === "cart"
+                        ? "bg-white text-gray-900 font-semibold"
+                        : "text-gray-300 hover:text-white hover:bg-gray-800"
+                    }`}
+                  >
+                    <div className="flex items-center justify-center gap-2">
+                      <ShoppingCart size={18} />
+                      <span>Cart</span>
+                      {user?.cart?.length > 0 && (
+                        <span
+                          className={`absolute -top-1 -right-1 rounded-full w-5 h-5 flex items-center justify-center text-xs ${
+                            state.activeOption === "cart"
+                              ? "bg-amber-500 text-white"
+                              : "bg-gray-700 text-white"
+                          }`}
+                        >
+                          {user.cart.length}
+                        </span>
+                      )}
                     </div>
-                    <button
-                      onClick={handleCheckout}
-                      className="w-full sm:w-auto bg-gray-900 hover:bg-gray-800 text-white px-6 py-2 rounded-md font-medium transition-colors focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
-                    >
-                      Checkout
-                    </button>
-                  </div>
+                  </button>
+
+                  <button
+                    onClick={() =>
+                      handleStateUpdate({ activeOption: "orders" })
+                    }
+                    className={`flex-1 py-3 px-4 font-medium text-sm sm:text-base transition-colors ${
+                      state.activeOption === "orders"
+                        ? "bg-white text-gray-900 font-semibold"
+                        : "text-gray-300 hover:text-white hover:bg-gray-800"
+                    }`}
+                  >
+                    <div className="flex items-center justify-center gap-2">
+                      <Package size={18} />
+                      <span>Orders</span>
+                    </div>
+                  </button>
                 </div>
-              </>
-            )}
-          </div>
-        ) : (
-          /* Orders Section */
-          <div className="h-full flex flex-col">
-            <div className="flex-1 overflow-auto p-4">
-              {orderHistory.length === 0 ? (
-                <div className="flex flex-col items-center justify-center h-full p-8 text-center">
-                  <Package className="text-gray-300 mb-4" size={48} />
-                  <h3 className="text-lg font-medium text-gray-700 mb-1">No orders yet</h3>
-                  <p className="text-gray-500 text-sm">Your completed orders will appear here</p>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {orderHistory.map((order, index) => (
-                    <div
-                      key={index}
-                      className="border border-gray-200 rounded-lg overflow-hidden hover:shadow-sm transition-shadow"
-                    >
-                      {/* Order Header */}
-                      <div className="bg-gray-50 p-4 border-b border-gray-200">
-                        <div className="flex justify-between sm:flex-row sm:items-center sm:justify-between gap-2">
-                          <div>
-                            <h3 className="font-medium text-gray-900">
-                              Order #{index + 1}
-                            </h3>
-                            <p className="text-sm text-gray-500">
-                              {new Date(order.orderedAt).toLocaleDateString("en-GB", {
-                                day: "2-digit",
-                                month: "short",
-                                year: "numeric",
-                              })}
-                            </p>
-                          </div>
-                          <div className="flex flex-col items-end">
-                            <span className="font-bold text-gray-900">
-                              ₹{order.totalAmount}
-                            </span>
-                            <span className="text-xs px-2 py-1 bg-amber-100 text-amber-800 rounded-full">
-                              {order.status || "Placed"}
-                            </span>
-                          </div>
+              </div>
+
+              {/* Content Area */}
+              <div className="flex-1 overflow-auto">
+                {state.activeOption === "cart" ? (
+                  <div className="h-full flex flex-col">
+                    {/* Cart Content */}
+                    {state.loading ? (
+                      <div className="flex-1 flex flex-col items-center justify-center p-8">
+                        <div className="animate-spin rounded-full h-12 w-12 border-4 border-gray-300 border-t-gray-900 mb-4"></div>
+                        <p className="text-gray-600">Loading your cart...</p>
+                      </div>
+                    ) : state.error ? (
+                      <div className="flex-1 flex items-center justify-center p-6">
+                        <div className="text-center bg-red-50 p-4 rounded-lg max-w-md">
+                          <AlertCircle
+                            className="mx-auto text-red-500 mb-2"
+                            size={24}
+                          />
+                          <p className="text-red-600">{state.error}</p>
                         </div>
                       </div>
-
-                      {/* Order Items */}
-                      <div className="divide-y divide-gray-200">
-                        {order.items.map((item, idx) => (
-                          <div
-                            key={idx}
-                            className="p-3 flex items-start gap-3"
-                          >
-                            <div className="flex-shrink-0">
-                              <img
-                                src={item.product?.imageUrl || "/images/placeholder.jpg"}
-                                alt={item.product?.name}
-                                className="w-16 h-16 object-contain bg-white border border-gray-200 rounded"
-                                onError={(e) => {
-                                  e.target.src = "/placeholder-product.jpg";
-                                }}
-                              />
+                    ) : state.cartProducts.length === 0 ? (
+                      <div className="flex-1 flex flex-col items-center justify-center p-8 text-center">
+                        <ShoppingCart
+                          className="text-gray-300 mb-4"
+                          size={48}
+                        />
+                        <h3 className="text-lg font-medium text-gray-700 mb-1">
+                          Your cart is empty
+                        </h3>
+                        <p className="text-gray-500 text-sm">
+                          Start shopping to add items
+                        </p>
+                      </div>
+                    ) : (
+                      <>
+                        {/* Cart Items */}
+                        <div className="divide-y divide-gray-200">
+                          {state.cartProducts.map((product, index) => (
+                            <div
+                              key={index}
+                              className="p-4 hover:bg-gray-50 transition-colors"
+                            >
+                              <CartItem product={product} />
                             </div>
-                            <div className="flex-1 min-w-0">
-                              <h4 className="text-sm font-medium text-gray-900 truncate">
-                                {item.product?.name}
-                              </h4>
-                              <p className="text-xs text-gray-500 mb-1">
-                                {item.product?.brand || "Generic"}
-                              </p>
-                              <div className="flex justify-between text-sm">
-                                <span className="text-gray-600">
-                                  Qty: {item.quantity}
-                                </span>
-                                <span className="font-medium">
-                                  ₹{item.priceAtTime}
-                                </span>
+                          ))}
+                        </div>
+
+                        {/* Cart Footer */}
+                        <div className="border-t border-gray-200 p-4 bg-gray-50 sticky bottom-0">
+                          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+                            <div className="text-lg font-bold text-gray-900">
+                              Total:{" "}
+                              <span className="text-emerald-600">
+                                ₹{calculateTotal()}
+                              </span>
+                            </div>
+                            <button
+                              onClick={handleCheckout}
+                              className="w-full sm:w-auto bg-gray-900 hover:bg-gray-800 text-white px-6 py-2 rounded-md font-medium transition-colors focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
+                            >
+                              Checkout
+                            </button>
+                          </div>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                ) : (
+                  /* Orders Section */
+                  <div className="h-full flex flex-col">
+                    <div className="flex-1 overflow-auto p-4">
+                      {orderHistory.length === 0 ? (
+                        <div className="flex flex-col items-center justify-center h-full p-8 text-center">
+                          <Package className="text-gray-300 mb-4" size={48} />
+                          <h3 className="text-lg font-medium text-gray-700 mb-1">
+                            No orders yet
+                          </h3>
+                          <p className="text-gray-500 text-sm">
+                            Your completed orders will appear here
+                          </p>
+                        </div>
+                      ) : (
+                        <div className="space-y-4">
+                          {orderHistory.map((order, index) => (
+                            <div
+                              key={index}
+                              className="border border-gray-200 rounded-lg overflow-hidden hover:shadow-sm transition-shadow"
+                            >
+                              {/* Order Header */}
+                              <div className="bg-gray-50 p-4 border-b border-gray-200">
+                                <div className="flex justify-between sm:flex-row sm:items-center sm:justify-between gap-2">
+                                  <div>
+                                    <h3 className="font-medium text-gray-900">
+                                      Order #{index + 1}
+                                    </h3>
+                                    <p className="text-sm text-gray-500">
+                                      {new Date(
+                                        order.orderedAt
+                                      ).toLocaleDateString("en-GB", {
+                                        day: "2-digit",
+                                        month: "short",
+                                        year: "numeric",
+                                      })}
+                                    </p>
+                                  </div>
+                                  <div className="flex flex-col items-end">
+                                    <span className="font-bold text-gray-900">
+                                      ₹{order.totalAmount}
+                                    </span>
+                                    <span className="text-xs px-2 py-1 bg-amber-100 text-amber-800 rounded-full">
+                                      {order.status || "Placed"}
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+
+                              {/* Order Items */}
+                              <div className="divide-y divide-gray-200">
+                                {order.items.map((item, idx) => (
+                                  <div
+                                    key={idx}
+                                    className="p-3 flex items-start gap-3"
+                                  >
+                                    <div className="flex-shrink-0">
+                                      <img
+                                        src={
+                                          item.product?.imageUrl ||
+                                          "/images/placeholder.jpg"
+                                        }
+                                        alt={item.product?.name}
+                                        className="w-16 h-16 object-contain bg-white border border-gray-200 rounded"
+                                        onError={(e) => {
+                                          e.target.src =
+                                            "/placeholder-product.jpg";
+                                        }}
+                                      />
+                                    </div>
+                                    <div className="flex-1 min-w-0">
+                                      <h4 className="text-sm font-medium text-gray-900 truncate">
+                                        {item.product?.name}
+                                      </h4>
+                                      <p className="text-xs text-gray-500 mb-1">
+                                        {item.product?.brand || "Generic"}
+                                      </p>
+                                      <div className="flex justify-between text-sm">
+                                        <span className="text-gray-600">
+                                          Qty: {item.quantity}
+                                        </span>
+                                        <span className="font-medium">
+                                          ₹{item.priceAtTime}
+                                        </span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                ))}
                               </div>
                             </div>
-                          </div>
-                        ))}
-                      </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
-                  ))}
-                </div>
-              )}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
-        )}
-      </div>
-    </div>
-  </div>
           // </div>
         )}
 

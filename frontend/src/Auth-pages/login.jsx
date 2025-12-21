@@ -14,8 +14,8 @@ const Login = () => {
   const handleGoogleLogin = (e) => {
     e.preventDefault();
     try {
-      window.location.href = `https://cleanngreen.onrender.com/api/auth/google`;
-      // window.location.href = `http://localhost:5000/api/auth/google`;   // for local testing
+      // window.location.href = `https://cleanngreen.onrender.com/api/auth/google`;
+      window.location.href = `http://localhost:5000/api/auth/google`; // for local testing
     } catch (err) {
       setError(err.message);
     }
@@ -147,7 +147,9 @@ const Login = () => {
         </div>
         {isForgotPasswordOpen && (
           <>
-            <ForgotPasswordPage />
+            <ForgotPasswordPage
+              setIsForgotPasswordOpen={setIsForgotPasswordOpen}
+            />
           </>
         )}
 

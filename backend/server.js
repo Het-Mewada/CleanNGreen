@@ -64,9 +64,12 @@ app.get("/api", (req, res) => {
 // ✅ Error handling middleware (good practice)
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
+
+  const statusCode =
+    res.statusCode && res.statusCode !== 200 ? res.statusCode : 500;
+
   res.status(statusCode).json({
-    error: err.message || "Internal Server Error",
+    message: err.message || "Internal Server Error",
   });
 });
 

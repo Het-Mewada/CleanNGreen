@@ -1,4 +1,4 @@
-import { useEffect, useState , useContext } from "react";
+import { useEffect, useState, useContext } from "react";
 import AuthContext from "../context/AuthContext";
 import axios from "axios";
 
@@ -14,7 +14,7 @@ const AdminDashboard = () => {
   const [isDeleteModeOpen, setIsDeleteModeOpen] = useState(false);
   const [isBlockModeOpen, setIsBlockModeOpen] = useState(false);
   const [editFormData, setEditFormData] = useState(null);
-  
+
   const [deleteStatus, setDeleteStatus] = useState({
     status: "idle", // 'idle' | 'loading' | 'success' | 'error'
     message: "",
@@ -28,10 +28,7 @@ const AdminDashboard = () => {
     message: "",
   });
 
-
-  const {user} = useContext(AuthContext)
-
-
+  const { user } = useContext(AuthContext);
 
   const fetchUsers = async () => {
     setUsers([]);
@@ -45,7 +42,6 @@ const AdminDashboard = () => {
         window.location.href = "/login";
         return;
       }
-
 
       const { data } = await axios.get(
         `${__API_URL__}/admin?page=${page}&search=${search}&role=${role}&limit=5`,
@@ -65,11 +61,11 @@ const AdminDashboard = () => {
       setIsLoading(false);
       setError(null);
     } catch (error) {
-      if(error.status == "403"){
-        alert("You do not have access to this content")
+      if (error.status == "403") {
+        alert("You do not have access to this content");
         window.location.href = "/login";
         return;
-            }
+      }
       console.error(
         "Error fetching users:",
         error.response?.data || error.message
@@ -84,7 +80,7 @@ const AdminDashboard = () => {
   };
   useEffect(() => {
     fetchUsers();
-  }, [page, search, role , user]);
+  }, [page, search, role, user]);
 
   const highlightText = (text, highlight) => {
     if (!highlight) return text;
@@ -169,8 +165,8 @@ const AdminDashboard = () => {
           )
         );
         setBlockStatus({
-        status: 'success', 
-        message: response.data.message 
+          status: "success",
+          message: response.data.message,
         });
       }
     } catch (error) {
@@ -189,7 +185,7 @@ const AdminDashboard = () => {
       return;
     }
 
-    setEditStatus({status:"loading",message:"Editing User..."})
+    setEditStatus({ status: "loading", message: "Editing User..." });
 
     try {
       const response = await axios.post(
@@ -207,13 +203,16 @@ const AdminDashboard = () => {
 
       if (response.status === 200) {
         fetchUsers();
-        setEditStatus({status:"success",message:"User updated successfully!"});
-        return true
+        setEditStatus({
+          status: "success",
+          message: "User updated successfully!",
+        });
+        return true;
       }
     } catch (error) {
       setEditStatus({
-      status: 'error', 
-      message: error.response?.data?.message || 'Failed to update user'
+        status: "error",
+        message: error.response?.data?.message || "Failed to update user",
       });
       return false;
     }
@@ -358,198 +357,212 @@ const AdminDashboard = () => {
         </div>
       </div>
       {isEditModeOpen && (
-  <div className="fixed inset-0 flex items-center justify-center z-50 backdrop-blur-sm bg-slate-900/20">
-    <div className="bg-slate-50 rounded-xl shadow-lg p-6 w-full max-w-md relative animate-fade-in-down">
-      {/* Close button (only shown when not in loading state) */}
-      {editStatus.status !== 'loading' && (
-        <button
-          onClick={() => {
-            setIsEditModeOpen(null);
-            setEditStatus({ status: 'idle', message: '' });
-          }}
-          className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-2xl transition-colors"
-        >
-          &times;
-        </button>
-      )}
-
-      {/* Loading State */}
-      {editStatus.status === 'loading' && (
-        <div className="text-center space-y-4">
-          <div className="mx-auto w-16 h-16 rounded-full bg-teal-100 flex items-center justify-center mb-2 animate-spin">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-8 w-8 text-teal-400"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-              />
-            </svg>
-          </div>
-          <p className="text-teal-600 font-medium">{editStatus.message}</p>
-        </div>
-      )}
-
-      {/* Initial Form State */}
-      {editStatus.status === 'idle' && (
-        <div className="text-center space-y-4">
-          <div className="mx-auto w-16 h-16 rounded-full bg-teal-100 flex items-center justify-center mb-2">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-8 w-8 text-teal-400"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-              />
-            </svg>
-          </div>
-
-          <h2 className="text-2xl font-medium text-slate-800">Edit User</h2>
-
-          <div className="space-y-3 text-left">
-            <div>
-              <label className="block text-sm font-medium text-slate-600 mb-1">
-                Email
-              </label>
-              <input
-                type="email"
-                value={editFormData.email}
-                onChange={(e) =>
-                  setEditFormData({
-                    ...editFormData,
-                    email: e.target.value,
-                  })
-                }
-                className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-transparent"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-slate-600 mb-1">
-                Name
-              </label>
-              <input
-                type="text"
-                value={editFormData.name}
-                onChange={(e) =>
-                  setEditFormData({ ...editFormData, name: e.target.value })
-                }
-                className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-transparent"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-slate-600 mb-1">
-                Role
-              </label>
-              <select
-                value={editFormData.role}
-                onChange={(e) =>
-                  setEditFormData({ ...editFormData, role: e.target.value })
-                }
-                className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-transparent"
+        <div className="fixed inset-0 flex items-center justify-center z-50 backdrop-blur-sm bg-slate-900/20">
+          <div className="bg-slate-50 rounded-xl shadow-lg p-6 w-full max-w-md relative animate-fade-in-down">
+            {/* Close button (only shown when not in loading state) */}
+            {editStatus.status !== "loading" && (
+              <button
+                onClick={() => {
+                  setIsEditModeOpen(null);
+                  setEditStatus({ status: "idle", message: "" });
+                }}
+                className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-2xl transition-colors"
               >
-                <option value="user">User</option>
-                <option value="admin">Admin</option>
-                <option value="editor">Editor</option>
-              </select>
-            </div>
-          </div>
+                &times;
+              </button>
+            )}
 
-          <div className="flex justify-center gap-3 pt-2">
-            <button
-              onClick={() => setIsEditModeOpen(null)}
-              className="px-5 py-2 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-100 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2"
-            >
-              Cancel
-            </button>
-            <button
-              onClick={async () => {
-                const success = await updateUser(editFormData);
-                if (success) {
-                  setTimeout(() => {
+            {/* Loading State */}
+            {editStatus.status === "loading" && (
+              <div className="text-center space-y-4">
+                <div className="mx-auto w-16 h-16 rounded-full bg-teal-100 flex items-center justify-center mb-2 animate-spin">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-8 w-8 text-teal-400"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                    />
+                  </svg>
+                </div>
+                <p className="text-teal-600 font-medium">
+                  {editStatus.message}
+                </p>
+              </div>
+            )}
+
+            {/* Initial Form State */}
+            {editStatus.status === "idle" && (
+              <div className="text-center space-y-4">
+                <div className="mx-auto w-16 h-16 rounded-full bg-teal-100 flex items-center justify-center mb-2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-8 w-8 text-teal-400"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                    />
+                  </svg>
+                </div>
+
+                <h2 className="text-2xl font-medium text-slate-800">
+                  Edit User
+                </h2>
+
+                <div className="space-y-3 text-left">
+                  <div>
+                    <label className="block text-sm font-medium text-slate-600 mb-1">
+                      Email
+                    </label>
+                    <input
+                      type="email"
+                      value={editFormData.email}
+                      onChange={(e) =>
+                        setEditFormData({
+                          ...editFormData,
+                          email: e.target.value,
+                        })
+                      }
+                      className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-transparent"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-600 mb-1">
+                      Name
+                    </label>
+                    <input
+                      type="text"
+                      value={editFormData.name}
+                      onChange={(e) =>
+                        setEditFormData({
+                          ...editFormData,
+                          name: e.target.value,
+                        })
+                      }
+                      className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-transparent"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-600 mb-1">
+                      Role
+                    </label>
+                    <select
+                      value={editFormData.role}
+                      onChange={(e) =>
+                        setEditFormData({
+                          ...editFormData,
+                          role: e.target.value,
+                        })
+                      }
+                      className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-transparent"
+                    >
+                      <option value="user">User</option>
+                      <option value="admin">Admin</option>
+                      <option value="editor">Editor</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="flex justify-center gap-3 pt-2">
+                  <button
+                    onClick={() => setIsEditModeOpen(null)}
+                    className="px-5 py-2 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-100 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={async () => {
+                      const success = await updateUser(editFormData);
+                      if (success) {
+                        setTimeout(() => {
+                          setIsEditModeOpen(null);
+                          setEditStatus({ status: "idle", message: "" });
+                        }, 1500);
+                      }
+                    }}
+                    className="px-5 py-2 rounded-lg bg-teal-400 text-white hover:bg-teal-500 transition-colors focus:outline-none focus:ring-2 focus:ring-teal-400 focus:ring-offset-2"
+                  >
+                    Save Changes
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Success State */}
+            {editStatus.status === "success" && (
+              <div className="text-center space-y-4">
+                <div className="mx-auto w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mb-2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-8 w-8 text-green-400"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                </div>
+                <h2 className="text-2xl font-medium text-slate-800">
+                  Success!
+                </h2>
+                <p className="text-green-600 font-medium">
+                  {editStatus.message}
+                </p>
+              </div>
+            )}
+
+            {/* Error State */}
+            {editStatus.status === "error" && (
+              <div className="text-center space-y-4">
+                <div className="mx-auto w-16 h-16 rounded-full bg-red-100 flex items-center justify-center mb-2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-8 w-8 text-red-400"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </div>
+                <h2 className="text-2xl font-medium text-slate-800">Error</h2>
+                <p className="text-red-600 font-medium">{editStatus.message}</p>
+                <button
+                  onClick={() => {
                     setIsEditModeOpen(null);
-                    setEditStatus({ status: 'idle', message: '' });
-                  }, 1500);
-                }
-              }}
-              className="px-5 py-2 rounded-lg bg-teal-400 text-white hover:bg-teal-500 transition-colors focus:outline-none focus:ring-2 focus:ring-teal-400 focus:ring-offset-2"
-            >
-              Save Changes
-            </button>
+                    setEditStatus({ status: "idle", message: "" });
+                  }}
+                  className="px-5 py-2 rounded-lg bg-red-400 text-white hover:bg-red-500 transition-colors focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2"
+                >
+                  Close
+                </button>
+              </div>
+            )}
           </div>
         </div>
       )}
-
-      {/* Success State */}
-      {editStatus.status === 'success' && (
-        <div className="text-center space-y-4">
-          <div className="mx-auto w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mb-2">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-8 w-8 text-green-400"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M5 13l4 4L19 7"
-              />
-            </svg>
-          </div>
-          <h2 className="text-2xl font-medium text-slate-800">Success!</h2>
-          <p className="text-green-600 font-medium">{editStatus.message}</p>
-        </div>
-      )}
-
-      {/* Error State */}
-      {editStatus.status === 'error' && (
-        <div className="text-center space-y-4">
-          <div className="mx-auto w-16 h-16 rounded-full bg-red-100 flex items-center justify-center mb-2">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-8 w-8 text-red-400"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          </div>
-          <h2 className="text-2xl font-medium text-slate-800">Error</h2>
-          <p className="text-red-600 font-medium">{editStatus.message}</p>
-          <button
-            onClick={() => {
-              setIsEditModeOpen(null);
-              setEditStatus({ status: 'idle', message: '' });
-            }}
-            className="px-5 py-2 rounded-lg bg-red-400 text-white hover:bg-red-500 transition-colors focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2"
-          >
-            Close
-          </button>
-        </div>
-      )}
-    </div>
-  </div>
-)}
 
       {isDeleteModeOpen && (
         <div className="fixed inset-0 flex items-center justify-center z-50 backdrop-blur-sm bg-slate-900/20">
@@ -719,162 +732,175 @@ const AdminDashboard = () => {
         </div>
       )}
       {isBlockModeOpen && (
-  <div className="fixed inset-0 flex items-center justify-center z-50 backdrop-blur-sm bg-slate-900/20">
-    <div className="bg-slate-50 rounded-xl shadow-lg p-6 w-full max-w-md relative animate-fade-in-down">
-      {/* Close button (only shown when not in loading state) */}
-      {blockStatus.status !== 'loading' && (
-        <button
-          onClick={() => {
-            setIsBlockModeOpen(null);
-            setBlockStatus({ status: 'idle', message: '' });
-          }}
-          className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-2xl transition-colors"
-        >
-          &times;
-        </button>
-      )}
+        <div className="fixed inset-0 flex items-center justify-center z-50 backdrop-blur-sm bg-slate-900/20">
+          <div className="bg-slate-50 rounded-xl shadow-lg p-6 w-full max-w-md relative animate-fade-in-down">
+            {/* Close button (only shown when not in loading state) */}
+            {blockStatus.status !== "loading" && (
+              <button
+                onClick={() => {
+                  setIsBlockModeOpen(null);
+                  setBlockStatus({ status: "idle", message: "" });
+                }}
+                className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-2xl transition-colors"
+              >
+                &times;
+              </button>
+            )}
 
-      {/* Loading State */}
-      {blockStatus.status === 'loading' && (
-        <div className="text-center space-y-4">
-          <div className="mx-auto w-16 h-16 rounded-full bg-orange-100 flex items-center justify-center mb-2">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-8 w-8 text-orange-400"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-              />
-            </svg>
-          </div>
-          <p className="text-orange-600 font-medium">{blockStatus.message}</p>
-        </div>
-      )}
+            {/* Loading State */}
+            {blockStatus.status === "loading" && (
+              <div className="text-center space-y-4">
+                <div className="mx-auto w-16 h-16 rounded-full bg-orange-100 flex items-center justify-center mb-2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-8 w-8 text-orange-400"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                    />
+                  </svg>
+                </div>
+                <p className="text-orange-600 font-medium">
+                  {blockStatus.message}
+                </p>
+              </div>
+            )}
 
-      {/* Initial Confirmation State */}
-      {blockStatus.status === 'idle' && (
-        <div className="text-center space-y-4">
-          <div className="mx-auto w-16 h-16 rounded-full bg-orange-100 flex items-center justify-center mb-2">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-8 w-8 text-orange-400"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-              />
-            </svg>
-          </div>
+            {/* Initial Confirmation State */}
+            {blockStatus.status === "idle" && (
+              <div className="text-center space-y-4">
+                <div className="mx-auto w-16 h-16 rounded-full bg-orange-100 flex items-center justify-center mb-2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-8 w-8 text-orange-400"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                    />
+                  </svg>
+                </div>
 
-          <h2 className="text-2xl font-medium text-slate-800">
-            {isBlockModeOpen.isBlocked ? 'Unblock' : 'Block'} User
-          </h2>
+                <h2 className="text-2xl font-medium text-slate-800">
+                  {isBlockModeOpen.isBlocked ? "Unblock" : "Block"} User
+                </h2>
 
-          <p className="text-slate-600">
-            Are you sure you want to {isBlockModeOpen.isBlocked ? 'unblock' : 'block'}{" "}
-            <span className="font-medium text-slate-800">
-              {isBlockModeOpen.email}
-            </span>?
-            {isBlockModeOpen.isBlocked ? 
-              " They will regain access to their account." : 
-              " They will lose access to their account until unblocked."}
-          </p>
+                <p className="text-slate-600">
+                  Are you sure you want to{" "}
+                  {isBlockModeOpen.isBlocked ? "unblock" : "block"}{" "}
+                  <span className="font-medium text-slate-800">
+                    {isBlockModeOpen.email}
+                  </span>
+                  ?
+                  {isBlockModeOpen.isBlocked
+                    ? " They will regain access to their account."
+                    : " They will lose access to their account until unblocked."}
+                </p>
 
-          <div className="flex justify-center gap-3 pt-2">
-            <button
-              onClick={() => setIsBlockModeOpen(null)}
-              className="px-5 py-2 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-100 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2"
-            >
-              Cancel
-            </button>
-            <button
-              onClick={async () => {
-                const success = await blockUser(isBlockModeOpen._id, isBlockModeOpen.role);
-                if (success) {
-                  setTimeout(() => {
+                <div className="flex justify-center gap-3 pt-2">
+                  <button
+                    onClick={() => setIsBlockModeOpen(null)}
+                    className="px-5 py-2 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-100 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={async () => {
+                      const success = await blockUser(
+                        isBlockModeOpen._id,
+                        isBlockModeOpen.role
+                      );
+                      if (success) {
+                        setTimeout(() => {
+                          setIsBlockModeOpen(null);
+                          setBlockStatus({ status: "idle", message: "" });
+                        }, 1500);
+                      }
+                    }}
+                    className="px-5 py-2 rounded-lg bg-orange-400 text-white hover:bg-orange-500 transition-colors focus:outline-none focus:ring-2 focus:ring-orange-400 focus:ring-offset-2"
+                  >
+                    Confirm {isBlockModeOpen.isBlocked ? "Unblock" : "Block"}
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Success State */}
+            {blockStatus.status === "success" && (
+              <div className="text-center space-y-4">
+                <div className="mx-auto w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mb-2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-8 w-8 text-green-400"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                </div>
+                <h2 className="text-2xl font-medium text-slate-800">
+                  Success!
+                </h2>
+                <p className="text-green-600 font-medium">
+                  {blockStatus.message}
+                </p>
+              </div>
+            )}
+
+            {/* Error State */}
+            {blockStatus.status === "error" && (
+              <div className="text-center space-y-4">
+                <div className="mx-auto w-16 h-16 rounded-full bg-red-100 flex items-center justify-center mb-2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-8 w-8 text-red-400"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </div>
+                <h2 className="text-2xl font-medium text-slate-800">Error</h2>
+                <p className="text-red-600 font-medium">
+                  {blockStatus.message}
+                </p>
+                <button
+                  onClick={() => {
                     setIsBlockModeOpen(null);
-                    setBlockStatus({ status: 'idle', message: '' });
-                  }, 1500);
-                }
-              }}
-              className="px-5 py-2 rounded-lg bg-orange-400 text-white hover:bg-orange-500 transition-colors focus:outline-none focus:ring-2 focus:ring-orange-400 focus:ring-offset-2"
-            >
-              Confirm {isBlockModeOpen.isBlocked ? 'Unblock' : 'Block'}
-            </button>
+                    setBlockStatus({ status: "idle", message: "" });
+                  }}
+                  className="px-5 py-2 rounded-lg bg-red-400 text-white hover:bg-red-500 transition-colors focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2"
+                >
+                  Close
+                </button>
+              </div>
+            )}
           </div>
         </div>
       )}
-
-      {/* Success State */}
-      {blockStatus.status === 'success' && (
-        <div className="text-center space-y-4">
-          <div className="mx-auto w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mb-2">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-8 w-8 text-green-400"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M5 13l4 4L19 7"
-              />
-            </svg>
-          </div>
-          <h2 className="text-2xl font-medium text-slate-800">Success!</h2>
-          <p className="text-green-600 font-medium">{blockStatus.message}</p>
-        </div>
-      )}
-
-      {/* Error State */}
-      {blockStatus.status === 'error' && (
-        <div className="text-center space-y-4">
-          <div className="mx-auto w-16 h-16 rounded-full bg-red-100 flex items-center justify-center mb-2">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-8 w-8 text-red-400"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          </div>
-          <h2 className="text-2xl font-medium text-slate-800">Error</h2>
-          <p className="text-red-600 font-medium">{blockStatus.message}</p>
-          <button
-            onClick={() => {
-              setIsBlockModeOpen(null);
-              setBlockStatus({ status: 'idle', message: '' });
-            }}
-            className="px-5 py-2 rounded-lg bg-red-400 text-white hover:bg-red-500 transition-colors focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2"
-          >
-            Close
-          </button>
-        </div>
-      )}
-    </div>
-  </div>
-)}
     </div>
   );
 };

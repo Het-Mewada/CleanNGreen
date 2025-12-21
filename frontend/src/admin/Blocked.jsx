@@ -3,9 +3,8 @@ import { useEffect, useState } from "react";
 import { FiUserX, FiRefreshCw, FiAlertCircle } from "react-icons/fi";
 
 export default function BlockedUsers() {
-
   const [blockedUsers, setBlockedUsers] = useState([]);
-  const [isBlockModeOpen,setIsBlockModeOpen] = useState(false)
+  const [isBlockModeOpen, setIsBlockModeOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -14,14 +13,10 @@ export default function BlockedUsers() {
       setLoading(true);
       const token = JSON.parse(localStorage.getItem("user"))?.token;
 
-      const response = await axios.get(
-        `${__API_URL__}/admin/blocked-users`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-          withCredentials: true,
-        }
-      );
-      console.log(response)
+      const response = await axios.get(`${__API_URL__}/admin/blocked-users`, {
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true,
+      });
       setBlockedUsers(response.data.blockedUsers || []);
       setError(null);
     } catch (err) {
@@ -36,7 +31,7 @@ export default function BlockedUsers() {
     fetchBlockedUsers();
   }, []);
 
-  const handleUnblock = async (userId , userRole) => {
+  const handleUnblock = async (userId, userRole) => {
     const token = JSON.parse(localStorage.getItem("user"))?.token;
 
     if (!token) {
@@ -48,7 +43,7 @@ export default function BlockedUsers() {
       const response = await axios.post(
         `${__API_URL__}/admin/block`,
         {
-          data: {userId , userRole},
+          data: { userId, userRole },
         },
         {
           withCredentials: true,
@@ -65,7 +60,6 @@ export default function BlockedUsers() {
           )
         );
         fetchBlockedUsers();
-
       }
     } catch (error) {
       alert(JSON.stringify(error));
@@ -100,10 +94,12 @@ export default function BlockedUsers() {
   }
 
   return (
-    <div className="bg-slate-50 min-w-100 rounded-lg shadow-sm border border-gray-200 overflow-hidden" 
-    style={{
-      height:'100vh',
-    }}>
+    <div
+      className="bg-slate-50 min-w-100 rounded-lg shadow-sm border border-gray-200 overflow-hidden"
+      style={{
+        height: "100vh",
+      }}
+    >
       {/* Header */}
       <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
         <div className="flex items-center">
@@ -111,7 +107,8 @@ export default function BlockedUsers() {
           <h2 className="text-xl font-semibold text-gray-800">Blocked Users</h2>
         </div>
         <div className="text-sm text-gray-500">
-          {blockedUsers.length} {blockedUsers.length === 1 ? "user" : "users"} blocked
+          {blockedUsers.length} {blockedUsers.length === 1 ? "user" : "users"}{" "}
+          blocked
         </div>
       </div>
 
@@ -120,11 +117,21 @@ export default function BlockedUsers() {
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-100 text-dark">
             <tr>
-              <th className="px-6 py-3 text-center text-xs font-medium text-dark uppercase tracking-wider">Logo</th>
-              <th className="px-6 py-3 text-center text-xs font-medium text-dark uppercase tracking-wider">User</th>
-              <th className="px-6 py-3 text-center text-xs font-medium text-dark uppercase tracking-wider">Email</th>
-              <th className="px-6 py-3 text-center text-xs font-medium text-dark uppercase tracking-wider">Role</th>
-              <th className="px-6 py-3 text-center text-xs font-medium text-dark uppercase tracking-wider">Actions</th>
+              <th className="px-6 py-3 text-center text-xs font-medium text-dark uppercase tracking-wider">
+                Logo
+              </th>
+              <th className="px-6 py-3 text-center text-xs font-medium text-dark uppercase tracking-wider">
+                User
+              </th>
+              <th className="px-6 py-3 text-center text-xs font-medium text-dark uppercase tracking-wider">
+                Email
+              </th>
+              <th className="px-6 py-3 text-center text-xs font-medium text-dark uppercase tracking-wider">
+                Role
+              </th>
+              <th className="px-6 py-3 text-center text-xs font-medium text-dark uppercase tracking-wider">
+                Actions
+              </th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200 ">
@@ -132,29 +139,38 @@ export default function BlockedUsers() {
               blockedUsers.map((user) => (
                 <tr key={user.id} className="hover:bg-gray-100 transition ">
                   <td className=" flex justify-center px-6 py-4  whitespace-nowrap">
-                      <div className="flex-shrink-0 h-10 w-10 bg-red-200 rounded-full flex items-center justify-center">
-                        <span className="text-dark  font-medium">
-                          {user.name?.charAt(0).toUpperCase() || "U"}
-                        </span>
-                      </div>
+                    <div className="flex-shrink-0 h-10 w-10 bg-red-200 rounded-full flex items-center justify-center">
+                      <span className="text-dark  font-medium">
+                        {user.name?.charAt(0).toUpperCase() || "U"}
+                      </span>
+                    </div>
                   </td>
                   <td className="px-6 py-4 text-center  whitespace-nowrap">
-                      <div className="ml-4 ">
-                        <div className="text-sm font-medium text-gray-900">{user.name || "Unknown"}</div>
-                        <div className="text-sm text-gray-500">ID: {user._id}</div>
+                    <div className="ml-4 ">
+                      <div className="text-sm font-medium text-gray-900">
+                        {user.name || "Unknown"}
                       </div>
+                      <div className="text-sm text-gray-500">
+                        ID: {user._id}
+                      </div>
+                    </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500">
                     {user.email}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-center">
-                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                      ${user.role === 'admin' ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800'}`}>
+                    <span
+                      className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                      ${
+                        user.role === "admin"
+                          ? "bg-purple-100 text-purple-800"
+                          : "bg-blue-100 text-blue-800"
+                      }`}
+                    >
                       {user.role}
                     </span>
                   </td>
                   <td className=" text-center text-sm font-medium">
-
                     {/* trial */}
                     <button
                       onClick={() => setIsBlockModeOpen(user)}
@@ -169,7 +185,9 @@ export default function BlockedUsers() {
               <tr>
                 <td colSpan="5" className="px-6 py-12 text-center">
                   <FiUserX className="mx-auto text-3xl text-gray-400 mb-3" />
-                  <p className="text-gray-500 text-lg">No blocked users found</p>
+                  <p className="text-gray-500 text-lg">
+                    No blocked users found
+                  </p>
                   <button
                     onClick={fetchBlockedUsers}
                     className="mt-4 px-4 py-2 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition inline-flex items-center"
@@ -235,7 +253,7 @@ export default function BlockedUsers() {
                 </button>
                 <button
                   onClick={() => {
-                    handleUnblock(isBlockModeOpen._id , isBlockModeOpen.role);
+                    handleUnblock(isBlockModeOpen._id, isBlockModeOpen.role);
                     setIsBlockModeOpen(null);
                   }}
                   className="px-5 py-2 rounded-lg bg-red-400 text-white hover:bg-red-500 transition-colors focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2"

@@ -40,7 +40,6 @@ const NeedHelpForm = () => {
     }
     setIsSubmitting(true);
     try {
-      console.log("FormData", formData);
       // Replace with your actual API endpoint
       await axios.post(`${__API_URL__}/users/help/submit-req`, formData, {
         headers: {

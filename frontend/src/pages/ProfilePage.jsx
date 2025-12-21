@@ -63,10 +63,8 @@ const ProfilePage = () => {
             Authorization: `Bearer ${token}`,
           },
         });
-        console.log("profile data : ", res.data.orders);
         setOrders(res.data.orders);
         setUser(res.data);
-        // console.log(res.data)
         setAddresses(res.data.address);
 
         setProfilePic(res.data.profilePic);
@@ -107,9 +105,9 @@ const ProfilePage = () => {
     } catch (error) {
       setError("Error updating profile picture. Please try again.");
       if (error.response && error.response.data) {
-        toast.error("Error:", error.response.data.message)
+        toast.error("Error:", error.response.data.message);
       } else {
-        toast.error("Unknown error:", error.message)
+        toast.error("Unknown error:", error.message);
       }
     } finally {
       setLoading(false);
@@ -151,7 +149,6 @@ const ProfilePage = () => {
         return true;
       }
     } catch (error) {
-      console.log(error);
       setEditStatus({
         status: "error",
         message: error.response?.data?.message || "Failed to update user",
@@ -185,7 +182,6 @@ const ProfilePage = () => {
         }
       );
 
-      console.log("Address added: ", res.data);
       toast.success(res.data.message);
       setAddresses(res.data.addresses);
       setSelectedAddress(null);
@@ -215,7 +211,6 @@ const ProfilePage = () => {
           },
         }
       );
-      console.log("Address deleted: ", res.data);
       setAddresses(res.data.remainingAddresses);
       toast.success(res.data.message);
     } catch (err) {
@@ -482,10 +477,6 @@ const ProfilePage = () => {
                                   </button>
                                   <button
                                     onClick={async () => {
-                                      console.log(
-                                        "Form at submit time : ",
-                                        editFormData
-                                      );
                                       const success = await updateUser(
                                         editFormData
                                       );
@@ -590,7 +581,7 @@ const ProfilePage = () => {
                             className="mb-3"
                             style={{ color: "#e8b98f", fontWeight: "bold" }}
                           >
-                            Details :{console.log(user)}
+                            Details :
                           </h4>
                           <p>
                             <strong className="text-[#278783]">Name:</strong>{" "}
@@ -781,7 +772,10 @@ const ProfilePage = () => {
                           );
                           toast.success("Address updated successfully!");
                         } catch (err) {
-                          console.log("Error Editing Address : ", err);
+                          toast.success(
+                            "Error Editing Address : ",
+                            err.message
+                          );
                         }
                       }}
                       className="space-y-4"
@@ -949,7 +943,6 @@ const ProfilePage = () => {
                         onClick={() => {
                           deleteAddress(selectedAddress._id);
                           setSelectedAddress(null);
-                          console.log("i am here");
                         }}
                         className="flex gap-3 mx-auto"
                       >

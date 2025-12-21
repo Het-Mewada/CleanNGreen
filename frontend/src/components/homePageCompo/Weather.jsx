@@ -29,7 +29,6 @@ const Weather = () => {
       userDecisionTimeout: 5000,
     });
   const token = JSON.parse(localStorage.getItem("user"))?.token;
-  console.log("token without login : " , token)
   const fetchWeather = async (lat, lon, cityName) => {
     setLoading(true);
     setError("");
@@ -86,99 +85,98 @@ const Weather = () => {
 
   if (!isGeolocationEnabled && !city) {
     return (
-    <Card
-      style={{
-        maxWidth: 800,
-        margin: "100px auto",
-        borderRadius: 16,
-        boxShadow: "0 8px 32px rgba(31, 38, 135, 0.15)",
-        background: "rgba(255, 255, 255, 0.85)",
-        backdropFilter: "blur(8px)",
-        border: "1px solid rgba(255, 255, 255, 0.18)",
-        overflow: "hidden",
-      }}
-    >
-      <CardContent style={{ padding: 24 }}>
-        <Grid container justifyContent="space-between" alignItems="center">
+      <Card
+        style={{
+          maxWidth: 800,
+          margin: "100px auto",
+          borderRadius: 16,
+          boxShadow: "0 8px 32px rgba(31, 38, 135, 0.15)",
+          background: "rgba(255, 255, 255, 0.85)",
+          backdropFilter: "blur(8px)",
+          border: "1px solid rgba(255, 255, 255, 0.18)",
+          overflow: "hidden",
+        }}
+      >
+        <CardContent style={{ padding: 24 }}>
+          <Grid container justifyContent="space-between" alignItems="center">
+            <Typography
+              variant="h5"
+              component="h2"
+              style={{
+                color: "#2E7D32",
+                fontWeight: 600,
+                fontFamily: "'Poppins', sans-serif",
+              }}
+            >
+              Location Services
+            </Typography>
+            <LocationOffIcon
+              style={{
+                backgroundColor: "#E8F5E9",
+                color: "#2E7D32",
+                borderRadius: "50%",
+                padding: 6,
+              }}
+            />
+          </Grid>
+
           <Typography
-            variant="h5"
-            component="h2"
+            variant="body1"
             style={{
-              color: "#2E7D32",
-              fontWeight: 600,
+              color: "#1B5E20",
+              fontWeight: 500,
+              marginTop: 24,
+              fontSize: 16,
               fontFamily: "'Poppins', sans-serif",
             }}
           >
-            Location Services
+            Geolocation is not enabled. Please enable it or search by city.
           </Typography>
-          <LocationOffIcon
-            style={{
-              backgroundColor: "#E8F5E9",
-              color: "#2E7D32",
-              borderRadius: "50%",
-              padding: 6,
-            }}
-          />
-        </Grid>
 
-        <Typography
-          variant="body1"
-          style={{
-            color: "#1B5E20",
-            fontWeight: 500,
-            marginTop: 24,
-            fontSize: 16,
-            fontFamily: "'Poppins', sans-serif",
-          }}
-        >
-          Geolocation is not enabled. Please enable it or search by city.
-        </Typography>
-
-        <form onSubmit={handleCitySearch} style={{ marginTop: 20 }}>
-          <TextField
-            label="Search by city"
-            value={city}
-            onChange={(e) => setCity(e.target.value)}
-            variant="outlined"
-            fullWidth
-            margin="normal"
-            InputProps={{
-              style: {
+          <form onSubmit={handleCitySearch} style={{ marginTop: 20 }}>
+            <TextField
+              label="Search by city"
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+              variant="outlined"
+              fullWidth
+              margin="normal"
+              InputProps={{
+                style: {
+                  borderRadius: 12,
+                  backgroundColor: "#F1F8E9",
+                },
+              }}
+              InputLabelProps={{
+                style: {
+                  color: "#689F38",
+                },
+              }}
+            />
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              disabled={!city.trim()}
+              fullWidth
+              style={{
+                marginTop: 8,
+                backgroundColor: "#2E7D32",
+                color: "white",
                 borderRadius: 12,
-                backgroundColor: "#F1F8E9",
-              },
-            }}
-            InputLabelProps={{
-              style: {
-                color: "#689F38",
-              },
-            }}
-          />
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            disabled={!city.trim()}
-            fullWidth
-            style={{
-              marginTop: 8,
-              backgroundColor: "#2E7D32",
-              color: "white",
-              borderRadius: 12,
-              padding: "10px 0",
-              textTransform: "none",
-              fontWeight: 500,
-              "&:hover": {
-                backgroundColor: "#1B5E20",
-              },
-            }}
-          >
-            Search
-          </Button>
-        </form>
-      </CardContent>
-    </Card>
-
+                padding: "10px 0",
+                textTransform: "none",
+                fontWeight: 500,
+                "&:hover": {
+                  backgroundColor: "#1B5E20",
+                },
+              }}
+            >
+              Search
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
     );
   }
 

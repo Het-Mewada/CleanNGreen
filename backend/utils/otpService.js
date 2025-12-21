@@ -1,16 +1,16 @@
-import nodemailer from 'nodemailer';
-import otpGenerator from 'otp-generator';
-import dotenv from 'dotenv';
+import nodemailer from "nodemailer";
+import otpGenerator from "otp-generator";
+import dotenv from "dotenv";
 
-dotenv.config()
+dotenv.config();
 
 // Email configuration
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  service: "gmail",
   auth: {
     user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
-  }
+    pass: process.env.EMAIL_PASS,
+  },
 });
 
 export const sendOTP = async (email) => {
@@ -18,13 +18,13 @@ export const sendOTP = async (email) => {
     digits: true,
     lowerCaseAlphabets: false,
     upperCaseAlphabets: false,
-    specialChars: false
+    specialChars: false,
   });
 
   const mailOptions = {
     from: '"Eco-Sphere-Official"',
     to: email,
-    subject: 'Your Verification Code',
+    subject: "Your Verification Code",
     text: `Your EcoSphere verification code is: ${otp}\n\nThis code will expire in 5 minutes.`,
     html: `<!DOCTYPE html>
 <html>
@@ -154,19 +154,17 @@ export const sendOTP = async (email) => {
         </div>
     </div>
 </body>
-</html>`
+</html>`,
   };
 
   try {
     await transporter.sendMail(mailOptions);
     return otp;
   } catch (error) {
-    console.error('Error sending OTP:', error);
-    throw new Error('Failed to send OTP');
+    console.error("Error sending OTP:", error);
+    throw new Error("Failed to send OTP");
   }
 };
-
-
 
 export const sendAccountDeletionEmail = async (email, userName, action) => {
   const isCancel = action === "cancel";
@@ -176,8 +174,12 @@ export const sendAccountDeletionEmail = async (email, userName, action) => {
     : "Account Deletion Requested";
 
   const text = isCancel
-    ? `Hi ${userName || ''},\n\nYour request to delete your EcoSphere account has been successfully cancelled. Your account remains active and no data has been removed.\n\nIf you have any questions or concerns, please contact our support team.\n\nThanks,\nEcosphere Team`
-    : `Hi ${userName || ''},\n\nWe have received a request to delete your EcoSphere account.\n\nIf you did not request this, please contact our support team immediately.\n\nYour data will be permanently deleted in 7 days.\n\nThanks,\nEcosphere Team`;
+    ? `Hi ${
+        userName || ""
+      },\n\nYour request to delete your EcoSphere account has been successfully cancelled. Your account remains active and no data has been removed.\n\nIf you have any questions or concerns, please contact our support team.\n\nThanks,\nEcosphere Team`
+    : `Hi ${
+        userName || ""
+      },\n\nWe have received a request to delete your EcoSphere account.\n\nIf you did not request this, please contact our support team immediately.\n\nYour data will be permanently deleted in 7 days.\n\nThanks,\nEcosphere Team`;
 
   const html = `<!DOCTYPE html>
 <html>
@@ -267,19 +269,23 @@ export const sendAccountDeletionEmail = async (email, userName, action) => {
     </div>
     
     <div class="content">
-      <h1>${isCancel ? "Account Deletion Cancelled" : "Account Deletion Requested"}</h1>
-      <p>Hi ${userName || 'User'},</p>
+      <h1>${
+        isCancel ? "Account Deletion Cancelled" : "Account Deletion Requested"
+      }</h1>
+      <p>Hi ${userName || "User"},</p>
       
       <p>
-        ${isCancel
-          ? "Your request to delete your Ecosphere account has been successfully <strong class='highlight'>cancelled</strong>. Your account remains active and no data has been deleted."
-          : "We've received a request to <strong class='highlight'>permanently delete</strong> your Ecosphere account."
+        ${
+          isCancel
+            ? "Your request to delete your Ecosphere account has been successfully <strong class='highlight'>cancelled</strong>. Your account remains active and no data has been deleted."
+            : "We've received a request to <strong class='highlight'>permanently delete</strong> your Ecosphere account."
         }
       </p>
 
-      ${isCancel
-        ? ""
-        : `<div class="warning-box">
+      ${
+        isCancel
+          ? ""
+          : `<div class="warning-box">
             <strong>Important:</strong> Your account and all associated data will be <strong>permanently deleted in 7 days</strong> unless you cancel this request.
           </div>
           
@@ -318,17 +324,16 @@ export const sendAccountDeletionEmail = async (email, userName, action) => {
   try {
     await transporter.sendMail(mailOptions);
   } catch (error) {
-    console.error('Error sending account deletion email:', error);
-    throw new Error('Failed to send account deletion email');
+    console.error("Error sending account deletion email:", error);
+    throw new Error("Failed to send account deletion email");
   }
 };
-
 
 export const subscribeNewsletter = async (email, userName) => {
   const mailOptions = {
     from: '"Ecosphere"',
     to: email,
-    subject: 'Thanks for Subscribing to Ecosphere Newsletter!',
+    subject: "Thanks for Subscribing to Ecosphere Newsletter!",
     text: `Hi there ,\n\nThanks for subscribing to the Ecosphere Newsletter!\n\nWe’re excited to have you on board. Expect the latest updates on tech, innovation, and everything Ecosphere directly in your inbox.\n\nStay tuned!\n\n– The Ecosphere Team`,
     html: `<!DOCTYPE html>
 <html>
@@ -427,7 +432,7 @@ export const subscribeNewsletter = async (email, userName) => {
     
     <div class="content">
       <h1>Welcome to Ecosphere News!</h1>
-      <p>Hi <span class="highlight">${userName || 'User'}</span>,</p>
+      <p>Hi <span class="highlight">${userName || "User"}</span>,</p>
       <p>Thank you for subscribing to our newsletter. We're absolutely <span class="highlight">thrilled</span> to have you join our community of tech enthusiasts and innovators!</p>
       <p>As a subscriber, you'll be the first to receive:</p>
       <p>• Exclusive tech trends and insights<br>
@@ -452,24 +457,22 @@ export const subscribeNewsletter = async (email, userName) => {
     </div>
   </div>
 </body>
-</html>`
+</html>`,
   };
 
   try {
     await transporter.sendMail(mailOptions);
   } catch (error) {
-    console.error('Error sending newsletter thank-you email:', error);
-    throw new Error('Failed to send newsletter thank-you email');
+    console.error("Error sending newsletter thank-you email:", error);
+    throw new Error("Failed to send newsletter thank-you email");
   }
 };
-
 
 export const resetPassEmail = async (to, link) => {
   await transporter.sendMail({
     from: '"EcoSphere"',
     to,
-    subject: 'Reset Your Password',
+    subject: "Reset Your Password",
     html: `<p>Click <a href="${link}">here</a> to reset your password. This link expires in 10 minutes.</p>`,
   });
-  console.log("Email sent")
 };

@@ -2,7 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 
-const ForgotPasswordPage = () => {
+const ForgotPasswordPage = ({ setIsForgotPasswordOpen }) => {
   const [email, setEmail] = useState("");
   const [modalOpen, setModalOpen] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -33,7 +33,7 @@ const ForgotPasswordPage = () => {
   return (
     <div
       className="fixed inset-0 z-30 flex items-center justify-center bg-black/30 backdrop-blur-sm"
-      onClick={() => setModalOpen(false)} // click outside = close
+      onClick={() => setIsForgotPasswordOpen(false)} // click outside = close
     >
       <div
         className="bg-white rounded-lg shadow-lg w-96 p-6 relative"
@@ -41,7 +41,7 @@ const ForgotPasswordPage = () => {
       >
         <button
           className="absolute top-2 right-3 text-gray-400 hover:text-red-500 text-xl"
-          onClick={() => setModalOpen(false)}
+          onClick={() => setIsForgotPasswordOpen(false)}
         >
           &times;
         </button>
