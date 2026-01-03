@@ -1,3 +1,6 @@
+// import swaggerUi from "swagger-ui-express";
+// import { swaggerSpec } from "./config/swagger.js";
+
 import dotenv from "dotenv";
 import cors from "cors";
 import passport from "passport";
@@ -14,12 +17,16 @@ import feedbackRoutes from "./routes/feedbackRoutes.js";
 import { verifyPayment } from "./controllers/cartController.js";
 import newsRoutes from "./routes/newsRoutes.js";
 import "./config/passport.js";
+import { startNewsCron } from "./cron/gNewsCron.js";
 
 dotenv.config();
 const app = express();
 app.set("trust proxy", 1);
+
 // ✅ Connect to MongoDB
 connectDB();
+// start news CRON job
+startNewsCron();
 
 // ✅ Middleware
 app.use(

@@ -2,6 +2,7 @@ import { useState, useContext } from "react";
 import AuthContext from "../context/AuthContext";
 import { BeatLoader } from "react-spinners";
 import ForgotPasswordPage from "../components/ForgotPassword";
+import { Navigate, useNavigate } from "react-router-dom";
 const Login = () => {
   const { login } = useContext(AuthContext);
   const [email, setEmail] = useState("");
@@ -10,12 +11,13 @@ const Login = () => {
   const [error, setError] = useState(null); // State for error handling
   const [isForgotPasswordOpen, setIsForgotPasswordOpen] = useState(false);
 
+  const navigate = useNavigate();
   // const GoogleLoginButton = () => {
   const handleGoogleLogin = (e) => {
     e.preventDefault();
     try {
-      // window.location.href = `https://cleanngreen.onrender.com/api/auth/google`;
-      window.location.href = `http://localhost:5000/api/auth/google`; // for local testing
+      window.location.href = `https://cleanngreen.onrender.com/api/auth/google`;
+      // window.location.href = `http://localhost:5000/api/auth/google`;
     } catch (err) {
       setError(err.message);
     }
@@ -134,12 +136,12 @@ const Login = () => {
               <div className="text-center mt-4">
                 <p className="text-muted">
                   Don't have an account?{" "}
-                  <a
-                    href="/register"
-                    className="text-decoration-none fw-semibold"
+                  <span
+                    className="text-blue-500"
+                    onClick={() => navigate("/register")}
                   >
                     Sign up
-                  </a>
+                  </span>
                 </p>
               </div>
             </form>

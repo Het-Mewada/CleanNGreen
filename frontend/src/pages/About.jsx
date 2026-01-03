@@ -224,65 +224,6 @@ const AboutUs = () => {
         </div>
       </section>
 
-      {/* Team Section */}
-      {/* <section className="py-16 bg-green-700 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold mb-4">
-              Meet Our <span className="text-green-300">Team</span>
-            </h2>
-            <p className="text-xl text-green-100 max-w-3xl mx-auto">
-              Passionate individuals dedicated to making sustainability
-              accessible
-            </p>
-          </div> */}
-
-      {/* <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {[
-              {
-                name: "Ruchi Gondaliya",
-                role: "Founder & CEO",
-                bio: "Environmental scientist with 15 years in sustainability research",
-                img: "images/admins/ruchi.jpg"
-              },
-              {
-                name: "Nandini Patel",
-                role: "CTO",
-                bio: "Green tech innovator building our digital platforms",
-                img: "images/admins/nandini.jpg"
-              },
-              {
-                name: "Yogesh Patel",
-                role: "Head of Education",
-                bio: "Former teacher creating our sustainability curriculum",
-                img: "images/admins/yogesh.jpg"
-              },
-              {
-                name: "Het Mewada",
-                role: "Community Manager",
-                bio: "Connects our members to local environmental initiatives",
-                img: "images/admins/het.jpg"
-              }
-            ].map((member, index) => (
-              <div key={index} className="bg-green-800 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
-                <div className="h-48 ">
-                  <img 
-                    src={member.img} 
-                    alt={member.name} 
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="p-6">
-                  <h3 className="text-xl font-bold mb-1">{member.name}</h3>
-                  <p className="text-green-300 font-medium mb-3">{member.role}</p>
-                  <p className="text-green-100">{member.bio}</p>
-                </div>
-              </div>
-            ))}
-          </div> */}
-      {/* </div>
-      </section> */}
-
       {/* Impact Stats */}
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

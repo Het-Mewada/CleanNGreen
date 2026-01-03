@@ -264,6 +264,15 @@ const Register = () => {
                     "Create Account"
                   )}
                 </button>
+                <div className="text-center ">
+                  Already have an account?{" "}
+                  <span
+                    className="text-blue-500"
+                    onClick={() => navigate("/login")}
+                  >
+                    Login
+                  </span>
+                </div>
               </div>
 
               {showOtpField && (
