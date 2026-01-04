@@ -14,19 +14,15 @@ const NewsSection = ({ source = "gnews", limit = 3 }) => {
         setLoading(true);
         setError(null);
 
-        const res = await axios.get(
-          `${__API_URL__}/news/fetchNews`,
-          {
-            params: { source, limit },
-            withCredentials: true,
-          }
-        );
+        const res = await axios.get(`${__API_URL__}/news/fetchNews`, {
+          params: { source, limit },
+          withCredentials: true,
+        });
 
-        if (!Array.isArray(res.data)) {
+        if (!Array.isArray(res.data.articles)) {
           throw new Error("Invalid news response");
         }
-
-        setNews(res.data);
+        setNews(res.data.articles);
       } catch (err) {
         console.error("News fetch failed:", err);
         setError("Failed to load news. Please try again later.");

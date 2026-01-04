@@ -12,7 +12,6 @@ import Nav from "./components/NavBar";
 import OAuthSuccess from "./Auth-pages/SuccessOAuth";
 import "bootstrap/dist/css/bootstrap.min.css";
 import ProfilePage from "./pages/ProfilePage";
-import Blocked from "./admin/Blocked";
 import Footer from "./components/Footer";
 import ClickSpark from "./components/universalCompos/ClickSparkComponent";
 import FuturisticCursor from "./components/universalCompos/CursorComponent";

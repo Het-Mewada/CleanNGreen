@@ -7,7 +7,14 @@ export function startNewsCron(limit = 10) {
     "0 */3 * * *",
     async () => {
       try {
-        console.log("News Cron Started at : ", Date.now());
+        const now = new Date();
+        console.log(
+          "News Cron Started at : ",
+          now.toLocaleString("en-IN", {
+            dateStyle: "full",
+            timeStyle: "medium",
+          })
+        );
 
         const articles = await fetchGNews(limit);
 

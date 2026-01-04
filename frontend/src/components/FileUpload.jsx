@@ -26,7 +26,6 @@ const FileUpload = ({ onUploadSuccess }) => {
       });
       onUploadSuccess(data.url); // Send Cloudinary URL to parent component
     } catch (error) {
-      console.log("Upload Error", error.message);
       alert("File upload failed!");
     } finally {
       setUploading(false);
